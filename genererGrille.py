@@ -6,31 +6,9 @@
 
 
 from random import randint
+import parser as p
+from grilleUtils import *
 
-def print_grille(grille):
-    for row in range(9):
-        line = ""
-        for column in range(9):
-            val = grille[row][column]
-            line += str(val) if val != 0 else "."
-            if column % 3 == 2 and column != 8:
-                line += " | "
-            else:
-                line += " "
-        print(line)
-        if row % 3 == 2 and row != 8:
-            print("-" * 21)
-
-
-def grille_vide():
-    return [[0 for _ in range(9)] for _ in range(9)]
-
-def find_empty_cell(grille):
-    for row in range(9):
-        for col in range(9):
-            if grille[row][col] == 0:
-                return row, col
-    return None
 
 def is_valid(grille,row, column, val):
     # Vérifier la ligne
@@ -66,6 +44,23 @@ def solve(grille):
             stats['nbBacktracks'] += 1
     return False
 
+
+# Fonction pour solve sans stats
+def solver(grille):
+    vide = find_empty_cell(grille)
+    if not vide:
+        return True # Résolu
+    row, column = vide
+    for _ in range(9):
+        val = randint(1, 9)
+        if is_valid(grille, row, column, val):
+            grille[row][column] = val
+            if solver(grille):
+                return True
+            grille[row][column] = 0 # backtrack
+    return False
+
+
 def categorie_dificulte(nb_backtracks):
     if nb_backtracks < 250:
         return "Facile"
@@ -87,12 +82,24 @@ def retirer_valeurs(grille, nb_retraites):
             grille[row][col] = 0
             count += 1
     return grille
-        
+
+# Fonction qui génère une grille complète
+def GrilleGenCompleted():
+    out=grille_vide()
+    if solver(out):
+        return out
+    else:
+        return [] 
+
+# Fonction qui génère une grille avec n valeur en moins
+def GrilleGen(n):
+    return retirer_valeurs(GrilleGenCompleted(),n)
 
 if __name__ == "__main__":
+    p.clean()
     grille = grille_vide()
     print_grille(grille)
-
+    p.grille_to_file(grille,"Generated_grille_empty")
     stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
 
     if solve(grille):
@@ -111,10 +118,10 @@ if __name__ == "__main__":
         print("Alors la complexité est O(9^k) dans le pire des cas.")
     else:
         print("Aucune solution trouvée.")
+    p.grille_to_file(grille,"Generated_grille_completed")
 
     print("\nGrille avec des valeurs retirées:")
     nb_retraites = 40  # Par exemple: retirer 40 valeurs
     grille_pour_resoudre = retirer_valeurs(grille, nb_retraites)
     print_grille(grille_pour_resoudre)
-
-    
+    p.grille_to_file(grille,"Generated_grille_uncompleted")
