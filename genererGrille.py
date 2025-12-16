@@ -96,19 +96,22 @@ def GrilleGen(n):
     return retirer_valeurs(GrilleGenCompleted(),n)
 
 if __name__ == "__main__":
+    print("Grille vide :")
     p.clean()
     grille = grille_vide()
     print_grille(grille)
     p.grille_to_file(grille,"Generated_grille_empty")
+    
     stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
 
     if solve(grille):
-        print("\nGrille résolue:")
+        print("\nGrille résolue :")
         print_grille(grille)
 
         print("\n--- Statistiques ---")
         print("Une solution trouvée")
-        print(f"Difficulté de la grille : {categorie_dificulte(stats['nbBacktracks'])}")
+        difficulte = categorie_dificulte(stats['nbBacktracks'])
+        print(f"Difficulté de la grille : {difficulte}")
         print(f"Nombre d'appels récursifs : {stats['appelsRecursifs']}")
         print(f"Nombre de tests effectués : {stats['testsEffectues']}")
         print(f"Nombre de backtracks : {stats['nbBacktracks']}")
@@ -121,7 +124,17 @@ if __name__ == "__main__":
     p.grille_to_file(grille,"Generated_grille_completed")
 
     print("\nGrille avec des valeurs retirées:")
-    nb_retraites = 40  # Par exemple: retirer 40 valeurs
+    # Retirer des valeurs selon la difficulte
+    if difficulte == "Facile":
+        nb_retraites = 40
+    elif difficulte == "Moyen":
+        nb_retraites = 50
+    elif difficulte == "Difficile":
+        nb_retraites = 60
+    elif difficulte == "Extrême":
+        nb_retraites = 65
+    else:  # God Mode
+        nb_retraites = 70
     grille_pour_resoudre = retirer_valeurs(grille, nb_retraites)
     print_grille(grille_pour_resoudre)
     p.grille_to_file(grille,"Generated_grille_uncompleted")
