@@ -27,6 +27,11 @@ def ajoutHistorique(grille):
     if len(Historique_Connu) == 0:
         Historique_Connu.append(grille)
 
+def popHistorique():
+    Historique.pop()
+    if len(Historique_Connu) == len(Historique):
+        Historique_Connu.pop()
+
 def showGrilleInterface():
     clear_console()
     print_grille(Historique_Connu[len(Historique_Connu)-1])
