@@ -74,19 +74,26 @@ def jouer_sudoku():
 
 
 def boucle_de_jeu(grille):
+    finish=False
     while True:
-        print("\nActions disponibles: ")
-        print("1. Entrer un valeur")
-        print("2. Résoudre automatiquement la grille")
-        print("3. Quitter")
+        if finish:
+            print("Veuillez appuyer sur une trouche")
+        else:
+            print("\nActions disponibles: ")
+            print("1. Entrer un valeur")
+            print("2. Résoudre automatiquement la grille")
+            print("3. Quitter")
 
         choix = input("Votre choix: ")
-        
+        if finish:
+            choix='3'
+
         if choix == '1':
             joeur_coup(grille)
         elif choix == '2':
             print("\nLa grille résolue automatiquement:")
             print_grille(completedGrille)
+            finish=True
         elif choix == '3':
             break
         else:
