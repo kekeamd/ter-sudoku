@@ -10,6 +10,9 @@ def grille_to_file(grille,file_name):
     for i in range (len(grille)):
         if len(grille[i])!=size:
             raise ParserError("WrongSizeOfCol")
+    # Si le dossier n'existe pas on le créer !
+    if (os.path.isdir("./sudoku_parser_out")):
+        os.makedirs("./sudoku_parser_out")
     fName="./sudoku_parser_out/"+file_name+".txt"
     f = open(fName,"w")
     for i in range (size):

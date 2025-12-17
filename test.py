@@ -2,7 +2,7 @@
 # Il est en work in progress pour le module parser.py
 # Veuillez mettre seulement des fonction test à l'intérieur !
 
-from genererGrille import GrilleGen,GrilleGenCompleted
+from genererGrille import GrilleGen,GrilleGenCompleted,solver
 from grilleUtils import *
 from parser import *
 from interfaceConsole import main
@@ -69,4 +69,24 @@ def testFileToFrilleIncorrectData():
         print("Test annulé !")
         clean()
 
-testFileToFrilleIncorrectData()
+def testCopy():
+    # Ligne qui permet de générer la grille avec des trous
+    G = GrilleGen(71)
+    print("Grille générer")
+    print_grille(G)
+    print('\n')
+    G1 = clone(G)
+    print("Grille copié")
+    print_grille(G1)
+    print('\n')
+    tmp=1
+    while(not(solver(G1))):
+        tmp+=1
+    print("<!> ===",tmp,"essaies avant de faire la résolution === <!>")
+    print("Grille Résolu !")
+    print_grille(G1)
+    print('\n')
+    print("Grille de base")
+    print_grille(G)
+    
+testCopy()
