@@ -92,6 +92,7 @@ def boucle_de_jeu(grille, solution):
         elif choix == '2':
             print("\nLa grille résolue automatiquement:")
             print_grille(solution)
+            print("\nLE JEU EST TERMINÉ!")
             break
         elif choix == '3':
             break
