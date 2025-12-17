@@ -1,5 +1,3 @@
-# Note : Architechture à retravailler !!
-
 import shutil
 import os
 from dependances.parser_requirement import *
@@ -22,6 +20,7 @@ def grille_to_file(grille,file_name):
     f.close()
     return fName
 
+# Clear le dossier ./sudoku_parser_out
 def clean():
     if os.path.isdir("./sudoku_parser_out"):
         shutil.rmtree("./sudoku_parser_out")
@@ -29,6 +28,7 @@ def clean():
 
 
 # Fonction Générique de parse
+# Format attendu : [["123..."]...]
 # N'accepte pas les char autre :
 # - 0-9
 # - \n
@@ -45,7 +45,7 @@ def Parse(Tb):
         raise ParserError("Le fichier d'input n'est pas correct !!")
     return out
 
-# Première version du parser file to grille
+# Parser un fichier (file_name) en grille
 def file_to_grille(file_name):
     fName=""
     # Verification de l'existance du fichier en admettant le plus de possibilité possible
