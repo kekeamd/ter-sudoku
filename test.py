@@ -2,7 +2,7 @@
 # Il est en work in progress pour le module parser.py
 # Veuillez mettre seulement des fonction test à l'intérieur !
 
-from genererGrille import GrilleGen,GrilleGenCompleted,solver
+from genererGrille import GrilleGen,GrilleGenCompleted,solver,comptePoss
 from grilleUtils import *
 from parser import *
 from interfaceConsole import main
@@ -27,7 +27,7 @@ def testErrorParseToFile():
     print_grille(G)
     print("Grille générer dans :")
     print(grille_to_file(G,"test_Grille"))
-
+ 
 def testFileToGrilleValid():
     clean()
     print("Generation d'une grille complète :")
@@ -69,6 +69,7 @@ def testFileToFrilleIncorrectData():
         print("Test annulé !")
         clean()
 
+# Test de la fonction clone (parser)
 def testCopy():
     # Ligne qui permet de générer la grille avec des trous
     G = GrilleGen(71)
@@ -88,5 +89,22 @@ def testCopy():
     print('\n')
     print("Grille de base")
     print_grille(G)
+
+# Fonction de test du compteur de possiblité
+def testcpt():
+    # Nombre de trous dans la grille
+    G=GrilleGen(40)
+    print_grille(G)
+    tmp=comptePoss(G)
+    print("====================")
+    print("On a",tmp,"solution existante !!")
+    print("====================")
+    print("\nPas de changement")
+    print_grille(G)
+    print("\nUne résolution")
+    tmp=1
+    while(not(solver(G))):
+        tmp+=1
+    print("<!> ===",tmp,"essaies avant de faire la résolution === <!>")
+    print_grille(G)
     
-testCopy()

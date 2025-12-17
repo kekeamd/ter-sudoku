@@ -52,7 +52,7 @@ def solver(grille):
         return True # Résolu
     row, column = vide
     for _ in range(9):
-        val = randint(1, 9)
+        val = randint(1, 9) # Le problème vient probablement d'ici, si on fait 9 randint entre 1 et 9 on risque de ne pas couvrir certaines valeurs
         if is_valid(grille, row, column, val):
             grille[row][column] = val
             if solver(grille):
@@ -60,6 +60,21 @@ def solver(grille):
             grille[row][column] = 0 # backtrack
     return False
 
+# Fonction qui compte le nombre de possibilité de résolution pour grille
+def comptePoss(grille):
+    vide=find_empty_cell(grille)
+    if not vide:
+        return 1
+    r,c=vide
+    sum=0
+    for i in range (1,10):
+        if is_valid(grille, r, c, i):
+            G=clone(grille)
+            G[r][c] = i
+            tmp=comptePoss(G)
+            if tmp>0:
+                sum=sum+tmp
+    return sum
 
 def categorie_dificulte(nb_backtracks):
     if nb_backtracks < 250:
