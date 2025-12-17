@@ -99,14 +99,14 @@ if __name__ == "__main__":
     print("Grille vide :")
     p.clean()
     grille = grille_vide()
-    print_grille(grille)
+    print_grille(grille, JustToShow=True)
     p.grille_to_file(grille,"Generated_grille_empty")
     
     stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
 
     if solve(grille):
         print("\nGrille résolue :")
-        print_grille(grille)
+        print_grille(grille, JustToShow=True)
 
         print("\n--- Statistiques ---")
         print("Une solution trouvée")
@@ -136,5 +136,5 @@ if __name__ == "__main__":
     else:  # God Mode
         nb_retraites = 70
     grille_pour_resoudre = retirer_valeurs(grille, nb_retraites)
-    print_grille(grille_pour_resoudre)
+    print_grille(grille_pour_resoudre, JustToShow=True)
     p.grille_to_file(grille,"Generated_grille_uncompleted")
