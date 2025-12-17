@@ -1,2 +1,5 @@
 sudoku_parser_out/
 __pycache__
+rapport/Rapport_Sprint1.*
+!rapport/Rapport_Sprint1.tex
+!rapport/Rapport_Sprint1.pdf
