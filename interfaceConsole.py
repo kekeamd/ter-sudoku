@@ -47,11 +47,16 @@ def grille_resolue():
         p.grille_to_file(grille, "Generated_grille_completed")
         return grille
 
-completedGrille = grille_resolue()
+#completedGrille = grille_resolue()
 
 def jouer_sudoku():
     difficulte = demander_difficulte()
 
+    completedGrille = grille_resolue()
+    if completedGrille is None:
+        print("Erreur lors de la génération de la grille complète.")
+        return
+    
     print("\nGrille prête à résoudre:")
     # Retirer des valeurs selon la difficulte
     if difficulte == "Facile":
@@ -70,14 +75,14 @@ def jouer_sudoku():
     print_grille(grille_pour_resoudre)
     p.grille_to_file(grille_pour_resoudre,"Generated_grille_uncompleted")
 
-    boucle_de_jeu(grille_pour_resoudre)
+    boucle_de_jeu(grille_pour_resoudre, completedGrille)
 
 
-def boucle_de_jeu(grille):
+def boucle_de_jeu(grille, solution):
     finish=False
     while True:
         if finish:
-            print("Veuillez appuyer sur une trouche")
+            print("Veuillez appuyer sur une touche pour quitter.")
         else:
             print("\nActions disponibles: ")
             print("1. Entrer un valeur")
@@ -89,10 +94,11 @@ def boucle_de_jeu(grille):
             choix='3'
 
         if choix == '1':
-            joeur_coup(grille)
+            joeur_coup(grille, solution)
         elif choix == '2':
             print("\nLa grille résolue automatiquement:")
-            print_grille(completedGrille)
+            print_grille(solution)
+            print("\nLE JEU EST TERMINÉ!")
             finish=True
         elif choix == '3':
             break
@@ -100,7 +106,7 @@ def boucle_de_jeu(grille):
             print("Choix invalide, veuillez réessayer.")
 
 
-def joeur_coup(grille):
+def joeur_coup(grille, solution):
     try:
         row = int(input("Ligne (1-9): ")) -1
         col = int(input("Colonne (1-9): ")) -1
@@ -118,7 +124,7 @@ def joeur_coup(grille):
         return
     if is_valid(grille, row, col, val):
         grille[row][col] = val
-        if grille[row][col] == completedGrille[row][col]: # je compares avec la grille complète
+        if grille[row][col] == solution[row][col]: # je compares avec la grille complète
             print("\nValeur insérée avec succès.")
             print_grille(grille)
         else:
@@ -129,5 +135,3 @@ def joeur_coup(grille):
 
 if __name__ == "__main__":
     main()
-
-    
