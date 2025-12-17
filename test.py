@@ -5,6 +5,7 @@
 from genererGrille import GrilleGen,GrilleGenCompleted
 from grilleUtils import *
 from parser import *
+from interfaceConsole import main
 
 
 def testValidParseToFile():
@@ -60,9 +61,12 @@ def testFileToFrilleIncorrectData():
             G1=file_to_grille("test_Grille")
         except ParserError as err:
             print("Une erreur est survene, arrêt du programme !")
-            print("Error NAME :",err)
+            print("Error :",err)
             exit()
+        print(G1)
         print_grille(G1)
     else:
         print("Test annulé !")
         clean()
+
+testFileToFrilleIncorrectData()

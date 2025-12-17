@@ -1,9 +1,12 @@
+# Note : Architechture à retravailler !!
+
 import shutil
 import os
+from dependances.parser_requirement import *
 
-class ParserError(Exception):
-    print(Exception)
 
+# Transforme la grille prise en entrée (grille) en fichier qui aura le nom "file_name"
+# localisation du fichier ./sudoku_parser_out
 def grille_to_file(grille,file_name):
     size=len(grille)
     for i in range (len(grille)):
@@ -25,9 +28,28 @@ def clean():
     os.makedirs("./sudoku_parser_out")
 
 
+# Fonction Générique de parse
+# N'accepte pas les char autre :
+# - 0-9
+# - \n
+def Parse(Tb):
+    type=verifTypeInput(Tb)
+    out=[]
+    if type==1:
+        out=parseToRBF(Tb)
+    elif type==2 or type==5:
+        out=parseLine(Tb)
+    elif type==3 or type==4 or type==6:
+        out=parseToR(Tb)
+    else:
+        raise ParserError("Le fichier d'input n'est pas correct !!")
+    return out
+
 # Première version du parser file to grille
 def file_to_grille(file_name):
     fName=""
+    # Verification de l'existance du fichier en admettant le plus de possibilité possible
+    # Afin de rendre l'utilisation plus simple
     if os.path.isfile("./sudoku_parser_out/"+file_name+".txt"):
         fName="./sudoku_parser_out/"+file_name+".txt"
     elif os.path.isfile("./sudoku_parser_out/"+file_name):
@@ -40,18 +62,8 @@ def file_to_grille(file_name):
         fName="./"+file_name
     else:
         raise ParserError("Fichier inexistant !!")
+    # Ouverture du fichier et récupération du contenu
     File=open(fName)
     f=File.readlines()
     File.close()
-    out=[]
-    for r in range(len(f)):
-        out.append([])
-        for c in range(len(f[r])):
-            if f[r][c]!='\n':
-                out[r].append(int(f[r][c]))
-    size=len(out)
-    for i in range(len(out)):
-        if len(out[i])!=size:
-            print("Size :",size,"Current size :",len(out[i]),"Line number :",i+1)
-            raise ParserError("DataIncompatible")
-    return out
+    return Parse(f)
