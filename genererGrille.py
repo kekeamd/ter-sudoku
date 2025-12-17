@@ -26,7 +26,7 @@ def is_valid(grille,row, column, val):
             if grille[i][j] == val:
                 return False
     return True
-
+#stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
 def solve(grille):
     stats['appelsRecursifs'] += 1 # j'utilise un dictionnaire pour stocker les statistiques
     vide = find_empty_cell(grille)
