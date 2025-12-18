@@ -2,7 +2,7 @@
 # Il est en work in progress pour le module parser.py
 # Veuillez mettre seulement des fonction test à l'intérieur !
 
-from genererGrille import GrilleGen,GrilleGenCompleted
+from genererGrille import GrilleGen,GrilleGenCompleted,solver
 from grilleUtils import *
 from parser import *
 from interfaceConsole import main
@@ -69,4 +69,21 @@ def testFileToFrilleIncorrectData():
         print("Test annulé !")
         clean()
 
-testFileToFrilleIncorrectData()
+G = grille_vide()
+for i in range (9):
+    G[0][i]=i+1
+
+print_grille(G)
+
+grille_to_file(G,"test_Grille")
+
+G1 = file_to_grille("test_Grille")
+G2 = file_to_grille("test_Grille")
+print("====================")
+solver(G1)
+solver(G2)
+print_grille(G1)
+print("====================")
+print_grille(G2)
+print("====================")
+print_grille(G)

@@ -1,7 +1,7 @@
 import shutil
 import os
 from dependances.parser_requirement import *
-
+from random import randint
 
 # Transforme la grille prise en entrée (grille) en fichier qui aura le nom "file_name"
 # localisation du fichier ./sudoku_parser_out

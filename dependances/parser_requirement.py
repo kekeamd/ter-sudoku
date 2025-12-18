@@ -34,7 +34,7 @@ def parseLine(T):
                 out.append([])
                 j+=1
             if len(T[0])>i and T[0][i]!='\n':
-                out[j].append(T[0][i])
+                out[j].append(int(T[0][i]))
             else:
                 out[j].append(0)
     else:
@@ -52,7 +52,7 @@ def parseToR(T):
             out.append([])
             for j in range (9):
                 if len(T)>i and len(T[i])>j and T[i][j]!='\n':
-                    out[i].append(T[i][j])
+                    out[i].append(int(T[i][j]))
                 else:
                     out[i].append(0)
     else:
