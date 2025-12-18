@@ -33,8 +33,9 @@ def solve(grille):
     if not vide:
         return True # Résolu
     row, column = vide
-    for _ in range(9):
-        val = randint(1, 9)
+    nums = [i for i in range(1, 10)]
+    shuffle(nums)
+    for val in nums: 
         stats['testsEffectues'] += 1
         if is_valid(grille, row, column, val):
             grille[row][column] = val
@@ -63,31 +64,37 @@ def solver(grille):
     return False
 
 # Fonction qui compte le nombre de possibilité de résolution pour grille
-def comptePoss(grille):
-    vide=find_empty_cell(grille)
+def comptePoss_limite(grille, limite=2):
+    vide = find_empty_cell(grille)
     if not vide:
-        return 1
-    r,c=vide
-    sum=0
-    for i in range (1,10):
-        if is_valid(grille, r, c, i):
-            G=clone(grille)
-            G[r][c] = i
-            tmp=comptePoss(G)
-            if tmp>0:
-                sum=sum+tmp
-    return sum
+        return 1 #solution trouvée
+
+    r, c = vide
+    total = 0
+
+    for val in range(1, 10):
+        if is_valid(grille, r, c, val):
+            grille[r][c] = val
+            total += comptePoss_limite(grille, limite)
+            grille[r][c] = 0  # backtrack encore :(
+
+            # si on a deja atteint la limite, on s'arrête
+            if total >= limite:
+                return total
+
+    return total
+
 
 def categorie_dificulte(nb_backtracks):
-    if nb_backtracks < 250:
+    if nb_backtracks < 150:
         return "Facile"
-    elif nb_backtracks < 1000:
+    elif nb_backtracks < 350:
         return "Moyen"
-    elif nb_backtracks < 5000:
+    elif nb_backtracks < 1000:
         return "Difficile"
-    elif nb_backtracks < 20000:
+    elif nb_backtracks < 5000:
         return "Extrême"
-    elif nb_backtracks < 100000:
+    else:
         return "God Mode"
 
 def retirer_valeurs(grille, nb_retraites):
@@ -119,39 +126,50 @@ if __name__ == "__main__":
     print_grille(grille)
     p.grille_to_file(grille,"Generated_grille_empty")
     
+    solution = GrilleGenCompleted()
+    print("\nGrille résolue :")
+    print_grille(solution)
+    p.grille_to_file(solution, "Generated_grille_completed")
+
+    nb_retraites = 45  # Nombre de valeurs à retirer pour créer une grille à résoudre
+    grille_a_resoudre = retirer_valeurs(clone(solution), nb_retraites)
+    print("\nGrille à résoudre:")
+    print_grille(grille_a_resoudre)
+    p.grille_to_file(grille_a_resoudre,"Generated_grille_uncompleted")
+
     stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
 
-    if solve(grille):
-        print("\nGrille résolue :")
-        print_grille(grille)
+    grille_a_resoudre_Copie = clone(grille_a_resoudre)
 
+    if solve(grille_a_resoudre_Copie):
         print("\n--- Statistiques ---")
-        print(f"Nombre de solutions trouvées : {comptePoss(grille)}")
+        nb_solutions = comptePoss_limite(grille_a_resoudre, 2)  # pour compter les solutions
+        print(f"Nombre de solutions trouvées : {nb_solutions}")  # mieux : sur le puzzle
+        if nb_solutions == 1:
+            print("La grille a une solution unique.")
+        else:
+            print("La grille a plusieurs solutions.")
         difficulte = categorie_dificulte(stats['nbBacktracks'])
         print(f"Difficulté de la grille : {difficulte}")
         print(f"Nombre d'appels récursifs : {stats['appelsRecursifs']}")
         print(f"Nombre de tests effectués : {stats['testsEffectues']}")
         print(f"Nombre de backtracks : {stats['nbBacktracks']}")
-        print("\n---- Complexité ----")
-        print("- k est le nombre des cases vides")
-        print("- chaque case aurait jusqu’à 9 possibilités")
-        print("Alors la complexité est O(9^k) dans le pire des cas.")
+        print("La complexité est O(9^k) dans le pire des cas.")
     else:
-        print("Aucune solution trouvée.")
-    p.grille_to_file(grille,"Generated_grille_completed")
+        print("Erreur : La grille généré n'a pas de solution !")
 
-    print("\nGrille avec des valeurs retirées:")
+    
     # Retirer des valeurs selon la difficulte
-    if difficulte == "Facile":
-        nb_retraites = 40
-    elif difficulte == "Moyen":
-        nb_retraites = 50
-    elif difficulte == "Difficile":
-        nb_retraites = 60
-    elif difficulte == "Extrême":
-        nb_retraites = 65
-    else:  # God Mode
-        nb_retraites = 70
-    grille_pour_resoudre = retirer_valeurs(grille, nb_retraites)
-    print_grille(grille_pour_resoudre)
-    p.grille_to_file(grille,"Generated_grille_uncompleted")
+    #if difficulte == "Facile":
+    #    nb_retraites = 40
+    #elif difficulte == "Moyen":
+    #    nb_retraites = 50
+    #elif difficulte == "Difficile":
+    #    nb_retraites = 60
+    #elif difficulte == "Extrême":
+    #    nb_retraites = 65
+    #elif difficulte == "God Mode":
+    #    nb_retraites = 70
+    #grille_pour_resoudre = retirer_valeurs(grille, nb_retraites)
+    #print_grille(grille_pour_resoudre)
+    #p.grille_to_file(grille,"Generated_grille_uncompleted")
