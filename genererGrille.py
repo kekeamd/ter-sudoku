@@ -8,24 +8,10 @@
 from random import randint, shuffle
 import parser as p
 from grilleUtils import *
+from solveUtils import *
 
-
-def is_valid(grille,row, column, val):
-    # Vérifier la ligne
-    if val in grille[row]:
-        return False
-    # Vérifier la colonne
-    for i in range(9):
-        if grille[i][column] == val:
-            return False
-    # Vérifier le carré 3x3
-    start_row = (row // 3) * 3 # premier indice du carré (row)
-    start_col = (column // 3) * 3 # premier indice du carré (column)
-    for i in range(start_row, start_row + 3):
-        for j in range(start_col, start_col + 3):
-            if grille[i][j] == val:
-                return False
-    return True
+# Fonction A SUPPRIMER
+# Remplacer par solveStats (fichier solveUtils)
 #stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
 def solve(grille):
     stats['appelsRecursifs'] += 1 # j'utilise un dictionnaire pour stocker les statistiques
@@ -33,8 +19,9 @@ def solve(grille):
     if not vide:
         return True # Résolu
     row, column = vide
-    for _ in range(9):
-        val = randint(1, 9)
+    nums = [i for i in range(1, 10)]
+    shuffle(nums)
+    for val in nums:
         stats['testsEffectues'] += 1
         if is_valid(grille, row, column, val):
             grille[row][column] = val
@@ -45,38 +32,6 @@ def solve(grille):
     return False
 
 
-# Fonction pour solve sans stats
-def solver(grille):
-    vide = find_empty_cell(grille)
-    if not vide:
-        return True # Résolu
-    row, column = vide
-    
-    nums = [i for i in range(1, 10)]
-    shuffle(nums)
-    for val in nums:  
-      if is_valid(grille, row, column, val):
-            grille[row][column] = val
-            if solver(grille):
-                return True
-            grille[row][column] = 0 # backtrack
-    return False
-
-# Fonction qui compte le nombre de possibilité de résolution pour grille
-def comptePoss(grille):
-    vide=find_empty_cell(grille)
-    if not vide:
-        return 1
-    r,c=vide
-    sum=0
-    for i in range (1,10):
-        if is_valid(grille, r, c, i):
-            G=clone(grille)
-            G[r][c] = i
-            tmp=comptePoss(G)
-            if tmp>0:
-                sum=sum+tmp
-    return sum
 
 def categorie_dificulte(nb_backtracks):
     if nb_backtracks < 250:
@@ -138,7 +93,23 @@ if __name__ == "__main__":
         print("Alors la complexité est O(9^k) dans le pire des cas.")
     else:
         print("Aucune solution trouvée.")
+    G=grille_vide()
+    stats=solveStats(G)
+    print("\nGrille résolue BIS :")
+    print_grille(G)
+    print("\n--- Statistiques BIS ---")
+    print(f"Nombre de solutions trouvées : {comptePoss(G)}")
+    difficulte = categorie_dificulte(stats['nbBacktracks'])
+    print(f"Difficulté de la grille : {difficulte}")
+    print(f"Nombre d'appels récursifs : {stats['appelsRecursifs']}")
+    print(f"Nombre de tests effectués : {stats['testsEffectues']}")
+    print(f"Nombre de backtracks : {stats['nbBacktracks']}")
+    print("\n---- Complexité ----")
+    print("- k est le nombre des cases vides")
+    print("- chaque case aurait jusqu’à 9 possibilités")
+    print("Alors la complexité est O(9^k) dans le pire des cas.")
     p.grille_to_file(grille,"Generated_grille_completed")
+    p.grille_to_file(grille,"Generated_grille_completedBIS")
 
     print("\nGrille avec des valeurs retirées:")
     # Retirer des valeurs selon la difficulte

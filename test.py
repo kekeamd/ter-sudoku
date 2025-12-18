@@ -6,7 +6,7 @@ from genererGrille import GrilleGen,GrilleGenCompleted,solver,comptePoss
 from grilleUtils import *
 from parser import *
 from interfaceConsole import main
-
+from solveUtils import *
 
 def testValidParseToFile():
     clean()
@@ -107,3 +107,43 @@ def testcpt():
         tmp+=1
     print("<!> ===",tmp,"essaies avant de faire la résolution === <!>")
     print_grille(G)
+
+
+def testHisto2Grille():
+    ajoutHistorique([[1, 4, 3, 2, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9]])
+    ajoutHistorique([[1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9], [1, 2, 3, 4, 5, 6, 7, 8, 9]])
+    navigationHistorique()
+
+def testStatsGrilleGenere():
+    G=GrilleGen(50)
+    print_grille(G)
+    stats=solveStats(G)
+    print("\n--- Statistiques ---")
+    print(f"Nombre de solutions trouvées : {comptePoss(G)}")
+    print(f"Nombre d'appels récursifs : {stats['appelsRecursifs']}")
+    print(f"Nombre de tests effectués : {stats['testsEffectues']}")
+    print(f"Nombre de backtracks : {stats['nbBacktracks']}")
+    print("\n---- Complexité ----")
+    print("- k est le nombre des cases vides")
+    print("- chaque case aurait jusqu’à 9 possibilités")
+    print("Alors la complexité est O(9^k) dans le pire des cas.")
+    print("\n---- Résolu ----")
+    print_grille(G)
+
+def testStatsNewGrille():
+    G=grille_vide()
+    print_grille(G)
+    stats=solveStats(G)
+    print("\n--- Statistiques ---")
+    print(f"Nombre de solutions trouvées : {comptePoss(G)}")
+    print(f"Nombre d'appels récursifs : {stats['appelsRecursifs']}")
+    print(f"Nombre de tests effectués : {stats['testsEffectues']}")
+    print(f"Nombre de backtracks : {stats['nbBacktracks']}")
+    print("\n---- Complexité ----")
+    print("- k est le nombre des cases vides")
+    print("- chaque case aurait jusqu’à 9 possibilités")
+    print("Alors la complexité est O(9^k) dans le pire des cas.")
+    print("\n---- Résolu ----")
+    print_grille(G)
+
+testStatsNewGrille()
