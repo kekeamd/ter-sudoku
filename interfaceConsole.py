@@ -64,11 +64,11 @@ def jouer_sudoku():
     elif difficulte == "Moyen":
         nb_retraites = 50
     elif difficulte == "Difficile":
-        nb_retraites = 60
+        nb_retraites = 55
     elif difficulte == "Extrême":
-        nb_retraites = 65
+        nb_retraites = 60
     elif difficulte == "God Mode":
-        nb_retraites = 70
+        nb_retraites = 67
     
     grille_copie = [row[:] for row in completedGrille] # copie pour ne pas modifier la grille complète
     grille_pour_resoudre = retirer_valeurs(grille_copie, nb_retraites)
@@ -82,7 +82,7 @@ def boucle_de_jeu(grille, solution):
     finish=False
     while True:
         if finish:
-            print("Veuillez appuyer sur une touche pour quitter.")
+            print("\nVeuillez appuyer sur une touche pour quitter.")
         else:
             print("\nActions disponibles: ")
             print("1. Entrer un valeur")
@@ -103,7 +103,7 @@ def boucle_de_jeu(grille, solution):
         elif choix == '3':
             break
         else:
-            print("Choix invalide, veuillez réessayer.")
+            print("\nChoix invalide, veuillez réessayer.")
 
 
 def joeur_coup(grille, solution):
