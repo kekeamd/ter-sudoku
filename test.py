@@ -2,11 +2,7 @@
 # Il est en work in progress pour le module parser.py
 # Veuillez mettre seulement des fonction test à l'intérieur !
 
-<<<<<<< HEAD
-from genererGrille import GrilleGen,GrilleGenCompleted,solver
-=======
 from genererGrille import GrilleGen,GrilleGenCompleted,solver,comptePoss
->>>>>>> 04f7e796eeee121e5639e08b0e8419542a447d58
 from grilleUtils import *
 from parser import *
 from interfaceConsole import main
