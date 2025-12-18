@@ -2,7 +2,7 @@
 # Il est en work in progress pour le module parser.py
 # Veuillez mettre seulement des fonction test à l'intérieur !
 
-from genererGrille import GrilleGen,GrilleGenCompleted,solver,comptePoss
+from genererGrille import GrilleGen,GrilleGenCompleted,solver,comptePoss_limite
 from grilleUtils import *
 from parser import *
 from interfaceConsole import main
@@ -146,4 +146,8 @@ def testStatsNewGrille():
     print("\n---- Résolu ----")
     print_grille(G)
 
-testStatsNewGrille()
+def testCompcptsol():
+    limit=50
+    G=GrilleGen(50)
+    print("nbSol par Compte Sol :",comptePoss(clone(G)))
+    print("nbSol par Compte Sol limited :",comptePoss_limite(clone(G),limit))
