@@ -8,5 +8,4 @@
 
 ## Encadrants :
 - Hartley Marc
-- 
 

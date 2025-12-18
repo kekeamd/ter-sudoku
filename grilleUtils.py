@@ -83,6 +83,14 @@ def find_empty_cell(grille):
                 return row, col
     return None
 
+# Fonction qui prends en entrée une grille et sort la copie de cette grille (deepCopy, évite les problème de copies de pointeurs)
+def clone(G):
+    out=[]
+    for i in range (len(G)):
+        out.append([])
+        for j in range (len(G[i])):
+            out[i].append(G[i][j])
+    return out
 
 #Tests print_grille
 

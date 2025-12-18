@@ -5,7 +5,7 @@
 # par exemple si la difficulte est facile on peut retirer moins de valeurs etc.
 
 
-from random import randint
+from random import randint, shuffle
 import parser as p
 from grilleUtils import *
 
@@ -51,15 +51,32 @@ def solver(grille):
     if not vide:
         return True # Résolu
     row, column = vide
-    for _ in range(9):
-        val = randint(1, 9)
-        if is_valid(grille, row, column, val):
+    
+    nums = [i for i in range(1, 10)]
+    shuffle(nums)
+    for val in nums:  
+      if is_valid(grille, row, column, val):
             grille[row][column] = val
             if solver(grille):
                 return True
             grille[row][column] = 0 # backtrack
     return False
 
+# Fonction qui compte le nombre de possibilité de résolution pour grille
+def comptePoss(grille):
+    vide=find_empty_cell(grille)
+    if not vide:
+        return 1
+    r,c=vide
+    sum=0
+    for i in range (1,10):
+        if is_valid(grille, r, c, i):
+            G=clone(grille)
+            G[r][c] = i
+            tmp=comptePoss(G)
+            if tmp>0:
+                sum=sum+tmp
+    return sum
 
 def categorie_dificulte(nb_backtracks):
     if nb_backtracks < 250:
@@ -109,7 +126,7 @@ if __name__ == "__main__":
         print_grille(grille)
 
         print("\n--- Statistiques ---")
-        print("Une solution trouvée")
+        print(f"Nombre de solutions trouvées : {comptePoss(grille)}")
         difficulte = categorie_dificulte(stats['nbBacktracks'])
         print(f"Difficulté de la grille : {difficulte}")
         print(f"Nombre d'appels récursifs : {stats['appelsRecursifs']}")
