@@ -69,13 +69,13 @@ Cette rencontre nous a permis d’éclaircir tous les points essentiels du proje
 % ===== 2. Cahier des charges =====
 \section*{2. Cahier des charges}
 \subsection*{Description du sujet et des objectifs}
-Le projet consiste à créer un générateur de grilles de Sudoku capable de produire des grilles valides avec une solution unique. 
-Le but est aussi de pouvoir estimer et contrôler la difficulté des grilles, en s’appuyant aussi bien sur des méthodes de résolution 
-humaines que sur un solveur informatique. L’objectif global est donc de mettre en place un système qui génère des grilles, mesure leur 
-difficulté et permet de les visualiser et de les tester facilement.
+Le projet consiste à créer un générateur de grilles de Sudoku capable de produire des grilles valides, avec une solution unique.
+Il vise également à estimer et contrôler la difficulté de ces grilles, en s’appuyant sur des méthodes de résolution automatiques (non nécessairement humaines pour ce sprint) via un solveur informatique.
+En complément, une interface de jeu en console, bien structurée qui permet de jouer directement sur les grilles générées et de tester les différentes fonctionnalités. 
+L’objectif global est donc de disposer d’un outil qui génère des grilles, en évalue la difficulté et offre un environnement pratique pour les visualiser et les manipuler.
 
 \subsection*{Périmètre retenu pour le projet}
-Le projet se concentre sur la génération de grilles de Sudoku complètes puis incomplètes, leur résolution et l’évaluation de leur difficulté. Nous incluons la mise en place d’un solveur, d’un générateur et de quelques techniques de résolution humaine pour mesurer la complexité.
+Le projet se concentre sur la génération de grilles de Sudoku complètes puis incomplètes, leur résolution et l’évaluation de leur difficulté. Nous incluons la mise en place d’un solveur, d’un générateur et de quelques techniques de résolution pour mesurer la complexité.
 En revanche, nous ne prévoyons pas de développer une interface utilisateur avancée ni un jeu complet pour le Sprint 1 : seule une interface minimale de test sera réalisée.
 
 \subsection*{Fonctionnalités principales (MVP)}
@@ -90,11 +90,11 @@ En revanche, nous ne prévoyons pas de développer une interface utilisateur ava
 
 \subsection*{Contraintes techniques et choix de technologies}
 \begin{itemize}
-  \item \textbf{Langage et outils :} le projet sera développé principalement en Python (pour la génération, le solveur et les techniques de résolution).
-  \item \textbf{Bibliothèques utilisées :} utilisation possible de modules standards (random, parser) et d’outils de visualisation simples pour l’interface de test.
-  \item \textbf{Contraintes de performance :} le générateur et le solveur doivent rester suffisamment rapides pour tester plusieurs grilles sans temps d’attente excessif.
+  \item \textbf{Langage et outils :} le projet sera développé principalement en Python (pour la génération, le solveur, l'interface et les techniques de résolution).
+  \item \textbf{Bibliothèques utilisées :} utilisation possible de modules standards (random, os) et d’outils de visualisation simples pour l’interface de test.
+  \item \textbf{Contraintes de performance :} le générateur et le solveur doivent rester suffisamment rapides pour tester des grilles sans temps d’attente excessif.
   \item \textbf{Portabilité :} le code doit fonctionner sur les environnements Linux de l’université ainsi que sur les machines personnelles des membres du groupe.
-  \item \textbf{Tests et validation :} mise en place de tests réguliers pour garantir que les grilles générées sont valides et qu’elles possèdent une solution unique.
+  \item \textbf{Tests et validation :} mise en place de tests réguliers pour garantir que les grilles générées sont valides et qu’elles possèdent une solution unique ou plusieurs.
   \item \textbf{Organisation du dépôt Git :} adoption d’un workflow simple (branche principale + branches de développement), conventions de nommage et commits fréquents.
 \end{itemize}
 
@@ -121,11 +121,10 @@ En revanche, nous ne prévoyons pas de développer une interface utilisateur ava
 Affichage de la structure globale du projet, avec les statistiques et la complexité. A la fin  on obtient un grille de Sudoku valide et prêt pour être résolu avec une solution unique.
 \begin{figure}[H]
   \centering
-  \includegraphics[width=.3\textwidth]{Terminal1.jpeg}
+  \includegraphics[width=.3\textwidth]{debut.jpeg}
   \caption{Schéma de l'architecture pour le debut du projet}
 \end{figure}
 
-\vspace{4em}
 
 \textbf{Interface Console:}\\[0.5em]
 
@@ -147,7 +146,7 @@ Affichage de la structure globale du projet, avec les statistiques et la complex
   \hfill
   \begin{subfigure}{.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{caseRemplit.jpeg}
+    \includegraphics[width=\linewidth]{caseRempli.jpeg}
     \caption{Message indiquant que la case sélectionnée est déjà remplie}
   \end{subfigure}
 \end{figure}
@@ -240,13 +239,16 @@ Analyses:
 
 % ===== 6. Prototype réalisé =====
 \section*{6. Prototype réalisé}
+
 \subsection*{Description de ce qui a été testé / mis en place (même minimal)}
-\emph{À compléter :} démo du plus petit incrément fonctionnel.
+
+Pour ce premier sprint, un prototype fonctionnel a été mis en place, comprenant la génération de grilles valides, l’affichage interactif en console et l’intégration d’un solveur automatique. L’interface console permet déjà de jouer : insertion de valeurs, détection d’erreurs, gestion des cases remplies et affichage clair de la grille.  
+Les tests réalisés ont confirmé que la génération produit une grille cohérente, que les contrôles de validité fonctionnent correctement et que le solveur est capable de compléter la grille, même si ses méthodes ne sont pas encore basées sur des stratégies humaines.
 
 \subsection*{Justification des choix initiaux}
 \begin{itemize}
-  \item \emph{À compléter :} Choix d’algorithmes / structures de données.
-  \item \emph{À compléter :} Compromis (simplicité vs performance).
+  \item Les structures de données utilisées (matrices Python) et les algorithmes de résolution choisis (principalement backtracking) offrent une implémentation simple, fiable et suffisante pour valider rapidement les fonctionnalités essentielles.
+  \item Les compromis ont privilégié la simplicité et la rapidité de développement : une interface console a été retenue pour faciliter les tests, et le solveur repose pour l’instant sur des méthodes automatiques plutôt que sur une modélisation complète des techniques humaines.
 \end{itemize}
 
 \end{document}
