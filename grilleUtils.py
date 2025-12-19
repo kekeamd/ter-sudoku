@@ -97,7 +97,7 @@ def clone(G):
 
 
 # Fonction qui affiche sous forme de graphe les différentes stats
-# Prends en entrée un tableau de :
+# Prends en entrée un tableau s de :
 # stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
 # dis(False par défaut) : 
 # Si True -> Affiche toutes les données dans des graphes séparés
@@ -139,7 +139,6 @@ def afficheStats(s,dis=False):
         plt.show()
     else:
         # Affichage du graphe avec toutes les datas !
-        title="Nombre de calculs selon le nombre de cases vide(",len(s),")"
         plt.title(f"Nombre de calculs selon le nombre de cases vide({len(s)})")
         plt.plot(index,AR, label="Nombre d'appels récursifs", color="red")
         plt.plot(index,TE, label="Nombre de tests", color="blue")
