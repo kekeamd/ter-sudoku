@@ -79,3 +79,39 @@ def comptePoss(grille):
             if tmp>0:
                 sum=sum+tmp
     return sum
+
+# Fonction qui retirer n valeurs de la grille "grille"
+# Pas de vérification d'unicité de résolution !
+def retirer_valeurs(grille, nb_retraites):
+    count = 0
+    while count < nb_retraites:
+        row = randint(0, 8)
+        col = randint(0, 8)
+        if grille[row][col] != 0:
+            grille[row][col] = 0
+            count += 1
+    return grille
+
+# Fonction qui compte le nombre de possibilité de résolution pour grille
+# Ce compte n'est pas exact car il est limité
+# Il est donc optimisé afin de faire moins de calculs
+def comptePoss_limite(grille, limite=2):
+    vide = find_empty_cell(grille)
+    if not vide:
+        return 1 #solution trouvée
+
+    r, c = vide
+    total = 0
+
+    for val in range(1, 10):
+        if is_valid(grille, r, c, val):
+            grille[r][c] = val
+            total += comptePoss_limite(grille, limite)
+            grille[r][c] = 0  # backtrack encore :(
+
+            # si on a deja atteint la limite, on s'arrête
+            if total >= limite:
+                return total
+
+    return total
+

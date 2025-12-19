@@ -1,5 +1,6 @@
 import os
 from random import randint,shuffle
+import matplotlib.pyplot as plt
 
 def clear_console():
    os.system('cls' if os.name == 'nt' else 'clear')
@@ -95,4 +96,55 @@ def clone(G):
     return out
 
 
-
+# Fonction qui affiche sous forme de graphe les différentes stats
+# Prends en entrée un tableau de :
+# stats = {'appelsRecursifs': 0, 'testsEffectues': 0, 'nbBacktracks': 0}
+# dis(False par défaut) : 
+# Si True -> Affiche toutes les données dans des graphes séparés
+# Si False -> Affiche toutes les données dans le même graphe
+def afficheStats(s,dis=False):
+    if len(s)<1:
+        print("PAS D'AFFICHAGE DE DONNEES : Données vide !")
+        return False
+    AR = []
+    TE = []
+    NB = []
+    index = []
+    for i in range (len(s)):
+        AR.append(s[i]['appelsRecursifs'])
+        TE.append(s[i]['testsEffectues'])
+        NB.append(s[i]['nbBacktracks'])
+        index.append(i+1)
+    if len(AR) != len(TE) or len(TE) != len(NB) or len(NB) != len(index):
+        print("PAS D'AFFICHAGE DE DONNEES : Données non conforme !")
+        return False
+    if dis:
+        # Affichage des appels récursifs
+        plt.title("Nombre d'appels récursifs en fonction du nombre de cases vide")
+        plt.plot(index,AR)
+        plt.xlabel("Nombre de cases vides")
+        plt.ylabel("Nombre d'appels récursifs")
+        plt.show()
+        # Affichage du nombre de calculs
+        plt.title("Nombre de tests en fonction du nombre de cases vide")
+        plt.plot(index,TE)
+        plt.xlabel("Nombre de cases vides")
+        plt.ylabel("Nombre de tests effectuer")
+        plt.show()
+        # Affichage du nombre de backtracks
+        plt.title("Nombre de backtracks en fonction du nombre de cases vide")
+        plt.plot(index,NB)
+        plt.xlabel("Nombre de cases vides")
+        plt.ylabel("Nombre de backtracks")
+        plt.show()
+    else:
+        # Affichage du graphe avec toutes les datas !
+        title="Nombre de calculs selon le nombre de cases vide(",len(s),")"
+        plt.title(f"Nombre de calculs selon le nombre de cases vide({len(s)})")
+        plt.plot(index,AR, label="Nombre d'appels récursifs", color="red")
+        plt.plot(index,TE, label="Nombre de tests", color="blue")
+        plt.plot(index,NB, label="Backtracks", color="green")
+        plt.legend()
+        plt.show()
+    return True
+    

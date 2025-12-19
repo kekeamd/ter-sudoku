@@ -32,29 +32,6 @@ def solve(grille):
     return False
 
 
-# Fonction qui compte le nombre de possibilité de résolution pour grille
-def comptePoss_limite(grille, limite=2):
-    vide = find_empty_cell(grille)
-    if not vide:
-        return 1 #solution trouvée
-
-    r, c = vide
-    total = 0
-
-    for val in range(1, 10):
-        if is_valid(grille, r, c, val):
-            grille[r][c] = val
-            total += comptePoss_limite(grille, limite)
-            grille[r][c] = 0  # backtrack encore :(
-
-            # si on a deja atteint la limite, on s'arrête
-            if total >= limite:
-                return total
-
-    return total
-
-
-
 def categorie_dificulte(nb_backtracks):
     if nb_backtracks < 150:
         return "Facile"
@@ -66,16 +43,6 @@ def categorie_dificulte(nb_backtracks):
         return "Extrême"
     else:
         return "God Mode"
-
-def retirer_valeurs(grille, nb_retraites):
-    count = 0
-    while count < nb_retraites:
-        row = randint(0, 8)
-        col = randint(0, 8)
-        if grille[row][col] != 0:
-            grille[row][col] = 0
-            count += 1
-    return grille
 
 # Fonction qui génère une grille complète
 def GrilleGenCompleted():

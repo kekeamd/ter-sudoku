@@ -151,3 +151,22 @@ def testCompcptsol():
     G=GrilleGen(50)
     print("nbSol par Compte Sol :",comptePoss(clone(G)))
     print("nbSol par Compte Sol limited :",comptePoss_limite(clone(G),limit))
+
+# Test l'affichage des stats
+# n est le nombre de cases vide à viser
+def testAffichageStats(n):
+    myS=[]
+    G=GrilleGenCompleted()
+    for _ in range (n):
+        G=retirer_valeurs(G,1)
+        myS.append(solveStats(clone(G)))
+    print("<!> ========== DATA BRUT ========== <!>")
+    print(myS)
+    print("<!> =============================== <!>")
+    afficheStats(myS)
+
+# testAffichageStats(10)
+# testAffichageStats(20)
+# testAffichageStats(30)
+# testAffichageStats(40)
+testAffichageStats(40)
