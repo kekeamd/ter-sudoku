@@ -91,7 +91,7 @@ En revanche, nous ne prévoyons pas de développer une interface utilisateur ava
 \subsection*{Contraintes techniques et choix de technologies}
 \begin{itemize}
   \item \textbf{Langage et outils :} le projet sera développé principalement en Python (pour la génération, le solveur, l'interface et les techniques de résolution).
-  \item \textbf{Bibliothèques utilisées :} utilisation possible de modules standards (random, os) et d’outils de visualisation simples pour l’interface de test.
+  \item \textbf{Bibliothèques utilisées :} utilisation possible de modules standards (random, os, mathplotlib, shutil) et d’outils de visualisation simples pour l’interface de test.
   \item \textbf{Contraintes de performance :} le générateur et le solveur doivent rester suffisamment rapides pour tester des grilles sans temps d’attente excessif.
   \item \textbf{Portabilité :} le code doit fonctionner sur les environnements Linux de l’université ainsi que sur les machines personnelles des membres du groupe.
   \item \textbf{Tests et validation :} mise en place de tests réguliers pour garantir que les grilles générées sont valides et qu’elles possèdent une solution unique ou plusieurs.
@@ -125,6 +125,7 @@ Affichage de la structure globale du projet, avec les statistiques et la complex
   \caption{Schéma de l'architecture pour le debut du projet}
 \end{figure}
 
+\vspace{3em}
 
 \textbf{Interface Console:}\\[0.5em]
 
@@ -167,14 +168,20 @@ Affichage de la structure globale du projet, avec les statistiques et la complex
   \end{subfigure}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.5\textwidth]{figure1.jpeg}
+  \caption{Statistiques de solveur sous forme de graphe}
+\end{figure}
+
 \vspace{1em}
 
 % ===== 4. Organisation interne du groupe =====
 \section*{4. Organisation interne du groupe}
 \subsection*{Répartition des rôles}
 \begin{itemize}
-  \item \textbf{KONCHEV Martin :} Conception et implémentation des algorithmes de génération de grilles et du solveur de Sudoku (backtracking); Analyse des statistiques et de la complexité; Création de l’interface console; Rapport.
-  \item \textbf{BRIOT-AMADIUE Kellyan :} Implémentation des algorithmes de parsing des grilles de Sudoku à partir de fichiers texte; Réalisation de tests fréquents afin de valider les fonctionnalités principales du projet.
+  \item \textbf{KONCHEV Martin :} Conception et implémentation des algorithmes de génération de grilles et du solveur de Sudoku (backtracking); Analyse des statistiques et de la complexité; Compteur de solutions possibles (optimisé); Création de l’interface console; Rapport.
+  \item \textbf{BRIOT-AMADIUE Kellyan :} Implémentation des algorithmes de parsing des grilles de Sudoku à partir de fichiers texte; Réalisation de tests fréquents afin de valider les fonctionnalités principales du projet; Compteur de solutions possibles (base); Analyse des statistiques.
   \item \textbf{BARRE-GUEROT Ilan :} Débogage du programme; Gestion du déroulement step by step dans l’interface console; Préparation de l’affichage des étapes successives et mise en place de la navigation dans l’historique des grilles.
   \item \textbf{DOLO Abdourahamane-Abdoul :} Mise en place d’une version fonctionnelle du parseur de grilles; Validation des données; Réalisation de tests unitaires pour vérifier des fonctions crées.
 \end{itemize}
