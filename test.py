@@ -2,7 +2,7 @@
 # Il est en work in progress pour le module parser.py
 # Veuillez mettre seulement des fonction test à l'intérieur !
 
-from genererGrille import GrilleGen,GrilleGenCompleted,solver,comptePoss_limite
+from genererGrille import *
 from grilleUtils import *
 from parser import *
 from interfaceConsole import main
@@ -27,7 +27,7 @@ def testErrorParseToFile():
     print_grille(G)
     print("Grille générer dans :")
     print(grille_to_file(G,"test_Grille"))
- 
+
 def testFileToGrilleValid():
     clean()
     print("Generation d'une grille complète :")
@@ -72,7 +72,7 @@ def testFileToFrilleIncorrectData():
 # Test de la fonction clone (parser)
 def testCopy():
     # Ligne qui permet de générer la grille avec des trous
-    G = GrilleGen(71)
+    G = GrilleGenBase(71)
     print("Grille générer")
     print_grille(G)
     print('\n')
@@ -93,7 +93,7 @@ def testCopy():
 # Fonction de test du compteur de possiblité
 def testcpt():
     # Nombre de trous dans la grille
-    G=GrilleGen(40)
+    G=GrilleGenBase(40)
     print_grille(G)
     tmp=comptePoss(G)
     print("====================")
@@ -115,7 +115,7 @@ def testHisto2Grille():
     navigationHistorique()
 
 def testStatsGrilleGenere():
-    G=GrilleGen(50)
+    G=GrilleGenBase(50)
     print_grille(G)
     stats=solveStats(G)
     print("\n--- Statistiques ---")
@@ -148,7 +148,7 @@ def testStatsNewGrille():
 
 def testCompcptsol():
     limit=50
-    G=GrilleGen(50)
+    G=GrilleGenBase(50)
     print("nbSol par Compte Sol :",comptePoss(clone(G)))
     print("nbSol par Compte Sol limited :",comptePoss_limite(clone(G),limit))
 
@@ -165,8 +165,46 @@ def testAffichageStats(n):
     print("<!> =============================== <!>")
     afficheStats(myS)
 
-# testAffichageStats(10)
-# testAffichageStats(20)
-# testAffichageStats(30)
-# testAffichageStats(40)
-testAffichageStats(40)
+def testRetireValeur():
+    G1=retirer_valeurs(GrilleGenCompleted(),10)
+    G2=retirer_valeurs(GrilleGenCompleted(),50)
+    nbPossG1=comptePoss(G1)
+    nbPossG2=comptePoss(G2)
+    print("===============")
+    print("=== Grille1 ===")
+    print("===============")
+    print(nbPossG1,"possiblité de résolution pour G1.")
+    print_grille(G1)
+    print("===============")
+    print("===============")
+    print("=== Grille2 ===")
+    print("===============")
+    print(nbPossG2,"possibilité de résolution pour G2")
+    print_grille(G2)
+    print("===============")
+    print("Résultat suppression 1 valeur supplémentaire G1")
+    print(retirevaleur(G1))
+    print("===============")
+    print("Résultat suppression 1 valeur supplémentaire G2")
+    print(retirevaleur(G2))
+    print("===============")
+
+# Test de la fonction GrilleGen
+# n est le nombre d'élément à supprimer
+def testGrilleGen(n):
+    print("============================================================")
+    print("Test de génération d'une grille Unique à",n,"trous")
+    print("============================================================")
+    try:
+        G=GrilleGen(n)
+    except GeneratorError as e:
+        print(e)
+        print("Erreur arrivé avec ",n,"trous")
+        return None
+    print("===============")
+    print("== La Grille ==")
+    print_grille(G)
+    print("===============")
+    print("Vérification des possibilités !!")
+    print("Il y a",comptePoss(G),"solutions possible")
+    print("===============")

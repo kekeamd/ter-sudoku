@@ -28,7 +28,7 @@ def solver(grille):
     nums = [i for i in range(1, 10)]
     shuffle(nums)
     for val in nums:  
-      if is_valid(grille, row, column, val):
+        if is_valid(grille, row, column, val):
             grille[row][column] = val
             if solver(grille):
                 return True
