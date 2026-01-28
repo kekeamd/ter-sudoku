@@ -49,16 +49,8 @@ def grille_resolue():
 
 #completedGrille = grille_resolue()
 
-def jouer_sudoku():
-    difficulte = demander_difficulte()
-
-    completedGrille = grille_resolue()
-    if completedGrille is None:
-        print("Erreur lors de la génération de la grille complète.")
-        return
-    
-    print("\nGrille prête à résoudre:")
-    # Retirer des valeurs selon la difficulte
+def nbRetraits(difficulte):
+    nb_retraites = 0
     if difficulte == "Facile":
         nb_retraites = 40
     elif difficulte == "Moyen":
@@ -69,6 +61,19 @@ def jouer_sudoku():
         nb_retraites = 60
     elif difficulte == "God Mode":
         nb_retraites = 67
+    return nb_retraites
+
+def jouer_sudoku():
+    difficulte = demander_difficulte()
+
+    completedGrille = grille_resolue()
+    if completedGrille is None:
+        print("Erreur lors de la génération de la grille complète.")
+        return
+    
+    print("\nGrille prête à résoudre:")
+    # Retirer des valeurs selon la difficulte
+    nb_retraites = nbRetraits(difficulte)
     
     grille_copie = [row[:] for row in completedGrille] # copie pour ne pas modifier la grille complète
     grille_pour_resoudre = retirer_valeurs(grille_copie, nb_retraites)
