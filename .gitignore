@@ -3,3 +3,5 @@ __pycache__
 rapport/Rapport_Sprint1.*
 !rapport/Rapport_Sprint1.tex
 !rapport/Rapport_Sprint1.pdf
+.DS_*
+$*
