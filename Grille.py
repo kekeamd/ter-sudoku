@@ -14,7 +14,7 @@ class Grille(ABC):
 
     #purpose: génère des valeurs et rempli la grille
     @abstractmethod
-    def GenererContenu(self, difficulte : Difficulte) -> None:
+    def GenerateValues(self, difficulte : Difficulte) -> None:
         pass
 
 
