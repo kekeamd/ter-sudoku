@@ -1,5 +1,5 @@
-from .Interface import Interface  # import le classe parent (Interface)
-from .Difficulte import Difficulte
+from Interface import Interface  # import le classe parent (Interface)
+from Difficulte import Difficulte
 
 class InterfaceWeb(Interface): # extends Interface
     def __init__(self):

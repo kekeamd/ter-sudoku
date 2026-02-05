@@ -18,5 +18,5 @@ class Cellule:
     
     def clone(self): # -> Cellule
         newCellule=Cellule(self.value)
-        newCellule.setCandidate(self.candidate)
+        newCellule.setCandidate(self.candidate.copy())
         return newCellule

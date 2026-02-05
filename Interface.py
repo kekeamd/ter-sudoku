@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .Difficulte import Difficulte
+from Difficulte import Difficulte
 
 # ABC = Abstract Base Class
 # ABC existe pour forcer Python à se comporter comme Java avec les classes abstraites
