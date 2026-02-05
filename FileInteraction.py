@@ -54,7 +54,7 @@ class FileInteraction:
     def readFile(self,file : str) -> list[list[str]]:
         self.setFile(file)
         if os.path.isfile(self.directory+self.file):
-            print("FileInteraction : /!\ WARNING /!\ [READ] Fichier non existant")
+            print("FileInteraction : /!\\ WARNING /!\\ [READ] Fichier non existant")
             return [[""]]
         else:
             return self.read()
@@ -69,7 +69,7 @@ class FileInteraction:
         self.setFile(file)
         self.setDirectory(directory)
         if os.path.isfile(self.directory+self.file):
-            print("FileInteraction : /!\ WARNING /!\ [READ] Fichier non existant")
+            print("FileInteraction : /!\\ WARNING /!\\ [READ] Fichier non existant")
             return [[""]]
         else:
             return self.read()
