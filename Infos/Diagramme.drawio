@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.3.6 Chrome/140.0.7339.249 Electron/38.8.0 Safari/537.36" version="29.3.6">
   <diagram name="Page-1" id="kFjKeDaxaP4BYbOjzu6P">
-    <mxGraphModel dx="1426" dy="3225" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="2336" background="none" math="0" shadow="0">
+    <mxGraphModel dx="1501" dy="3272" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="2336" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -402,7 +402,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="WJ7XjnIq0UgPE5fTD137-5" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="FileInteraction" vertex="1">
-          <mxGeometry height="424" width="470" x="1065" y="1150" as="geometry" />
+          <mxGeometry height="450" width="470" x="1065" y="1150" as="geometry" />
         </mxCell>
         <mxCell id="WJ7XjnIq0UgPE5fTD137-6" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- dossier : string" vertex="1">
           <mxGeometry height="26" width="470" y="26" as="geometry" />
@@ -437,20 +437,23 @@
         <mxCell id="WJ7XjnIq0UgPE5fTD137-16" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ écrire(string contenu) : void" vertex="1">
           <mxGeometry height="26" width="470" y="268" as="geometry" />
         </mxCell>
-        <mxCell id="WJ7XjnIq0UgPE5fTD137-17" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ lire() : string" vertex="1">
+        <mxCell id="WJ7XjnIq0UgPE5fTD137-17" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ lire() : ArrayList&amp;lt;ArrayList&amp;lt;string&amp;gt;&amp;gt;" vertex="1">
           <mxGeometry height="26" width="470" y="294" as="geometry" />
         </mxCell>
         <mxCell id="WJ7XjnIq0UgPE5fTD137-18" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ écrireFichier(string contenu, string fichier) : void" vertex="1">
           <mxGeometry height="26" width="470" y="320" as="geometry" />
         </mxCell>
-        <mxCell id="WJ7XjnIq0UgPE5fTD137-19" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ lireFichier(string fichier) : string" vertex="1">
+        <mxCell id="WJ7XjnIq0UgPE5fTD137-19" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ lireFichier(string fichier) : ArrayList&amp;lt;ArrayList&amp;lt;string&amp;gt;&amp;gt;" vertex="1">
           <mxGeometry height="26" width="470" y="346" as="geometry" />
         </mxCell>
         <mxCell id="WJ7XjnIq0UgPE5fTD137-20" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ écrireFichierDossier(string contenu, string fichier, string emplacement) : void" vertex="1">
           <mxGeometry height="26" width="470" y="372" as="geometry" />
         </mxCell>
-        <mxCell id="WJ7XjnIq0UgPE5fTD137-21" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ lireFichierDossier(string fichier, string emplacement) : string" vertex="1">
+        <mxCell id="WJ7XjnIq0UgPE5fTD137-21" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ lireFichierDossier(string fichier, string emplacement) : ArrayList&amp;lt;ArrayList&amp;lt;string&amp;gt;&amp;gt;" vertex="1">
           <mxGeometry height="26" width="470" y="398" as="geometry" />
+        </mxCell>
+        <mxCell id="-y4oNBnR1FKUkJmzpFiV-2" parent="WJ7XjnIq0UgPE5fTD137-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ clearDirectory() : void" vertex="1">
+          <mxGeometry height="26" width="470" y="424" as="geometry" />
         </mxCell>
         <mxCell id="WJ7XjnIq0UgPE5fTD137-22" edge="1" parent="1" source="WJ7XjnIq0UgPE5fTD137-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="WJ7XjnIq0UgPE5fTD137-43">
           <mxGeometry relative="1" as="geometry" />
