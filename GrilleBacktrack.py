@@ -21,5 +21,5 @@ class GrilleBacktrack(Grille):
 
 
     #purpose: génère des valeurs et rempli la grille
-    def GenerateValues(self, difficulte : Difficulte) -> None:
+    def generateValues(self, difficulte : Difficulte) -> None:
         pass

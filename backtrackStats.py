@@ -5,5 +5,5 @@ class BacktrackStats(SolveBacktrack):
         super().__init__(grille)
         self.stats = {}
 
-    def SolverGrille(self, grille):
+    def solverGrille(self, grille):
         pass

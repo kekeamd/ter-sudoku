@@ -5,8 +5,8 @@ class Solver(ABC):
         self.grille = grille
 
     @abstractmethod
-    def SolveGrille(self, grille):
+    def solveGrille(self, grille):
         pass
 
-    def EstValide(self, grille, ligne, colonne, valide):
+    def isValid(self, grille, ligne, colonne, valide):
         pass

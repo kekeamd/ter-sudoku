@@ -4,14 +4,14 @@ class SolveBacktrack(Solver):
     def __init__(self, grille=None):
         super().__init__(grille)
 
-    def SolveGrille(self, grille):
+    def solveGrille(self, grille):
         pass
 
-    def UniqueSolution(self, grille):
+    def uniqueSolution(self, grille):
         pass
 
-    def ComptePossibiliteLimite(self, grille):
+    def countPossibilityLimit(self, grille):
         pass
 
-    def ComptePossibilite(self, grille):
+    def countPossibility(self, grille):
         pass

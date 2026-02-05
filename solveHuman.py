@@ -5,8 +5,8 @@ class SolveHuman(Solver):
     def __init__(self, grille=None):
         super().__init__(grille)
 
-    def SolveGrille(self, grille):
+    def solveGrille(self, grille):
         pass
 
-    def Singleton(self):
+    def singleton(self):
         pass

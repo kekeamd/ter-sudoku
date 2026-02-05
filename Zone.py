@@ -24,10 +24,10 @@ class Zone:
     def getValues(self) -> list[int]:
         return []
     
-    def containValue(self, value : int) -> bool:
+    def containsValue(self, value : int) -> bool:
         return False
     
-    def ajustCandidate(cellule : Cellule, imp : list[int]) -> None:
+    def adjustCandidates(cellule : Cellule, imp : list[int]) -> None:
         pass
     
     def clone(self):# -> Zone

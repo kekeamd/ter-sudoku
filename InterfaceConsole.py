@@ -1,8 +1,8 @@
 # self = this in java
 # __init__ = constructeur
 
-from .Interface import Interface  # import le classe parent (Interface)
-from .Difficulte import Difficulte
+from Interface import Interface  # import le classe parent (Interface)
+from Difficulte import Difficulte
 
 
 class InterfaceConsole(Interface): # extends Interface
