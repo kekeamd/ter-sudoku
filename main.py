@@ -28,7 +28,7 @@ if __name__ == "__main__":
         print("====== Bienvenue dans : ======")
         print("==== Sudoku : Serveur Web ====")
         print("==============================")
-        interface : Interface = InterfaceConsole()
+        interface : Interface = InterfaceWeb()
         answer : chr = input("Voulez-vous lancer le serveur ? (O/N) ")
         if answer == 'O':
             interface.startPlaying()
