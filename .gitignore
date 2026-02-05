@@ -6,3 +6,5 @@ rapport/Rapport_Sprint1.*
 .DS_*
 $*
 .$*
+__pycache__/
+*.pyc
