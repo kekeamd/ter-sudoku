@@ -1,4 +1,8 @@
+# Pour le bon fonctionnement du programme
 mathplotlib
 random
 os
 shutil
+
+# Pour le bon fonctionnement des tests
+pytest

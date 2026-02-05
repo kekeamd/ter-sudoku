@@ -3,18 +3,23 @@ import os
 from ParserError import ParserError
 
 class FileInteraction:
-    def __init__(self,directory : str = "../sudoku_parser_out",file : str = "file_out.txt"):
+    def __init__(self,directory : str = "./sudoku_parser_out/",file : str = "file_out.txt"):
+        self.directory=""
         self.setDirectory(directory)
-        self.file=file
+        self.file=""
+        self.setFile(file)
     
     def getDirectory(self) -> str :
         return self.directory
     
     def setDirectory(self,directory : str) -> None:
         if os.path.isdir(directory):
-            self.directory=directory
+            if directory[len(directory)-1]=='/' or directory[len(directory)-1]=='\\':
+                self.directory=directory
+            else:
+                self.directory=directory+"/"
         else:
-            if directory==directory=="../sudoku_parser_out":
+            if directory==directory=="./sudoku_parser_out/":
                 os.makedirs(directory)
             else:
                 raise(ParserError("FileInteraction : Erreur lors de la création de l'objet -> directory non existant"))
@@ -23,17 +28,20 @@ class FileInteraction:
         return self.file
     
     def setFile(self, file : str) -> None:
-        self.file = file
+        if file.endswith(".txt"):
+            self.file = file
+        else:
+            self.file = file+".txt"
     
     # Ecrit de manière brute le contenue passer en paramètre /!\ PAS DE FORMATTAGE /!\
     def write(self,content : str) -> None:
-        f=open(self.directory+self.file)
+        f=open(self.directory+self.file,"w")
         f.write(content)
         f.flush()
         f.close()
     
     def read(self) -> list[list[str]]:
-        f=open(self.directory+self.file)
+        f=open(self.directory+self.file,"r")
         content=f.readlines()
         f.close()
         return content
