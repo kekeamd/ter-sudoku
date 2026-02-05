@@ -1,7 +1,7 @@
 # Fichier contenant des fonctions nécessaire pour le parser
 
 class ParserError(Exception):
-    print(Exception)
+    pass
 
 #====================================================================================================
 # PARSER PUR
