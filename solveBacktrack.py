@@ -1,4 +1,4 @@
-from solver import Solver
+from Solver import Solver
 
 class SolveBacktrack(Solver):
     def __init__(self, grille=None):

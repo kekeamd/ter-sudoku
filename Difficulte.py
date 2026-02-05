@@ -1,8 +1,8 @@
 from enum import Enum
 
 class Difficulte(Enum):
-    FACIULE = "Facile"
+    FACILE = "Facile"
     MOYEN = "Moyen"
     DIFFICILE = "Difficile"
-    EXTREME = "Extrême"
+    EXTREME = "Extreme"
     GODMODE = "God Mode"

@@ -1,3 +1,4 @@
+import SolveBacktrack
 
 class BacktrackStats(SolveBacktrack):
     def __init__(self, grille):
