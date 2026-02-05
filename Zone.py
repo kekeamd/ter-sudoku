@@ -27,7 +27,7 @@ class Zone:
     def containValue(self, value : int) -> bool:
         return False
     
-    def AjustCandidate(cellule : Cellule, imp : list[int]) -> None:
+    def ajustCandidate(cellule : Cellule, imp : list[int]) -> None:
         pass
     
     def clone(self):# -> Zone
