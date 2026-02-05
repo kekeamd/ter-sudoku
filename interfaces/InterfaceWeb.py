@@ -9,13 +9,13 @@ class InterfaceWeb(Interface): # extends Interface
     def startPlaying(self):
         pass
 
-    def jouerSudoku(self):
+    def askChoice(self) -> str:
         pass
 
-    def demanderDifficulte(self) -> Difficulte:
+    def askDifficulty(self) -> Difficulte:
         pass
 
-    def demanderChoix(self) -> str:
+    def playSudoku(self):
         pass
 
     # Méthodes suplémentaires

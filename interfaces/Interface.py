@@ -14,13 +14,13 @@ class Interface(ABC): # ne peux pas l'instancier, sert de modele
         pass
 
     @abstractmethod
-    def demanderChoix(self) -> str:
+    def askChoice(self) -> str:
         pass
 
     @abstractmethod
-    def demanderDifficulte(self) -> Difficulte:
+    def askDifficulty(self) -> Difficulte:
         pass
 
     @abstractmethod
-    def jouerSudoku(self):
+    def playSudoku(self):
         pass
