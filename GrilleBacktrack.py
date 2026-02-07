@@ -7,8 +7,8 @@ from Difficulte import Difficulte
 class GrilleBacktrack(Grille):
     def __init__():
         super()
-    def __init__(zoneList : list , sizeCote : int = 3): #sizeCote à revoir (est-ce vraiment utile?? checks supplémentaire à faire???)
-        super(zoneList, sizeCote)
+    def __init__(zoneList : list , size : int = 9): #sizeCote à revoir (est-ce vraiment utile?? checks supplémentaire à faire???)
+        super(zoneList, size)
 
     
     #purpose: défini le nombre de retraits(aka de cellule )
