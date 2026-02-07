@@ -1,4 +1,5 @@
-import Grille, Difficulte
+from Grille import Grille 
+from Difficulte import Difficulte
 
 
 #purpose: la grille de jeu avec le contenu généré par backtrack
