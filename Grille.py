@@ -1,15 +1,27 @@
 from abc import ABC, abstractmethod
-import Difficulte, Zone, Grille
+from Grille import Grille
+from Zone import Zone
+from Cellule import Cellule
+from Difficulte import Difficulte
+from GrilleUtils import *
+from math import sqrt
 
 #purpose: bah la grille de sudoku
-#dependencies: Difficulte, Zone, Grille
+#dependencies: Difficulte, Cellule ,Zone, Grille, GrilleUtils
 class Grille(ABC):
     def __init__(self):
-        self.__grille = []
-        self.__difficulte = None
-    def __init__(self, zoneList : list , sizeCote : int = 3): #sizeCote à revoir (est-ce vraiment utile?? checks supplémentaire à faire???)
-        self.__grille = zoneList
-        self.__difficulte = None
+        self.__grille : list[Zone] = []
+        self.__size : int = 9
+        for _ in range(self.__size):
+            self.__grille.append(Zone())
+        self.__difficulte : Difficulte = None
+    def __init__(self, zoneList : list[Zone] , size : int = 9): #sizeCote à revoir (est-ce vraiment utile?? checks supplémentaire à faire???)
+        if (size!=len(zoneList)):
+            print("ERROR: deuxième argument invalide ou alors la taille de 'zoneList' est différente de la valeur par défaut (avez-vous pensé à préciser la taille?)")
+            exit(1)
+        self.__grille : list[Zone] = zoneList
+        self.__size : int = size
+        self.__difficulte : Difficulte = None
     
 
     #purpose: génère des valeurs et rempli la grille
@@ -20,94 +32,192 @@ class Grille(ABC):
 
     #purpose: renvoie la difficulté de la grille
     def getDifficulte(self)-> Difficulte:
-        pass
+        return self.__difficulte
 
 
     #purpose: défini la difficulté de la grille
     def setDifficulte(self, difficulte : Difficulte) -> None:
-        pass
+        self.__difficulte = difficulte
 
 
-    #purpose: renvoie vrai si la ligne numéro 'line' contient la valeur 'value' et faux sinon
-    def lineContainsValue(self, line : int, value : int) ->  bool:
-        pass
-
-
-    #purpose: renvoie vrai si la colonne numéro 'column' contient la valeur 'value' et faux sinon
-    def lineContainsValue(self, column: int, value : int) ->  bool:
-        pass
-
-
-    #purpose: renvoie la ligne numéro 'line'
-    def getLine(self, line : int) -> list:
-        pass
+    #purpose: renvoie la ligne numéro 'row'
+    def getRow(self, row : int) -> list[int]: #row commence à 0
+        rowValues = []
+        l = sqrt(self.__size)//1 # l <-- nombre de zones dans la ligne
+        for i in range(l):
+            zone = self.__grille[indexOfFirstZoneInRow(row, l) + i] #avec i qui sert d'offset par rapport à la première zone de la ligne
+            rowValues+= zone.getRow(indexRowOrColumnInZone(row, l)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la ligne de 'zone'
+        return rowValues
 
 
     #purpose: renvoie la colonne numéro 'column'
-    def getColumn(self, column : int) -> list:
-        pass
+    def getColumn(self, column : int) -> list[int]:
+        colValues = []
+        l = sqrt(self.__size)//1 # l <-- nombre de zones dans la colonne
+        for i in range(l):
+            zone = self.__grille[indexOfFirstZoneInColumn(column, l) + l*i] #avec l*i qui sert d'offset par rapport à la première zone de la colonne
+            rowValues+= zone.getRow(indexRowOrColumnInZone(column, l)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
+        return rowValues
+
+
+    #purpose: renvoie vrai si la ligne numéro 'row' contient la valeur 'value' et faux sinon
+    def rowContainsValue(self, row : int, value : int) ->  bool:
+        return value in self.getRow(row)
+
+
+    #purpose: renvoie vrai si la colonne numéro 'column' contient la valeur 'value' et faux sinon
+    def rowContainsValue(self, column: int, value : int) ->  bool:
+        return value in self.getColumn(column)
+
+
+    #purpose : renvoie la cellule aux coordonnées ('row', 'column')
+    def __getCelluleCoord(self, row : int, column : int) -> Cellule:
+        l = sqrt(self.__size)//1 # l <-- nombre de lignes/colonnes dans la zone
+        zone = self.__grille[indexOfZone(row, column, l)]
+        cellule = zone.getCelluleCoord(row, column)
+        return cellule
+
+
+    #purpose: renvoie la cellule d'index 'index' de la zone 'zone'
+    def __getCelluleIndex(self, zone : Zone, index : int) -> Cellule:
+        cellule = zone.getCelluleIndex(index)
+        return cellule
+
+
+    #purpose: rectifie les listes de candidats de la cellule en fonction des candidats impossibles 'imp'
+    def __adjustCandidatesCellule(self, cellule : Cellule, imp : list[int]) -> None:
+        newCandidates = listDifference(cellule.getCandidates(), imp)
+        cellule.setCandidates(newCandidates)
 
 
     #purpose: rectifie les listes de candidats des cellules de la zone 'zone'
     def __adjustCandidatesZone(self, zone : Zone) -> None:
-        pass
+        for i in range(self.__size):
+            cellule =  self.__getCelluleIndex(zone, i)
+            impossible = [valuesWithoutZero(zone.getValues())]
+            self.__adjustCandidatesCellule(cellule, impossible)
 
 
-    #purpose: rectifie les listes de candidats des cellules de la ligne 'line'
-    def __adjustCandidatesLine(self, line : int) -> None:
-        pass
+    #purpose: rectifie les listes de candidats des cellules de la ligne 'row'
+    def __adjustCandidatesRow(self, row : int) -> None:
+        for i in range(self.__size):
+            cellule =  self.__getCelluleCoord(row, i)
+            impossible = [valuesWithoutZero(self.getRow(row))]
+            self.__adjustCandidatesCellule(cellule, impossible)
+            
 
 
     #purpose: rectifie les listes de candidats des cellules de la colonne 'column'
     def __adjustCandidatesColumn(self, column : int) -> None:
-        pass
+        for i in range(self.__size):
+            cellule =  self.__getCelluleCoord(i, column)
+            impossible = [valuesWithoutZero(self.getColumn(column))]
+            self.__adjustCandidatesCellule(cellule, impossible)
 
 
     #purpose: rectifie les listes de candidats des cellules de la grille
     def adjustCandidates(self) -> None:
-        pass
+        size = self.__size
+        for i in range(size):
+            self.__adjustCandidatesZone(self.__grille[i])
+            self.__adjustCandidatesRow(i)
+            self.__adjustCandidatesColumn(i)
 
 
-    #purpose: rectifie la liste de candidats de la cellule aux coordonnées ('line', 'column')
-    def adjustCandidatesAfterAddingValueCoord(self, line : int, column : int) -> None:
-        pass
+    #purpose: rectifie la liste de candidats de la cellule aux coordonnées ('row', 'column')
+    def adjustCandidatesAfterAddingValueCoord(self, row : int, column : int) -> None:
+        l = sqrt(self.__size)//1 # l <-- nombre de lignes/colonnes dans la zone
+        zone = self.__grille[indexOfZone(row, column, l)]
+        self.__adjustCandidatesZone(zone)
+        self.__adjustCandidatesRow(row)
+        self.__adjustCandidatesColumn(column)
 
 
     #purpose: rectifie la liste de candidats de la cellule d'index 'index' dans la zone 'zone'
     def adjustCandidatesAfterAddingValueIndex(self, zone : Zone, index : int) -> None:
-        pass
+        l = sqrt(self.__size)//1 # l <-- nombre de lignes/colonnes
+        zoneI = -1
+        for z in range(self.__size):
+            if (self.__grille[z]==zone):
+                zoneI = z
+        if (zoneI==-1):
+            print("ERROR: couldn't identify the zone while adjusting candidates after modifying a cell's value using its index")
+            exit(1)
+        row = indexOfRow(zoneI, index, l)
+        column = indexOfColumn(zoneI, index, l)
+        self.__adjustCandidatesZone(zone)
+        self.__adjustCandidatesRow(row)
+        self.__adjustCandidatesColumn(column)
 
 
-    #purpose: défini la valeur de la cellule aux coordonnées ('line', 'column')
-    def setCelluleValueCoord(self, line : int, column : int) -> None:
-        pass
+    #purpose: renvoie la valeur de la cellule aux coordonnées ('row', 'column')
+    def getCelluleValueCoord(self, row : int, column : int) -> int:
+        cellule = self.__getCelluleCoord(row, column)
+        return cellule.getValue()
 
 
-    #purpose: défini la valeur de la cellule d'index 'index' dans la zone 'zone'
-    def setCelluleValueIndex(self, zone : Zone, index : int) -> None:
-        pass
+    #purpose: renvoie la valeur de la cellule d'index 'index' de la zone 'zone'
+    def getCelluleValueIndex(self, zone : Zone, index : int) -> int:
+        cellule = self.__getCelluleIndex(zone, index)
+        return cellule.getValue()
 
 
-    #purpose: enlève la valeur de la cellule aux coordonnées ('line', 'column')
-    def removeCelluleValueCoord(self, line : int, column : int) -> None:
-        pass
+    #purpose: défini la valeur de la cellule aux coordonnées ('row', 'column')
+    def setCelluleValueCoord(self, row : int, column : int, value : int) -> None:
+        cellule = self.__getCelluleCoord(row, column)
+        cellule.setValue(value)
 
 
-    #purpose: enlève la valeur de la cellule d'index 'index' dans la zone 'zone'
+    #purpose: défini la valeur de la cellule d'index 'index' de la zone 'zone'
+    def setCelluleValueIndex(self, zone : Zone, index : int, value : int) -> None:
+        cellule = self.__getCelluleIndex(zone, index)
+        cellule.setValue(value)
+
+
+    #purpose: enlève la valeur de la cellule aux coordonnées ('row', 'column')
+    def removeCelluleValueCoord(self, row : int, column : int) -> None:
+        cellule = self.__getCelluleCoord(row, column)
+        cellule.setValue(0)
+
+
+
+    #purpose: enlève la valeur de la cellule d'index 'index' de la zone 'zone'
     def removeCelluleValueIndex(self, zone : Zone, index : int) -> None:
-        pass
+        cellule = self.__getCelluleIndex(zone, index)
+        cellule.setValue(0)
 
 
     #purpose: clone la grille (duh!)
     def clone(self) -> Grille:
-        pass
+        newGrille = []
+        for i in range(self.__size):
+            newGrille.append(self.__grille[i].clone())
+        return Grille(newGrille)
 
 
     #purpose: affiche la grille
     def printGrille(self) -> None:
-        pass
-
+        size = self.__size
+        for row in range(size):
+            line = ""
+            for column in range(size):
+                val = self.getCelluleValueCoord(row, column)
+                line += str(val) if val != 0 else "."
+                if column % 3 == 2 and column != 8:
+                    line += " | "
+                else:
+                    line += " "
+            print(line)
+            if row % 3 == 2 and row != 8:
+                print("-" * 21)
 
     #purpose: renvoie la grille sous forme de chaine de caractères
     def toString(self) -> str:
-        pass
+        size = self.__size
+        s = "[ "
+        for i in range(size):
+            s +=self.__grille[i].toString()
+            if (i!=size-1):
+                s+= ", "
+        s += " ]"
+        return s
