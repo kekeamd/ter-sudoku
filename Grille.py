@@ -16,7 +16,7 @@ class Grille(ABC):
             self.__grille.append(Zone())
         self.__difficulte : Difficulte = None
     def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
-        if ((sizeCote*sizeCote)!=len(zoneList)):
+        if ((sizeCote*sizeCote)!=len(zoneList) or len(zoneList) < 3):
             raise(GrilleError("Grille : deuxième argument invalide ou alors la taille de 'zoneList' est différente de la valeur par défaut (avez-vous pensé à préciser la taille?)"))
         self.__grille : list[Zone] = zoneList
         self.__sizeCote : int = sizeCote
