@@ -1,6 +1,6 @@
 import shutil
 import os
-from ParserError import ParserError
+from Except.ParserError import ParserError
 
 class FileInteraction:
     def __init__(self,directory : str = "./sudoku_parser_out/",file : str = "file_out.txt"):

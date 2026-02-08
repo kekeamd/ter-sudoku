@@ -56,8 +56,8 @@ class Grille(ABC):
         l = sqrt(self.__size)//1 # l <-- nombre de zones dans la colonne
         for i in range(l):
             zone = self.__grille[indexOfFirstZoneInColumn(column, l) + l*i] #avec l*i qui sert d'offset par rapport à la première zone de la colonne
-            rowValues+= zone.getRow(indexRowOrColumnInZone(column, l)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
-        return rowValues
+            colValues+= zone.getColum(indexRowOrColumnInZone(column, l)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
+        return colValues
 
 
     #purpose: renvoie vrai si la ligne numéro 'row' contient la valeur 'value' et faux sinon
@@ -66,7 +66,7 @@ class Grille(ABC):
 
 
     #purpose: renvoie vrai si la colonne numéro 'column' contient la valeur 'value' et faux sinon
-    def rowContainsValue(self, column: int, value : int) ->  bool:
+    def columnContainsValue(self, column: int, value : int) ->  bool:
         return value in self.getColumn(column)
 
 

@@ -1,5 +1,5 @@
 from FileInteraction import FileInteraction
-from ParserError import ParserError
+from Except.ParserError import ParserError
 import os
 import shutil
 import pytest

@@ -51,7 +51,7 @@ if __name__ == "__main__":
             print("/!\\ PAS ENCORE IMPLEMENTER /!\\")
             input("Voulez-vous continuer ? ")
 
-        elif TypeDeJeu == 4:
+        else:                                                       # Tout autre entrée en quitte !
             break
         clear()
 

@@ -1,0 +1,2 @@
+class GrilleError(Exception):
+    pass
