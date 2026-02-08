@@ -9,27 +9,32 @@ from Except.GrilleError import GrilleError
 #  c4,c5,c6
 #  c7,c8,c9]
 # Pour une size de 3
-# Taille par défaut : 3
+# Taille par défaut (Si la zone est vide) : 3
+# Si la zone n'est pas vide la taille par défaut est sqrt de len de la zone
+# Si une liste vide ainsi qu'une taille sont données, alors le résultat sera une zone de taille taille vide
 class Zone:
     
     def __init__(self, zone : list[Cellule] = [], size : int = -1):
-        if len(zone)>0:                                                 # Vérification du paramètre zone
-            self.__zone : list[Cellule] = zone.clone()
-        else:
-            self.__zone=[]
-            for _ in range (9):
-                self.__zone.append(Cellule())
-        if (size != -1):                                                # Vérification du paramètre size
+        self.__zone : list[Cellule]= []
+        if len(zone)>0:                                                   # Vérification du paramètre zone
+            for e in zone:
+                self.__zone.append(e.clone())
+        if (size != -1):                                                  # Vérification du paramètre size
             tmp = size
+        elif (len(zone)==0):
+            tmp = 3
         else:
             tmp = sqrt(len(self.__zone))
-        if (tmp % 1) == 0:                                              # Vérification de la cohérence de la size
-            self.__size : int = tmp
+        if (tmp % 1) == 0 and ((tmp*tmp)<=len(self.__zone) or zone==[]) and tmp>=0:     # Vérification de la cohérence de la size
+            self.__size : int = int(tmp)
+            if self.__zone==[]:                                           # Dans le cas ou on a un tableau vide mais une taille >0
+                for _ in range (self.__size*self.__size):
+                    self.__zone.append(Cellule())
         else:
             raise(GrilleError("Zone : Taille de la zone incorrect !"))
     
     def getSize(self) -> int:
-        return self.__size()
+        return self.__size
     
     # Renvoie la ligne index de la zone
     # /!\ Attention /!\ l'index commence à 0
@@ -37,10 +42,10 @@ class Zone:
         out = []
         for i in range (self.__size):
             myi = index*self.__size+i
-            if myi >=len(self.__zone):
+            if myi >=len(self.__zone) or index<0 or index>=self.__size:
                 Error="Essaie d'accès à un index inexistant ("+str(myi)+") imax = "+str(len(self.__zone)-1)
                 raise(GrilleError("Zone : getRow ->"+Error))
-            out.append(self.zone[myi].getValue())
+            out.append(self.__zone[myi].getValue())
         return out
     
     # Renvoie la colonne index de la zone
@@ -49,29 +54,29 @@ class Zone:
         out = []
         for i in range (self.__size):
             myi = index+(i*self.__size)
-            if myi >=len(self.__zone):
+            if myi >=len(self.__zone) or index<0 or index>=self.__size:
                 Error="Essaie d'accès à un index inexistant ("+str(myi)+") imax = "+str(len(self.__zone)-1)
                 raise(GrilleError("Zone : getColum ->"+Error))
-            out.append(self.zone[myi].getValue())
+            out.append(self.__zone[myi].getValue())
         return out
     
     # Renvoie la cellule aux coords row,col
     # /!\ La cellule N'EST PAS une copie /!\
     def getCelluleCoord(self, row : int, col : int) -> Cellule:
         myi = row*self.__size+col
-        if myi>=len(self.__zone):
+        if myi>=len(self.__zone) or (row<0) or (col<0) or (row>=self.__size) or (col>=self.__size):
             Error="Essaie d'accès à une cellule inexistante ("+str(myi)+") max = "+str(len(self.__zone)-1)
             raise(GrilleError("Zone : getCelluleCoord ->"+Error))
-        return self.__zone(myi)
+        return self.__zone[myi]
     
     # Renvoie la cellule à l'index index
     # /!\ La cellule N'EST PAS une copie /!\
     def getCelluleIndex(self, index : int) -> Cellule:
         myi = index
-        if myi>=len(self.__zone):
+        if myi>=len(self.__zone) or index<0:
             Error="Essaie d'accès à une cellule inexistante ("+str(myi)+") max = "+str(len(self.__zone)-1)
             raise(GrilleError("Zone : getCelluleCoord ->"+Error))
-        return self.__zone(myi)
+        return self.__zone[myi]
     
     # Retourne un tableau contenant la liste des valeurs dans la zone
     def getValues(self) -> list[int]:
@@ -87,7 +92,6 @@ class Zone:
     
     # Ajuste les candidats d'une cellule
     def adjustCandidates(cellule : Cellule, imp : list[int]) -> None: #inutile / superflu
-        # Note : Nécessité de discuter avec Ilan afin de parler de la pertinence de cette fonction
         pass
     
     # Renvoie un clone de l'objet courant Zone
