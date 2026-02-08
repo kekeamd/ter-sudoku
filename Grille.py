@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
-from Grille import Grille
 from Zone import Zone
 from Cellule import Cellule
 from Difficulte import Difficulte
+from Except.GrilleError import GrilleError
 from GrilleUtils import *
 from math import sqrt
 
 #purpose: bah la grille de sudoku
-#dependencies: Difficulte, Cellule ,Zone, Grille, GrilleUtils
+#dependencies: Difficulte, Cellule ,Zone, GrilleUtils, GrilleError
 class Grille(ABC):
     def __init__(self):
         self.__grille : list[Zone] = []
@@ -17,8 +17,7 @@ class Grille(ABC):
         self.__difficulte : Difficulte = None
     def __init__(self, zoneList : list[Zone] , size : int = 9): #sizeCote à revoir (est-ce vraiment utile?? checks supplémentaire à faire???)
         if (size!=len(zoneList)):
-            print("ERROR: deuxième argument invalide ou alors la taille de 'zoneList' est différente de la valeur par défaut (avez-vous pensé à préciser la taille?)")
-            exit(1)
+            raise(GrilleError("Grille : deuxième argument invalide ou alors la taille de 'zoneList' est différente de la valeur par défaut (avez-vous pensé à préciser la taille?)"))
         self.__grille : list[Zone] = zoneList
         self.__size : int = size
         self.__difficulte : Difficulte = None
@@ -141,8 +140,7 @@ class Grille(ABC):
             if (self.__grille[z]==zone):
                 zoneI = z
         if (zoneI==-1):
-            print("ERROR: couldn't identify the zone while adjusting candidates after modifying a cell's value using its index")
-            exit(1)
+            raise(GrilleError("Grille : impossible d'identifier la zone en ajustant les candidats après modification de la valeur d'une cellule par index"))
         row = indexOfRow(zoneI, index, l)
         column = indexOfColumn(zoneI, index, l)
         self.__adjustCandidatesZone(zone)
@@ -188,7 +186,7 @@ class Grille(ABC):
 
 
     #purpose: clone la grille (duh!)
-    def clone(self) -> Grille:
+    def clone(self):# -> Grille
         newGrille = []
         for i in range(self.__size):
             newGrille.append(self.__grille[i].clone())
