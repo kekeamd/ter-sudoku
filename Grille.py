@@ -57,7 +57,7 @@ class Grille(ABC):
     def getColumn(self, column : int) -> list[int]:
         colValues = []
         for i in range(self.__size):
-            zone = self.__grille[indexOfFirstZoneInColumn(column, self.__size) + self.__size*i] #avec sizeCote*i qui sert d'offset par rapport à la première zone de la colonne
+            zone = self.__grille[indexOfFirstZoneInColumn(column, self.__size) + self.__size*i] #avec size*i qui sert d'offset par rapport à la première zone de la colonne
             colValues+= zone.getColum(indexRowOrColumnInZone(column, self.__size)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
         return colValues
 

@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
+from Grille import Grille
 
-class Solver(ABC):
-    def __init__(self, grille=None):
-        self.grille = grille
-
+class Solver(ABC): #transformation de la classe en classe static parce qu'on ne veut absolument pas instancier des solvers T-T
     @abstractmethod
-    def solveGrille(self, grille):
+    @staticmethod
+    def solveGrille(grille : Grille) -> bool:
         pass
 
-    def isValid(self, grille, ligne, colonne, valide):
+
+    @staticmethod
+    def isValid(grille : Grille, row : int, column : int) -> bool:
         pass
