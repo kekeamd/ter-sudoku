@@ -1,5 +1,5 @@
 # Pour le bon fonctionnement du programme
-mathplotlib
+matplotlib
 random
 os
 shutil

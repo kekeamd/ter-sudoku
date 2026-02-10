@@ -26,6 +26,17 @@ class GrilleBacktrack(Grille):
             return 70
 
 
+    #purpose retire une valeur de la grille et la renvoie (sans aucun checks)
+    def __removeValue(self) -> int: #s'inspirer de ./old/genererGrille.retirevaleur()
+        pass
+
+
+    #purpose retire 'nbValues' valeurs de la grille (tout en conservant l'unicite)
+    def __removeValues(self, nbValues : int) -> None: #s'inspirer de ./old/genererGrille.GrilleGen()
+        pass
+
+
+
     #purpose: génère des valeurs et rempli la grille entièrement
     def generateEntireGrille(self) -> None:
         if (not SolverBacktrack.solveGrille(self)):
@@ -34,4 +45,6 @@ class GrilleBacktrack(Grille):
 
     #purpose: génère des valeurs et rempli la grille
     def generateValues(self, difficulte : Difficulte) -> None:
+        self.generateEntireGrille()
+        #removeValues et plus
         pass
