@@ -9,7 +9,7 @@ class SolverBacktrack(Solver): #transformation de la classe en classe static par
 
 
     @staticmethod
-    def uniqueSolution(grille : Grille) -> bool:
+    def SolutionIsUnique(grille : Grille) -> bool:
         pass
 
 

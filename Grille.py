@@ -4,7 +4,6 @@ from Cellule import Cellule
 from Difficulte import Difficulte
 from Except.GrilleError import GrilleError
 from GrilleUtils import *
-from math import sqrt
 
 #purpose: bah la grille de sudoku
 #dependencies: Difficulte, Cellule ,Zone, GrilleUtils, GrilleError

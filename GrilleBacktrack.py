@@ -2,9 +2,10 @@ from Grille import Grille
 from Difficulte import Difficulte
 from SolverBacktrack import SolverBacktrack
 from Except.GrilleError import GrilleError
+from random import shuffle
 
 #purpose: la grille de jeu avec le contenu généré par backtrack
-#dependencies: Grille, Difficulte , SolveBacktrack, GrillError
+#dependencies: Grille, Difficulte , SolveBacktrack, GrillError, shuffle
 class GrilleBacktrack(Grille):
     def __init__():
         super()
@@ -13,27 +14,65 @@ class GrilleBacktrack(Grille):
 
     
     #purpose: renvoie le nombre de retraits(aka de cellules vides)
-    def emptyCelluleCount(self) -> int:
-        if self.__difficulte == Difficulte.FACILE:
-            return 40
-        elif self.__difficulte == Difficulte.MOYEN:
-            return 50
-        elif self.__difficulte == Difficulte.DIFFICILE:
-            return 60
-        elif self.__difficulte == Difficulte.EXTREME:
-            return 65
-        elif self.__difficulte == Difficulte.GODMODE:
-            return 70
+    def emptyCelluleCount(self) -> int: #gardez en tête qu'il n'y a pas de réponse exact pour ça donc j'ai fait des approximations(à revoir?)
+        celluleCount = self.__size**4                       #nombre de cellule dans la grille
+        minCelluleCount = (17//3)*self.__size               #nombre minimal de cellule avec une valeur pour grille autre que 9x9(approximatif)
+        if (self.__size==3):
+            minCelluleCount = 17                            #nombre minimal de cellule avec une valeur pour grille 9x9 (exact)
+        potentialMaximum = celluleCount-minCelluleCount     #nombre maximal de cellule vide
+        offset = 2**(self.__size-1)                         #nombre qu'il faut enlever pour éviter que ce soit trop dure
+        if self.__difficulte == Difficulte.FACILE: #pour une grille 9*9: 28
+            return potentialMaximum-(9*offset)
+        elif self.__difficulte == Difficulte.MOYEN: #pour une grille 9x9: 40
+            return potentialMaximum-(6*offset)
+        elif self.__difficulte == Difficulte.DIFFICILE:#pour une grille 9x9: 48
+            return potentialMaximum-(4*offset)
+        elif self.__difficulte == Difficulte.EXTREME: #pour une grille 9x9: 56
+            return potentialMaximum-(2*offset)
+        elif self.__difficulte == Difficulte.GODMODE: #pour une grille 9x9: 60
+            return potentialMaximum-offset
 
 
-    #purpose retire une valeur de la grille et la renvoie (sans aucun checks)
-    def __removeValue(self) -> int: #s'inspirer de ./old/genererGrille.retirevaleur()
-        pass
+    #purpose retire une valeur de la grille et renvoie sa valeur avec ses coordonnées
+    def __removeValue(self) -> tuple[int, int, int]:# retour:  valeur, ligne, colonne
+        rows=[i for i in range (9)]
+        columns=[i for i in range (9)]
+        shuffle(rows)
+        shuffle(columns)
+        tempGrille = self.clone()
+        for row in rows:
+            for col in columns:
+                oldValue = self.getCelluleValueCoord(row, col)                          # On sauvegarde la valeur de la case
+                if oldValue!=0:                                                         # On teste si la case est vide 
+                    tempGrille.removeCelluleValueCoord(row, col)                        # Si elle ne l'est pas alors on la vide
+                    if (SolverBacktrack.SolutionIsUnique(tempGrille)):         # On vérifie qu'il n'y ait qu'une seule possibilité de résolution
+                        return oldValue, row, col                                       # Si oui alors on renvoie valeur, ligne, colonne
+                    else:                                                               # Sinon
+                        tempGrille.setCelluleValueCoord(row, col, oldValue)             # On remets l'ancienne valeur
+        return -1, -1, -1
 
-
-    #purpose retire 'nbValues' valeurs de la grille (tout en conservant l'unicite)
-    def __removeValues(self, nbValues : int) -> None: #s'inspirer de ./old/genererGrille.GrilleGen()
-        pass
+    #purpose retire 'nbValues' valeurs de la grille
+    def __removeValues(self, nbValues : int) -> None:
+        tempGrille=self.clone()
+        removedCells=[]
+        i=0
+        nbRemoved=0
+        maxIteration = 9*nbValues
+        while(i<=maxIteration) and (nbRemoved<=nbValues):
+            val, row, col = self.__removeValue()        # On tente de supprimer une valeur
+            if (val!=-1):                               # Si c'est possible alors j'ajoute la valeur à l'historique
+                removedCells.append([val, row, col])
+                nbRemoved+=1
+            else:                                       # Sinon on va rétabli la dernière valeur supprimé
+                if len(removedCells)<1:
+                    raise(GrilleError("Impossible de supprimer des valeurs ! (Tableau Hist Vide)")) # Plus de valeurs à rétablir !
+                else:
+                    Cell=removedCells.pop()
+                    self.setCelluleValueCoord(Cell[1], Cell[2], Cell[0])
+                    nbRemoved-=1               # On diminue de 1 car on à rétabli une valeur supprimé
+            i+=1
+        if i>maxIteration:
+            raise(GrilleError("Impossible de générer la grille avec le nombre de valeur demander.(ForceStop)"))
 
 
 
