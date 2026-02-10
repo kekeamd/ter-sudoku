@@ -1,3 +1,4 @@
+from Parser import Parser
 from Grille import Grille 
 from Difficulte import Difficulte
 from SolverBacktrack import SolverBacktrack
@@ -5,7 +6,7 @@ from Except.GrilleError import GrilleError
 from random import shuffle
 
 #purpose: la grille de jeu avec le contenu généré par backtrack
-#dependencies: Grille, Difficulte , SolveBacktrack, GrillError, shuffle
+#dependencies: Parser, Grille, Difficulte , SolveBacktrack, GrillError, shuffle
 class GrilleBacktrack(Grille):
     def __init__():
         super()
@@ -31,6 +32,8 @@ class GrilleBacktrack(Grille):
             return potentialMaximum-(2*offset)
         elif self.__difficulte == Difficulte.GODMODE: #pour une grille 9x9: 60
             return potentialMaximum-offset
+        elif self.__difficulte == None:
+            raise(GrilleError("GrilleBacktrack : "))
 
 
     #purpose retire une valeur de la grille et renvoie sa valeur avec ses coordonnées
@@ -65,14 +68,14 @@ class GrilleBacktrack(Grille):
                 nbRemoved+=1
             else:                                       # Sinon on va rétabli la dernière valeur supprimé
                 if len(removedCells)<1:
-                    raise(GrilleError("Impossible de supprimer des valeurs ! (Tableau Hist Vide)")) # Plus de valeurs à rétablir !
+                    raise(GrilleError("GrilleBacktrack : Impossible de supprimer des valeurs ! (Tableau Hist Vide)")) # Plus de valeurs à rétablir !
                 else:
                     Cell=removedCells.pop()
                     self.setCelluleValueCoord(Cell[1], Cell[2], Cell[0])
                     nbRemoved-=1               # On diminue de 1 car on à rétabli une valeur supprimé
             i+=1
         if i>maxIteration:
-            raise(GrilleError("Impossible de générer la grille avec le nombre de valeur demander.(ForceStop)"))
+            raise(GrilleError("GrilleBacktrack : Impossible de générer la grille avec le nombre de valeur demander.(ForceStop)"))
 
 
 
@@ -84,6 +87,9 @@ class GrilleBacktrack(Grille):
 
     #purpose: génère des valeurs et rempli la grille
     def generateValues(self, difficulte : Difficulte) -> None:
+        self.setDifficulte(difficulte)
         self.generateEntireGrille()
-        #removeValues et plus
-        pass
+        Parser.grilleToFile(self, "grilleSolution") #à modifier en fonction de comment on veux organiser les files
+        nbValuesToRemove = self.emptyCelluleCount()
+        self.__removeValues()
+        Parser.grilleToFile(self, "grilleInitale") #à modifier en fonction de comment on veux organiser les files
