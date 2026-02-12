@@ -101,6 +101,8 @@ class InterfaceConsole(Interface): # extends Interface
             if row % 3 == 2 and row != 8:
                 print("-" * 21)
 
+    
+    #reset character NOW!!!!!
     def retirer_valeurs(self, grille, nb_retraites : int):
         count = 0
         while count < nb_retraites:
@@ -155,7 +157,7 @@ class InterfaceConsole(Interface): # extends Interface
             print("\nCette case est déjà remplie.")
             return
         if Solver.isValid(grille, row, col, val):
-            grille[row][col] = val
+            grille[row][col] = val              #??????????????? tu fait le job de la grille maintenant???????????
             if grille[row][col] == solution[row][col]: # je compares avec la grille complète
                 print("\nValeur insérée avec succès.")
                 self.print_grille(grille)

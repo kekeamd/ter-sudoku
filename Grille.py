@@ -34,7 +34,7 @@ class Grille(ABC):
 
 
     #purpose: défini la difficulté de la grille
-    def setDifficulte(self, difficulte : Difficulte) -> None:
+    def __setDifficulte(self, difficulte : Difficulte) -> None:
         self.__difficulte = difficulte
 
     
@@ -82,6 +82,43 @@ class Grille(ABC):
     def __getCelluleIndex(self, zone : Zone, index : int) -> Cellule:
         cellule = zone.getCelluleIndex(index)
         return cellule
+
+
+    #purpose: renvoie la valeur de la cellule aux coordonnées ('row', 'column')
+    def getCelluleValueCoord(self, row : int, column : int) -> int:
+        cellule = self.__getCelluleCoord(row, column)
+        return cellule.getValue()
+
+
+    #purpose: renvoie la valeur de la cellule d'index 'index' de la zone 'zone'
+    def getCelluleValueIndex(self, zone : Zone, index : int) -> int:
+        cellule = self.__getCelluleIndex(zone, index)
+        return cellule.getValue()
+
+
+    #purpose: défini la valeur de la cellule aux coordonnées ('row', 'column')
+    def setCelluleValueCoord(self, row : int, column : int, value : int) -> None:
+        cellule = self.__getCelluleCoord(row, column)
+        cellule.setValue(value)
+
+
+    #purpose: défini la valeur de la cellule d'index 'index' de la zone 'zone'
+    def setCelluleValueIndex(self, zone : Zone, index : int, value : int) -> None:
+        cellule = self.__getCelluleIndex(zone, index)
+        cellule.setValue(value)
+
+
+    #purpose: enlève la valeur de la cellule aux coordonnées ('row', 'column')
+    def removeCelluleValueCoord(self, row : int, column : int) -> None:
+        cellule = self.__getCelluleCoord(row, column)
+        cellule.setValue(0)
+
+
+
+    #purpose: enlève la valeur de la cellule d'index 'index' de la zone 'zone'
+    def removeCelluleValueIndex(self, zone : Zone, index : int) -> None:
+        cellule = self.__getCelluleIndex(zone, index)
+        cellule.setValue(0)
 
 
     #purpose: rectifie les listes de candidats de la cellule en fonction des candidats impossibles 'imp'
@@ -147,51 +184,6 @@ class Grille(ABC):
         self.__adjustCandidatesColumn(column)
 
 
-    #purpose: renvoie la valeur de la cellule aux coordonnées ('row', 'column')
-    def getCelluleValueCoord(self, row : int, column : int) -> int:
-        cellule = self.__getCelluleCoord(row, column)
-        return cellule.getValue()
-
-
-    #purpose: renvoie la valeur de la cellule d'index 'index' de la zone 'zone'
-    def getCelluleValueIndex(self, zone : Zone, index : int) -> int:
-        cellule = self.__getCelluleIndex(zone, index)
-        return cellule.getValue()
-
-
-    #purpose: défini la valeur de la cellule aux coordonnées ('row', 'column')
-    def setCelluleValueCoord(self, row : int, column : int, value : int) -> None:
-        cellule = self.__getCelluleCoord(row, column)
-        cellule.setValue(value)
-
-
-    #purpose: défini la valeur de la cellule d'index 'index' de la zone 'zone'
-    def setCelluleValueIndex(self, zone : Zone, index : int, value : int) -> None:
-        cellule = self.__getCelluleIndex(zone, index)
-        cellule.setValue(value)
-
-
-    #purpose: enlève la valeur de la cellule aux coordonnées ('row', 'column')
-    def removeCelluleValueCoord(self, row : int, column : int) -> None:
-        cellule = self.__getCelluleCoord(row, column)
-        cellule.setValue(0)
-
-
-
-    #purpose: enlève la valeur de la cellule d'index 'index' de la zone 'zone'
-    def removeCelluleValueIndex(self, zone : Zone, index : int) -> None:
-        cellule = self.__getCelluleIndex(zone, index)
-        cellule.setValue(0)
-
-
-    #purpose: clone la grille (duh!)
-    def clone(self):# -> Grille
-        newGrille = []
-        for i in range(self.__size**2):
-            newGrille.append(self.__grille[i].clone())
-        return Grille(newGrille)
-
-
     #purpose: affiche la grille
     def printGrille(self) -> None:
         size = self.__size**2
@@ -211,6 +203,16 @@ class Grille(ABC):
             if row % self.__size == self.__size-1 and row != size-1:
                 print("-" * numCharPerLine)
 
+
+    #purpose: clone la grille (duh!)
+    def clone(self):# -> Grille
+        newGrille = []
+        for i in range(self.__size**2):
+            newGrille.append(self.__grille[i].clone())
+        return Grille(newGrille)
+
+
+    """Dans parser?
     #purpose: renvoie la grille sous forme de chaine de caractères
     def toString(self) -> str:
         size = self.__size**2
@@ -221,3 +223,4 @@ class Grille(ABC):
                 s+= ", "
         s += " ]"
         return s
+    """

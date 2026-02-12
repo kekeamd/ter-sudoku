@@ -36,35 +36,35 @@ class Zone:
     def getSize(self) -> int:
         return self.__size
     
-    # Renvoie la ligne index de la zone
-    # /!\ Attention /!\ l'index commence à 0
-    def getRow(self, index : int) -> list[int]:
+    # Renvoie la ligne row de la zone
+    # /!\ Attention /!\ row commence à 0
+    def getRow(self, row : int) -> list[int]:
         out = []
         for i in range (self.__size):
-            myi = index*self.__size+i
-            if myi >=len(self.__zone) or index<0 or index>=self.__size:
-                Error="Essaie d'accès à un index inexistant ("+str(myi)+") imax = "+str(len(self.__zone)-1)
+            myi = row*self.__size+i
+            if myi >=len(self.__zone) or row<0 or row>=self.__size:
+                Error="Essaie d'accès à une row inexistante ("+str(myi)+") imax = "+str(len(self.__zone)-1)
                 raise(GrilleError("Zone : getRow ->"+Error))
             out.append(self.__zone[myi].getValue())
         return out
     
-    # Renvoie la colonne index de la zone
-    # /!\ Attention /!\ l'index commence à 0
-    def getColumn(self, index : int) -> list[int]:
+    # Renvoie la colonne column de la zone
+    # /!\ Attention /!\ column commence à 0
+    def getColumn(self, column : int) -> list[int]:
         out = []
         for i in range (self.__size):
-            myi = index+(i*self.__size)
-            if myi >=len(self.__zone) or index<0 or index>=self.__size:
-                Error="Essaie d'accès à un index inexistant ("+str(myi)+") imax = "+str(len(self.__zone)-1)
-                raise(GrilleError("Zone : getColum ->"+Error))
+            myi = column+(i*self.__size)
+            if myi >=len(self.__zone) or column<0 or column>=self.__size:
+                Error="Essaie d'accès à une column inexistante ("+str(myi)+") imax = "+str(len(self.__zone)-1)
+                raise(GrilleError("Zone : getColumn ->"+Error))
             out.append(self.__zone[myi].getValue())
         return out
     
-    # Renvoie la cellule aux coords row,col
+    # Renvoie la cellule aux coords row,column
     # /!\ La cellule N'EST PAS une copie /!\
-    def getCelluleCoord(self, row : int, col : int) -> Cellule:
-        myi = row*self.__size+col
-        if myi>=len(self.__zone) or (row<0) or (col<0) or (row>=self.__size) or (col>=self.__size):
+    def getCelluleCoord(self, row : int, column : int) -> Cellule:
+        myi = row*self.__size+column
+        if myi>=len(self.__zone) or (row<0) or (column<0) or (row>=self.__size) or (column>=self.__size):
             Error="Essaie d'accès à une cellule inexistante ("+str(myi)+") max = "+str(len(self.__zone)-1)
             raise(GrilleError("Zone : getCelluleCoord ->"+Error))
         return self.__zone[myi]
@@ -90,9 +90,6 @@ class Zone:
     def containsValue(self, value : int) -> bool:
         return value in self.getValues()
     
-    # Ajuste les candidats d'une cellule
-    def adjustCandidates(cellule : Cellule, imp : list[int]) -> None: #inutile / superflu
-        pass
     
     # Renvoie un clone de l'objet courant Zone
     def clone(self):# -> Zone (Erreur lors de la compilation)
@@ -101,6 +98,7 @@ class Zone:
             NewZone.append(e.clone())
         return Zone(NewZone, self.__size)
     
+    """Dans Parser?
     def toString(self) -> str:
         size = len(self.__zone)
         s = "["
@@ -110,3 +108,4 @@ class Zone:
                 s+= ", "
         s += "]"
         return s
+    """

@@ -87,7 +87,7 @@ class GrilleBacktrack(Grille):
 
     #purpose: génère des valeurs et rempli la grille
     def generateValues(self, difficulte : Difficulte) -> None:
-        self.setDifficulte(difficulte)
+        self.__setDifficulte(difficulte)
         self.generateEntireGrille()
         Parser.grilleToFile(self, "grilleSolution") #à modifier en fonction de comment on veux organiser les files
         nbValuesToRemove = self.emptyCelluleCount()
