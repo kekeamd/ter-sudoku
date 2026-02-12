@@ -5,7 +5,7 @@ from random import randint
 from Interface import Interface  # import le classe parent (Interface)
 from Difficulte import Difficulte # askDifficulte()
 from Parser import Parser # playSudoku()
-from Solver import Solver # playMove()
+from SolverBacktrack import SolverBacktrack # playMove()
 from GrilleBacktrack import GrilleBacktrack # playSudoku()
 
 
@@ -68,14 +68,16 @@ class InterfaceConsole(Interface): # extends Interface
     def playSudoku(self): # prends la difficulté, la grille complete, fait la grille prete à resoudre et appele gameLoop
         difficulty = self.askDifficulty()
 
-        completedGrille = GrilleBacktrack.generateEntireGrille()
+        grille_generator = GrilleBacktrack()
+        completedGrille = grille_generator.generateEntireGrille()
+
         if completedGrille is None:
             print("Erreur lors de la génération de la grille complète.")
             return
         print("\nGrille prête à résoudre:")
         
         # Retirer des valeurs selon la difficulte
-        nb_retraites = self.nbRetraits(difficulty)
+        nb_retraites = self.nbretraites(difficulty)
         
         grille_copie = [row[:] for row in completedGrille] # copie pour ne pas modifier la grille complète
         grille_pour_resoudre = self.retirer_valeurs(grille_copie, nb_retraites)
@@ -101,8 +103,6 @@ class InterfaceConsole(Interface): # extends Interface
             if row % 3 == 2 and row != 8:
                 print("-" * 21)
 
-    
-    #reset character NOW!!!!!
     def retirer_valeurs(self, grille, nb_retraites : int):
         count = 0
         while count < nb_retraites:
@@ -156,8 +156,8 @@ class InterfaceConsole(Interface): # extends Interface
         if grille[row][col] != 0:
             print("\nCette case est déjà remplie.")
             return
-        if Solver.isValid(grille, row, col, val):
-            grille[row][col] = val              #??????????????? tu fait le job de la grille maintenant???????????
+        if SolverBacktrack.isValid(grille, row, col, val):
+            grille[row][col] = val
             if grille[row][col] == solution[row][col]: # je compares avec la grille complète
                 print("\nValeur insérée avec succès.")
                 self.print_grille(grille)

@@ -1,6 +1,7 @@
 from Parser import Parser
 from Grille import Grille 
 from Difficulte import Difficulte
+from Zone import Zone
 from SolverBacktrack import SolverBacktrack
 from Except.GrilleError import GrilleError
 from random import shuffle
@@ -8,10 +9,12 @@ from random import shuffle
 #purpose: la grille de jeu avec le contenu généré par backtrack
 #dependencies: Parser, Grille, Difficulte , SolveBacktrack, GrillError, shuffle
 class GrilleBacktrack(Grille):
-    def __init__():
-        super()
-    def __init__(zoneList : list , size : int = 3):
-        super(zoneList, size)
+    #def __init__(): #overwritten
+    #    super()
+    def __init__(self, zoneList=None, size: int = 3):
+        if zoneList is None:
+            zoneList = [Zone() for _ in range(size * size)]
+        super().__init__(zoneList, size)
 
     
     #purpose: renvoie le nombre de retraits(aka de cellules vides)
@@ -83,6 +86,7 @@ class GrilleBacktrack(Grille):
     def generateEntireGrille(self) -> None:
         if (not SolverBacktrack.solveGrille(self)):
             raise(GrilleError("GrilleBacktrack : La génération de la grille entière a échoué."))
+        return self
 
 
     #purpose: génère des valeurs et rempli la grille
@@ -91,5 +95,5 @@ class GrilleBacktrack(Grille):
         self.generateEntireGrille()
         Parser.grilleToFile(self, "grilleSolution") #à modifier en fonction de comment on veux organiser les files
         nbValuesToRemove = self.emptyCelluleCount()
-        self.__removeValues()
+        self.__removeValues(nbValuesToRemove)
         Parser.grilleToFile(self, "grilleInitale") #à modifier en fonction de comment on veux organiser les files
