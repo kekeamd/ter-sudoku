@@ -48,7 +48,7 @@ class GrilleBacktrack(Grille):
                 oldValue = self.getCelluleValueCoord(row, col)                          # On sauvegarde la valeur de la case
                 if oldValue!=0:                                                         # On teste si la case est vide 
                     tempGrille.removeCelluleValueCoord(row, col)                        # Si elle ne l'est pas alors on la vide
-                    if (SolverBacktrack.SolutionIsUnique(tempGrille)):         # On vérifie qu'il n'y ait qu'une seule possibilité de résolution
+                    if (SolverBacktrack.solutionIsUnique(tempGrille)):         # On vérifie qu'il n'y ait qu'une seule possibilité de résolution
                         return oldValue, row, col                                       # Si oui alors on renvoie valeur, ligne, colonne
                     else:                                                               # Sinon
                         tempGrille.setCelluleValueCoord(row, col, oldValue)             # On remets l'ancienne valeur
