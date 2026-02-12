@@ -34,7 +34,7 @@ class Grille(ABC):
 
 
     #purpose: défini la difficulté de la grille
-    def setDifficulte(self, difficulte : Difficulte) -> None:
+    def __setDifficulte(self, difficulte : Difficulte) -> None:
         self.__difficulte = difficulte
 
     
@@ -57,7 +57,7 @@ class Grille(ABC):
         colValues = []
         for i in range(self.__size):
             zone = self.__grille[indexOfFirstZoneInColumn(column, self.__size) + self.__size*i] #avec size*i qui sert d'offset par rapport à la première zone de la colonne
-            colValues+= zone.getColum(indexRowOrColumnInZone(column, self.__size)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
+            colValues+= zone.getColumn(indexRowOrColumnInZone(column, self.__size)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
         return colValues
 
 
@@ -82,6 +82,43 @@ class Grille(ABC):
     def __getCelluleIndex(self, zone : Zone, index : int) -> Cellule:
         cellule = zone.getCelluleIndex(index)
         return cellule
+
+
+    #purpose: renvoie la valeur de la cellule aux coordonnées ('row', 'column')
+    def getCelluleValueCoord(self, row : int, column : int) -> int:
+        cellule = self.__getCelluleCoord(row, column)
+        return cellule.getValue()
+
+
+    #purpose: renvoie la valeur de la cellule d'index 'index' de la zone 'zone'
+    def getCelluleValueIndex(self, zone : Zone, index : int) -> int:
+        cellule = self.__getCelluleIndex(zone, index)
+        return cellule.getValue()
+
+
+    #purpose: défini la valeur de la cellule aux coordonnées ('row', 'column')
+    def setCelluleValueCoord(self, row : int, column : int, value : int) -> None:
+        cellule = self.__getCelluleCoord(row, column)
+        cellule.setValue(value)
+
+
+    #purpose: défini la valeur de la cellule d'index 'index' de la zone 'zone'
+    def setCelluleValueIndex(self, zone : Zone, index : int, value : int) -> None:
+        cellule = self.__getCelluleIndex(zone, index)
+        cellule.setValue(value)
+
+
+    #purpose: enlève la valeur de la cellule aux coordonnées ('row', 'column')
+    def removeCelluleValueCoord(self, row : int, column : int) -> None:
+        cellule = self.__getCelluleCoord(row, column)
+        cellule.setValue(0)
+
+
+
+    #purpose: enlève la valeur de la cellule d'index 'index' de la zone 'zone'
+    def removeCelluleValueIndex(self, zone : Zone, index : int) -> None:
+        cellule = self.__getCelluleIndex(zone, index)
+        cellule.setValue(0)
 
 
     #purpose: rectifie les listes de candidats de la cellule en fonction des candidats impossibles 'imp'
@@ -147,41 +184,24 @@ class Grille(ABC):
         self.__adjustCandidatesColumn(column)
 
 
-    #purpose: renvoie la valeur de la cellule aux coordonnées ('row', 'column')
-    def getCelluleValueCoord(self, row : int, column : int) -> int:
-        cellule = self.__getCelluleCoord(row, column)
-        return cellule.getValue()
-
-
-    #purpose: renvoie la valeur de la cellule d'index 'index' de la zone 'zone'
-    def getCelluleValueIndex(self, zone : Zone, index : int) -> int:
-        cellule = self.__getCelluleIndex(zone, index)
-        return cellule.getValue()
-
-
-    #purpose: défini la valeur de la cellule aux coordonnées ('row', 'column')
-    def setCelluleValueCoord(self, row : int, column : int, value : int) -> None:
-        cellule = self.__getCelluleCoord(row, column)
-        cellule.setValue(value)
-
-
-    #purpose: défini la valeur de la cellule d'index 'index' de la zone 'zone'
-    def setCelluleValueIndex(self, zone : Zone, index : int, value : int) -> None:
-        cellule = self.__getCelluleIndex(zone, index)
-        cellule.setValue(value)
-
-
-    #purpose: enlève la valeur de la cellule aux coordonnées ('row', 'column')
-    def removeCelluleValueCoord(self, row : int, column : int) -> None:
-        cellule = self.__getCelluleCoord(row, column)
-        cellule.setValue(0)
-
-
-
-    #purpose: enlève la valeur de la cellule d'index 'index' de la zone 'zone'
-    def removeCelluleValueIndex(self, zone : Zone, index : int) -> None:
-        cellule = self.__getCelluleIndex(zone, index)
-        cellule.setValue(0)
+    #purpose: affiche la grille
+    def printGrille(self) -> None:
+        size = self.__size**2
+        numCharPerCellule = valueNumCount(size)*size +1 # +1 pour l'espace
+        numCharPerZoneDelimitation = (self.__size-1)*2 #x2 parce qu'il y a une barre et un espace (l'espace à gauche est compté dans numCharPerCellule)
+        numCharPerLine = numCharPerCellule + numCharPerZoneDelimitation
+        for row in range(size):
+            line = ""
+            for column in range(size):
+                val = self.getCelluleValueCoord(row, column)
+                line += valueToString(val, valueNumCount(size))
+                if column % self.__size == self.__size-1 and column != size-1:
+                    line += " | "
+                else:
+                    line += " "
+            print(line)
+            if row % self.__size == self.__size-1 and row != size-1:
+                print("-" * numCharPerLine)
 
 
     #purpose: clone la grille (duh!)
@@ -192,22 +212,7 @@ class Grille(ABC):
         return Grille(newGrille)
 
 
-    #purpose: affiche la grille
-    def printGrille(self) -> None:
-        size = self.__size**2
-        for row in range(size):
-            line = ""
-            for column in range(size):
-                val = self.getCelluleValueCoord(row, column)
-                line += str(val) if val != 0 else "."
-                if column % 3 == 2 and column != 8:
-                    line += " | "
-                else:
-                    line += " "
-            print(line)
-            if row % 3 == 2 and row != 8:
-                print("-" * 21)
-
+    """Dans parser?
     #purpose: renvoie la grille sous forme de chaine de caractères
     def toString(self) -> str:
         size = self.__size**2
@@ -218,3 +223,4 @@ class Grille(ABC):
                 s+= ", "
         s += " ]"
         return s
+    """

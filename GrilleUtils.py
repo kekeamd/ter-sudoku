@@ -38,9 +38,41 @@ def valuesWithoutZero(values : list[int]) -> list[int]:
         if (val!=0):
             newValues.append(val)
 
+
 def listDifference(list1 : list[int], list2: list[int]) -> list[int]:
     newList = []
     for i in range(len(list1)):
         if (list1[i] not in list2):
             newList.append(list1[i])
     return newList
+
+
+def valueNumCount(value : int):
+    if value==0:    #failsafe si value est déjà égal à 0
+        return 1
+    numCount = 0     #numCount = le nombre de chiffres qui composent value
+    while value!= 0:   #on fait la division entière par 10 jusqu'à avoir 0 et le nombre de division = le nombre de chiffres qui composent value
+        value = value//10
+        numCount+=1
+    return numCount
+
+
+def valueToString(value : int, maxNumCount : int):
+    if value==0:
+        middle = "."
+    else:
+        middle = str(value)
+    before = ""
+    after = ""
+    valNumCount = valueNumCount(value)
+    spaceCount = maxNumCount - valNumCount
+    if spaceCount%2==0:
+        for _ in range(spaceCount//2):
+            before+=" "
+            after+= " "
+    else:
+        for _ in range(spaceCount//2):
+            before+=" "
+            after+=" "
+        before+= " "
+    return before + middle + after

@@ -1,6 +1,7 @@
 from Parser import Parser
 from Grille import Grille 
 from Difficulte import Difficulte
+from Zone import Zone
 from SolverBacktrack import SolverBacktrack
 from Except.GrilleError import GrilleError
 from random import shuffle
@@ -8,10 +9,12 @@ from random import shuffle
 #purpose: la grille de jeu avec le contenu généré par backtrack
 #dependencies: Parser, Grille, Difficulte , SolveBacktrack, GrillError, shuffle
 class GrilleBacktrack(Grille):
-    def __init__():
-        super()
-    def __init__(zoneList : list , size : int = 3):
-        super(zoneList, size)
+    #def __init__(): #overwritten
+    #    super()
+    def __init__(self, zoneList=None, size: int = 3):
+        if zoneList is None:
+            zoneList = [Zone() for _ in range(size * size)]
+        super().__init__(zoneList, size)
 
     
     #purpose: renvoie le nombre de retraits(aka de cellules vides)
@@ -48,7 +51,7 @@ class GrilleBacktrack(Grille):
                 oldValue = self.getCelluleValueCoord(row, col)                          # On sauvegarde la valeur de la case
                 if oldValue!=0:                                                         # On teste si la case est vide 
                     tempGrille.removeCelluleValueCoord(row, col)                        # Si elle ne l'est pas alors on la vide
-                    if (SolverBacktrack.SolutionIsUnique(tempGrille)):         # On vérifie qu'il n'y ait qu'une seule possibilité de résolution
+                    if (SolverBacktrack.solutionIsUnique(tempGrille)):         # On vérifie qu'il n'y ait qu'une seule possibilité de résolution
                         return oldValue, row, col                                       # Si oui alors on renvoie valeur, ligne, colonne
                     else:                                                               # Sinon
                         tempGrille.setCelluleValueCoord(row, col, oldValue)             # On remets l'ancienne valeur
@@ -83,13 +86,14 @@ class GrilleBacktrack(Grille):
     def generateEntireGrille(self) -> None:
         if (not SolverBacktrack.solveGrille(self)):
             raise(GrilleError("GrilleBacktrack : La génération de la grille entière a échoué."))
+        return self
 
 
     #purpose: génère des valeurs et rempli la grille
     def generateValues(self, difficulte : Difficulte) -> None:
-        self.setDifficulte(difficulte)
+        self.__setDifficulte(difficulte)
         self.generateEntireGrille()
         Parser.grilleToFile(self, "grilleSolution") #à modifier en fonction de comment on veux organiser les files
         nbValuesToRemove = self.emptyCelluleCount()
-        self.__removeValues()
+        self.__removeValues(nbValuesToRemove)
         Parser.grilleToFile(self, "grilleInitale") #à modifier en fonction de comment on veux organiser les files

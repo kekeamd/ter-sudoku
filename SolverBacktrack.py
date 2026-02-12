@@ -20,7 +20,8 @@ class SolverBacktrack(Solver): #transformation de la classe en classe static par
 
 
     @staticmethod
-    def SolutionIsUnique(self,grille : Grille) -> bool:
+
+    def solutionIsUnique(self,grille : Grille) -> bool:
             copie=Grille.clone(grille) 
             return self.countPossibilityLimit(copie) == 1
 

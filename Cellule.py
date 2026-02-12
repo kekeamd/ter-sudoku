@@ -31,6 +31,7 @@ class Cellule:
         newCellule.setCandidates(self.__candidates.copy())
         return newCellule
     
+    """Dans Parser?
     def toString(self) -> str:
         if (self.__value!=0):
             return self.__value
@@ -42,3 +43,4 @@ class Cellule:
                 s+= ","
         s += "]"
         return s
+    """

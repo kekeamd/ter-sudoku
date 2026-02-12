@@ -1,4 +1,4 @@
-import Grille
+from Grille import Grille
 
 #purpose: historique de grilles
 #dependencies: Grille 
@@ -7,31 +7,31 @@ class Historique :
         self.__historique = []
     def __init__(self, grille : Grille):
         self.__historique = [grille]
-    def __init__(self, grilleList : list):
+    def __init__(self, grilleList : list[Grille]):
         self.__historique = grilleList
 
 
     #purpose:
-    def getHistorique(self) -> list:
-        pass
+    def getHistorique(self) -> list[Grille]:
+        return self.__historique
 
     
     #purpose: taille de l'historique
     def lenHistorique(self) -> int:
-        pass
+        return len(self.__historique)
 
 
     #purpose: renvoie la grille à l'index 'index' de l'historique
     def getGrille(self, index) -> Grille:
-        pass
+        return self.__historique[index]
 
 
     #purpose: ajoute une grille à la fin de l'historique
     def addGrille(self, grille : Grille) -> None:
-        pass
+        self.__historique.append(grille)
 
 
     #purpose: enlève la dernière grille de l'historique et la renvoie
-    def delLastGrille(self) -> Grille:
-        pass
+    def removeLastGrille(self) -> Grille:
+        return self.__historique.pop()
 
