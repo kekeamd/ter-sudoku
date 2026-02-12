@@ -57,7 +57,7 @@ class Grille(ABC):
         colValues = []
         for i in range(self.__size):
             zone = self.__grille[indexOfFirstZoneInColumn(column, self.__size) + self.__size*i] #avec size*i qui sert d'offset par rapport à la première zone de la colonne
-            colValues+= zone.getColum(indexRowOrColumnInZone(column, self.__size)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
+            colValues+= zone.getColumn(indexRowOrColumnInZone(column, self.__size)) #on on concatène la liste de valeurs actuel avec la liste de valeurs dans la colonne de 'zone'
         return colValues
 
 
@@ -195,18 +195,21 @@ class Grille(ABC):
     #purpose: affiche la grille
     def printGrille(self) -> None:
         size = self.__size**2
+        numCharPerCellule = valueNumCount(size)*size +1 # +1 pour l'espace
+        numCharPerZoneDelimitation = (self.__size-1)*2 #x2 parce qu'il y a une barre et un espace (l'espace à gauche est compté dans numCharPerCellule)
+        numCharPerLine = numCharPerCellule + numCharPerZoneDelimitation
         for row in range(size):
             line = ""
             for column in range(size):
                 val = self.getCelluleValueCoord(row, column)
-                line += str(val) if val != 0 else "."
-                if column % 3 == 2 and column != 8:
+                line += valueToString(val, valueNumCount(size))
+                if column % self.__size == self.__size-1 and column != size-1:
                     line += " | "
                 else:
                     line += " "
             print(line)
-            if row % 3 == 2 and row != 8:
-                print("-" * 21)
+            if row % self.__size == self.__size-1 and row != size-1:
+                print("-" * numCharPerLine)
 
     #purpose: renvoie la grille sous forme de chaine de caractères
     def toString(self) -> str:
