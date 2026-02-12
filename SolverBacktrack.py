@@ -1,57 +1,59 @@
 from Solver import Solver
 from Grille import Grille
-import copy
 
 
 class SolverBacktrack(Solver): #transformation de la classe en classe static parce qu'on ne veut absolument pas instancier des solvers T-T
     @staticmethod
-    def solveGrille(grille : Grille) -> bool:
-        for i in range(9):
-            for j in range(9): 
-                if grille[i][j] == 0: 
-                    for val in range(1, 10):
+    def solveGrille(self,grille : Grille) -> bool:
+        taille=grille.getSize()*grille.getSize()
+        for i in range(taille):
+            for j in range(taille): 
+                if grille.getCelluleValueCoord(i, j) == 0: 
+                    for val in range(1, taille+1):
                         if Solver.isValid(grille, i, j, val):
-                            grille[i][j] = val
-                            if SolverBacktrack.solveGrille(grille):
+                            grille.setCelluleValueCoord(i, j, val)
+                            if self.solveGrille(grille):
                                 return True
-                            grille[i][j] = 0
+                            grille.setCelluleValueCoord(i, j, 0)
                     return False
         return True
 
 
     @staticmethod
-    def SolutionIsUnique(grille : Grille) -> bool:
+    def SolutionIsUnique(self,grille : Grille) -> bool:
             copie=Grille.clone(grille) 
-            return SolverBacktrack.countPossibilityLimit(copie) == 1
+            return self.countPossibilityLimit(copie) == 1
 
 
     @staticmethod
-    def countPossibilityLimit(grille : Grille) -> int:
+    def countPossibilityLimit(self,grille : Grille,limit=2) -> int:
+        taille=grille.getSize()*grille.getSize()
         count = 0
-        for i in range(9):
-            for j in range(9): 
-                if grille[i][j] == 0: 
-                    for val in range(1, 10):
-                        if Solver.isValid(grille, i, j, val):
-                            grille[i][j] = val
-                            count += SolverBacktrack.countPossibilityLimit(grille)
-                            if count >= 2:
+        for i in range(taille):
+            for j in range(taille): 
+                if grille.getCelluleValueCoord(i, j) == 0: 
+                    for val in range(1, taille+1):
+                        if self.isValid(grille, i, j, val):
+                            grille.setCelluleValueCoord(i, j, val)
+                            count += self.countPossibilityLimit(grille)
+                            if count >= limit:
                                 return count
-                            grille[i][j] = 0
+                            grille.setCelluleValueCoord(i, j, 0)
                     return count
         return 1
 
 
     @staticmethod
-    def countPossibility(grille : Grille) -> int:
+    def countPossibility(self,grille : Grille) -> int:
+        taille=grille.getSize()*grille.getSize()
         count = 0
-        for i in range(9):
-            for j in range(9): 
-                if grille[i][j] == 0: 
-                    for val in range(1, 10):
-                        if Solver.isValid(grille, i, j, val):
-                            grille[i][j] = val
-                            count += SolverBacktrack.countPossibility(grille)
-                            grille[i][j] = 0
+        for i in range(taille):
+            for j in range(taille): 
+                if grille.getCelluleValueCoord(i, j) == 0: 
+                    for val in range(1, taille+1):
+                        if self.isValid(grille, i, j, val):
+                            grille.setCelluleValueCoord(i, j, val)
+                            count += self.countPossibility(grille)
+                            grille.setCelluleValueCoord(i, j, 0)
                     return count
         return 1
