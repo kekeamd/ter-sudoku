@@ -98,7 +98,7 @@ class Zone:
             NewZone.append(e.clone())
         return Zone(NewZone, self.__size)
     
-    """Dans Parser?
+    """ Va être utilisé ?
     def toString(self) -> str:
         size = len(self.__zone)
         s = "["

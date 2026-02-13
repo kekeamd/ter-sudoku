@@ -91,7 +91,7 @@ class Grille(ABC):
 
 
     #purpose: renvoie la valeur de la cellule d'index 'index' de la zone 'zone'
-    def getCelluleValueIndex(self, zone : Zone, index : int) -> int:
+    def getCelluleValueIndex(self, zone : Zone, index : int) -> int: # Impossiblité d'obtenir Zone hors de Grille (Public / Privé ?)
         cellule = self.__getCelluleIndex(zone, index)
         return cellule.getValue()
 
@@ -103,7 +103,7 @@ class Grille(ABC):
 
 
     #purpose: défini la valeur de la cellule d'index 'index' de la zone 'zone'
-    def setCelluleValueIndex(self, zone : Zone, index : int, value : int) -> None:
+    def setCelluleValueIndex(self, zone : Zone, index : int, value : int) -> None: # Impossiblité d'obtenir Zone hors de Grille (Public / Privé ?)
         cellule = self.__getCelluleIndex(zone, index)
         cellule.setValue(value)
 
@@ -116,7 +116,7 @@ class Grille(ABC):
 
 
     #purpose: enlève la valeur de la cellule d'index 'index' de la zone 'zone'
-    def removeCelluleValueIndex(self, zone : Zone, index : int) -> None:
+    def removeCelluleValueIndex(self, zone : Zone, index : int) -> None: # Impossiblité d'obtenir Zone hors de Grille (Public / Privé ?)
         cellule = self.__getCelluleIndex(zone, index)
         cellule.setValue(0)
 
@@ -170,7 +170,7 @@ class Grille(ABC):
 
 
     #purpose: rectifie la liste de candidats de la cellule d'index 'index' dans la zone 'zone'
-    def adjustCandidatesAfterAddingValueIndex(self, zone : Zone, index : int) -> None:
+    def adjustCandidatesAfterAddingValueIndex(self, zone : Zone, index : int) -> None: # Impossiblité d'obtenir Zone hors de Grille (Public / Privé ?)
         zoneI = -1
         for z in range(self.__size**2):
             if (self.__grille[z]==zone):
@@ -211,16 +211,21 @@ class Grille(ABC):
             newGrille.append(self.__grille[i].clone())
         return Grille(newGrille)
 
+    """ Fonctions obligatoire -> Sinon gestion des candidats INUTILE (A moins que autre possiblité ? (mettre la cellule en public ?))
+    # Retourne la liste des Candidats d'une cellule
+    # La cellule est identifé par ses coords row,column
+    def getCelluleCandidatesCoord(self, row : int, column : int) -> list[int]:
+        pass
+    
+    # Retourne la liste des Candidats d'une cellule
+    # La cellule est identifié par son index :
+    # Pour une grille en 9c*9c -> Index est compris dans [0,80]
+    def getCelluleCandidatesIndex(self, index : int) -> list[int]:
+        pass
+    """
 
-    """Dans parser?
-    #purpose: renvoie la grille sous forme de chaine de caractères
-    def toString(self) -> str:
-        size = self.__size**2
-        s = "[ "
-        for i in range(size):
-            s +=self.__grille[i].toString()
-            if (i!=size-1):
-                s+= ", "
-        s += " ]"
-        return s
+    """ Pas sûr ? 
+    #A voir si on donne la possiblité d'accès sur la zone ou si on modifie l'utilisation de *Index
+    def getZone(self, index : int) -> Zone :
+        pass
     """

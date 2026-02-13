@@ -30,17 +30,3 @@ class Cellule:
         newCellule=Cellule(self.__value)
         newCellule.setCandidates(self.__candidates.copy())
         return newCellule
-    
-    """Dans Parser?
-    def toString(self) -> str:
-        if (self.__value!=0):
-            return self.__value
-        size = len(self.__candidates)
-        s = "["
-        for i in range(size):
-            s +=self.__candidates[i].toString()
-            if (i!=size-1):
-                s+= ","
-        s += "]"
-        return s
-    """
