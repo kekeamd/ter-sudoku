@@ -50,25 +50,9 @@ class InterfaceConsole(Interface): # extends Interface
             '5': "God Mode"
         }
         return difficulte_map.get(choix, "Facile")
-    
-    # Gérer dans grille ?
-    def nbretraites(self, difficulte : str) -> int:
-        nb_retraites = 0
-        if difficulte == "Facile":
-            nb_retraites = 40
-        elif difficulte == "Moyen":
-            nb_retraites = 50
-        elif difficulte == "Difficile":
-            nb_retraites = 55
-        elif difficulte == "Extrême":
-            nb_retraites = 60
-        elif difficulte == "God Mode":
-            nb_retraites = 67
-        return nb_retraites
 
     def playSudoku(self): # prends la difficulté, la grille complete, fait la grille prete à resoudre et appele gameLoop
         difficulty = self.askDifficulty()
-
 
         grilleVide = GrilleBacktrack()
         
