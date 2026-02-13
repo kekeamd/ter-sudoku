@@ -33,7 +33,7 @@ class InterfaceConsole(Interface): # extends Interface
         return choix
 
 
-    def askDifficulty(self) -> Difficulte: # demande la difficulté à propos de nbr de retraites
+    def askDifficulty(self) -> str: # demande la difficulté à propos de nbr de retraites
         print("\nChoisissez une difficulté:")
         print("1. Facile")
         print("2. Moyen")
@@ -68,52 +68,20 @@ class InterfaceConsole(Interface): # extends Interface
     def playSudoku(self): # prends la difficulté, la grille complete, fait la grille prete à resoudre et appele gameLoop
         difficulty = self.askDifficulty()
 
-        grille_generator = GrilleBacktrack()
-        completedGrille = grille_generator.generateEntireGrille()
+        grilleVide = GrilleBacktrack()
+        
+        self.grilleComplete = grilleVide.generateEntireGrille()
+        self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 
-        if completedGrille is None:
+        if self.grilleComplete is None:
             print("Erreur lors de la génération de la grille complète.")
             return
-        print("\nGrille prête à résoudre:")
         
-        # Retirer des valeurs selon la difficulte
-        nb_retraites = self.nbretraites(difficulty)
-        
-        grille_copie = [row[:] for row in completedGrille] # copie pour ne pas modifier la grille complète
-        grille_pour_resoudre = self.retirer_valeurs(grille_copie, nb_retraites)
+        self.grilleDeJeu.printGrille()
+    
+        self.gameLoop()
 
-        print("\nGrille prête à résoudre:")
-        self.print_grille(grille_pour_resoudre)
-
-        Parser.grilleToFile(grille_pour_resoudre, "Directory", "Generated_grille_uncompleted")
-
-        self.gameLoop(grille_pour_resoudre, completedGrille)
-
-    def print_grille(self, grille):
-        for row in range(9):
-            line = ""
-            for column in range(9):
-                val = grille[row][column]
-                line += str(val) if val != 0 else "."
-                if column % 3 == 2 and column != 8:
-                    line += " | "
-                else:
-                    line += " "
-            print(line)
-            if row % 3 == 2 and row != 8:
-                print("-" * 21)
-
-    def retirer_valeurs(self, grille, nb_retraites : int):
-        count = 0
-        while count < nb_retraites:
-            row = randint(0, 8)
-            col = randint(0, 8)
-            if grille[row][col] != 0:
-                grille[row][col] = 0
-                count += 1
-        return grille
-
-    def gameLoop(self, grille, solution): # soit entrer une valeur(appelle playMove()), soit donner la grille complete, soit quitter
+    def gameLoop(self): # soit entrer une valeur(appelle playMove()), soit donner la grille complete, soit quitter
         finish=False
         while True:
             if finish:
@@ -129,10 +97,10 @@ class InterfaceConsole(Interface): # extends Interface
                 choix='3'
 
             if choix == '1':
-                self.playMove(grille, solution)
+                self.playMove()
             elif choix == '2':
                 print("\nLa grille résolue automatiquement:")
-                self.print_grille(solution)
+                self.grilleComplete.printGrille()
                 print("\nLE JEU EST TERMINÉ!")
                 finish=True
             elif choix == '3':
@@ -140,7 +108,7 @@ class InterfaceConsole(Interface): # extends Interface
             else:
                 print("\nChoix invalide, veuillez réessayer.")
 
-    def playMove(self, grille, solution): # entrer une certain valeur sur un certian ligne et colenne, verifie si cest bon en comparaison avec la grille complete
+    def playMove(self): # entrer une certain valeur sur un certian ligne et colenne, verifie si cest bon en comparaison avec la grille complete
         try:
             row = int(input("Ligne (1-9): ")) -1
             col = int(input("Colonne (1-9): ")) -1
@@ -153,17 +121,27 @@ class InterfaceConsole(Interface): # extends Interface
             print("\nLigne/colonne hors limites (1-9).")
             return
         
-        if grille[row][col] != 0:
+        if self.grilleDeJeu.getCelluleValueCoord(row, col) != 0:
             print("\nCette case est déjà remplie.")
             return
-        if SolverBacktrack.isValid(grille, row, col, val):
-            grille[row][col] = val
-            if grille[row][col] == solution[row][col]: # je compares avec la grille complète
+        if SolverBacktrack.isValid(self.grille, row, col, val):
+            self.grilleDeJeu.setCelluleValueCoord(row, col, val)
+            if self.grilleDeJeu.getCelluleValueCoord(row, col) == self.grilleComplete.getCelluleValueCoord(row, col): # je compares avec la grille complète
                 print("\nValeur insérée avec succès.")
-                self.print_grille(grille)
+                self.grilleDeJeu.printGrille()
+
+                # CHECK FIN DE JEU
+                size = self.grilleDeJeu.getSize() ** 2
+                hasZero = False
+                for row in size:
+                    for cell in self.grilleDeJeu.getRow(row):
+                        if cell == 0:
+                            hasZero = True
+                if hasZero != True:
+                    print("\nBravo ! Grille complétée !")
             else:
                 print("\nValeur invalide pour cette position.")
-                grille[row][col] = 0
+                self.grilleDeJeu.setCelluleValueCoord(row, col, 0)
         else:
             print("\nValeur invalide pour cette position.")
 
