@@ -8,11 +8,11 @@ from GrilleUtils import *
 #purpose: bah la grille de sudoku
 #dependencies: Difficulte, Cellule ,Zone, GrilleUtils, GrilleError
 class Grille(ABC):
-    def __init__(self):
+    def __init__(self, sizeCote : int = 3): #faire un constructeur avec que la taille
         self.__grille : list[Zone] = []
-        self.__size : int = 3
+        self.__size : int = sizeCote
         for _ in range(self.__size**2):
-            self.__grille.append(Zone())
+            self.__grille.append(Zone(size=sizeCote))
         self.__difficulte : Difficulte = None
     def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
         if ((sizeCote*sizeCote)!=len(zoneList) or len(zoneList) < 3):
@@ -187,9 +187,9 @@ class Grille(ABC):
     #purpose: affiche la grille
     def printGrille(self) -> None:
         size = self.__size**2
-        numCharPerCellule = valueNumCount(size)*size +1 # +1 pour l'espace
+        numCharPerCellule = valueNumCount(size)+1 # +1 pour l'espace
         numCharPerZoneDelimitation = (self.__size-1)*2 #x2 parce qu'il y a une barre et un espace (l'espace à gauche est compté dans numCharPerCellule)
-        numCharPerLine = numCharPerCellule + numCharPerZoneDelimitation
+        numCharPerLine = size*numCharPerCellule + numCharPerZoneDelimitation
         for row in range(size):
             line = ""
             for column in range(size):
