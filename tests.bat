@@ -7,32 +7,32 @@ pause
 
 cls
 echo test Parser.py
-pytest ./TestParser.py -v
+python -m pytest ./TestParser.py -v
 pause
 
 cls
 echo test FileInteraction.py
-pytest ./TestFileInteraction.py -v
+python -m pytest ./TestFileInteraction.py -v
 pause
 
 cls
 echo test Cellule.py
-pytest ./TestCellule.py -v
+python -m pytest ./TestCellule.py -v
 pause
 
 cls
 echo test Zone.py
-pytest ./TestZone.py -v
+python -m pytest ./TestZone.py -v
 pause
 
 cls
 echo test Grille.py
-pytest ./TestGrille.py -v
+python -m pytest ./TestGrille.py -v
 pause
 
 cls
 echo test SolverBacktrack.py
-pytest ./TestSolverBacktrack.py -v
+python -m pytest ./TestSolverBacktrack.py -v
 pause
 
 cls
