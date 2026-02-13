@@ -74,7 +74,7 @@ class Grille(ABC):
     #purpose : renvoie la cellule aux coordonnées ('row', 'column')
     def __getCelluleCoord(self, row : int, column : int) -> Cellule:
         zone = self.__grille[indexOfZone(row, column, self.__size)]
-        cellule = zone.getCelluleCoord(row, column)
+        cellule = zone.getCelluleCoord(indexRowOrColumnInZone(row, self.__size), indexRowOrColumnInZone(column, self.__size))
         return cellule
 
 
@@ -204,12 +204,15 @@ class Grille(ABC):
                 print("-" * numCharPerLine)
 
 
+    """ a faire dans les filles
     #purpose: clone la grille (duh!)
     def clone(self):# -> Grille
         newGrille = []
         for i in range(self.__size**2):
             newGrille.append(self.__grille[i].clone())
         return Grille(newGrille)
+    """
+        
 
     """ Fonctions obligatoire -> Sinon gestion des candidats INUTILE (A moins que autre possiblité ? (mettre la cellule en public ?))
     # Retourne la liste des Candidats d'une cellule
