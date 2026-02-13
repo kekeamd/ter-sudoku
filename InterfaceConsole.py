@@ -51,6 +51,7 @@ class InterfaceConsole(Interface): # extends Interface
         }
         return difficulte_map.get(choix, "Facile")
     
+    # Gérer dans grille ?
     def nbretraites(self, difficulte : str) -> int:
         nb_retraites = 0
         if difficulte == "Facile":
@@ -67,6 +68,7 @@ class InterfaceConsole(Interface): # extends Interface
 
     def playSudoku(self): # prends la difficulté, la grille complete, fait la grille prete à resoudre et appele gameLoop
         difficulty = self.askDifficulty()
+
 
         grilleVide = GrilleBacktrack()
         

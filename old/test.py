@@ -208,3 +208,9 @@ def testGrilleGen(n):
     print("Vérification des possibilités !!")
     print("Il y a",comptePoss(G),"solutions possible")
     print("===============")
+
+G = GrilleGen(30)
+Gcomp = clone(G)
+solver(Gcomp)
+grille_to_file(Gcomp,"Completed")
+grille_to_file(G,"WithEmptyCases")

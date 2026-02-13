@@ -20,14 +20,13 @@ class SolverBacktrack(Solver): #transformation de la classe en classe static par
 
 
     @staticmethod
-
     def solutionIsUnique(self,grille : Grille) -> bool:
             copie=Grille.clone(grille) 
             return self.countPossibilityLimit(copie) == 1
 
 
     @staticmethod
-    def countPossibilityLimit(self,grille : Grille,limit=2) -> int:
+    def countPossibilityLimit(self,grille : Grille,limit : int = 2) -> int:
         taille=grille.getSize()*grille.getSize()
         count = 0
         for i in range(taille):
