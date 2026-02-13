@@ -60,7 +60,8 @@ class Parser:
         for s in self.__fileInputFormat(self.__fileInteraction.read()):
             out.append([])
             for c in s:
-                out[i].append(c)
+                out[i].append(int(c))
+            i+=1
         return out
     
     # Prends une chaine de char et la transforme en Grille
@@ -104,23 +105,32 @@ class Parser:
         s += " ]"
         return s
     
+    
+    # Transforme une chaine de char en tableau en 2D
+    # /!\ ATTENTION /!\ char séparateur : "[]" ou "\n"
     @staticmethod
     def stringToTab(strG : str) -> list[list[int]]:
-        chffr = [0,1,2,3,4,5,6,7,8,9]
+        chffr = ['0','1','2','3','4','5','6','7','8','9']
         out=[]
         i=-1
         saved = []
+        j=0
         for c in strG:
-            if c == '[' or c == ']':
-                out.append([])
-                i+=1
-                while len(saved)>0:
-                    out[i].append(saved.pop(0))
-            elif abs(c) in chffr:
+            if c == '[' or c == '\n':
+                if strG[j+1] != '[':
+                    out.append([])
+                    i+=1
+                    while len(saved)>0:
+                        out[i].append(saved.pop(0))
+                if i==0 and c == '\n':
+                    out.append([])
+                    i+=1
+            elif c in chffr:
                 if i!=-1:
-                    out[i].append(abs(c))
+                    out[i].append(int(c))
                 else:
-                    saved.append(abs(c))
+                    saved.append(int(c))
+            j+=1
         return out
     
     @staticmethod
@@ -148,15 +158,17 @@ class Parser:
     # size défini la taille de notre tableau de sortie (size*size)
     # AutoComplet dit si jamais on veut compléter les cases vides avec des nombres trouver en dehors des bornes ou pas
     @staticmethod
-    def __fileInputFormat(fileContent : list[str], nombreAuth : list[int] = [0,1,2,3,4,5,6,7,8,9], size : int = 9, AutoComplet : bool = True) -> list[str]:
-        out = []*size # Tableau de chaine de char (sortie)
+    def __fileInputFormat(fileContent : list[str], nombreAuth : list[chr] = ['0','1','2','3','4','5','6','7','8','9'], size : int = 9, AutoComplet : bool = True) -> list[str]:
+        out = [] # Tableau de chaine de char (sortie)
         saved = [] # Items qui lors de la première lecture n'ont pas pu être placé
         nbItems = 0 # Nombre d'item qui respecte les conditions
         auth = nombreAuth # Lite d'entier qui défini les conditions
         i=0 # Itérateur qui permet de connaître le numéro de la ligne
         for s in fileContent:
+            if i<size:
+                out.append("")
             for c in s:
-                if ord(c) in auth:
+                if c in auth:
                     nbItems+=1
                     if i<size and len(out[i])<size: # On vérifie que l'élément fait partie du tableau de taille size*size
                         out[i]+=c

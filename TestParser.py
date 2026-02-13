@@ -8,12 +8,17 @@ import shutil
 
 
 global StrComplete
-global fdTest
 
 def test_start():
     os.mkdir("./ForTests/")
-    fdTest = FileInteraction("ForTests","Complete")
-    StrComplete = ""
+
+@pytest.fixture
+def fdTest():
+    return FileInteraction("ForTests","Complete")
+
+@pytest.fixture
+def strComplete():
+    StrComplete : str= ""
     StrComplete+="619375824\n"
     StrComplete+="725814369\n"
     StrComplete+="348692571\n"
@@ -23,9 +28,43 @@ def test_start():
     StrComplete+="164237958\n"
     StrComplete+="293548716\n"
     StrComplete+="587961243"
+    return StrComplete
 
-def test_verifString():
-    assert StrComplete == "619375824\n725814369\n348692571\n976123485\n451789632\n832456197\n164237958\n293548716\n587961243"
+@pytest.fixture
+def tabWanted():
+    TabWanted = [[] for _ in range (9)]
+    i=0
+    for c in "619375824":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "725814369":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "348692571":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "976123485":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "451789632":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "832456197":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "164237958":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "293548716":
+        TabWanted[i].append(int(c))
+    i+=1
+    for c in "587961243":
+        TabWanted[i].append(int(c))
+    i+=1
+    return TabWanted
+
+def test_verifString(strComplete : str):
+    assert strComplete == "619375824\n725814369\n348692571\n976123485\n451789632\n832456197\n164237958\n293548716\n587961243"
 
 # test grilleToFile
 def test_grilleToFile():
@@ -46,39 +85,11 @@ def test_grilleToTab():
     pass # test Impossible pour le moment (setCelluleValueIndex)
 
 # test fileToTab
-def test_fileToTab():
-    TabWanted = [[] for _ in range (9)]
-    i=0
-    for c in "619375824":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "725814369":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "348692571":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "976123485":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "451789632":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "832456197":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "164237958":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "293548716":
-        TabWanted[i].append(ord(c))
-    i+=1
-    for c in "587961243":
-        TabWanted[i].append(ord(c))
-    i+=1
-    fdTest.write(StrComplete)
+def test_fileToTab(strComplete,fdTest,tabWanted):
+    fdTest.write(strComplete)
+    assert os.path.exists("./ForTests/Complete.txt")
     p=Parser(fdTest)
-    assert p.fileToTab()==TabWanted
+    assert p.fileToTab()==tabWanted
 
 # test stringToGrille
 def test_stringToGrille():
@@ -89,8 +100,13 @@ def test_grilleToString():
     pass # test Impossible pour le moment (setCelluleValueIndex)
 
 # test stringToTab
-def stringToTab():
-    pass
+def test_stringToTab(strComplete,tabWanted):
+    tab=Parser.stringToTab(strComplete)
+    print(strComplete)
+    assert tabWanted==tab
+    strTab=str(tab)
+    print(strTab)
+    assert tabWanted==Parser.stringToTab(strTab)
 
 # test getFileDescriptor & setFileDescriptor
 def test_fileDescriptors():
@@ -102,6 +118,13 @@ def test_fileDescriptors():
     assert p.getFileDescriptor().getDirectory() == "./ForTests/" # test avec le nouveau nom
     p.setFileDescriptor(fdB) # Set du Deuxième fd de base
     assert p.getFileDescriptor().getDirectory() == "./sudoku_parser_out/" # Verification du nom
+
+# test de fileInputFormat avec une entrée bien formaté
+def test_fileInputFormatValid(fdTest : FileInteraction, strComplete : str):
+    fdTest.write(strComplete)
+    formated = strComplete.split('\n')
+    assert formated == Parser._Parser__fileInputFormat(fdTest.read())
+    fdTest.clearDirectory()
 
 def test_stop():
     if os.path.exists("./ForTests/"):

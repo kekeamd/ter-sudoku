@@ -2,11 +2,13 @@ from Interface import Interface
 from InterfaceConsole import InterfaceConsole
 from InterfaceWeb import InterfaceWeb
 import os
+from requirement import verifyRequire
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 if __name__ == "__main__":
+    verifyRequire()
     while True:
         print("==============================")
         print("=========== Sudoku ===========")

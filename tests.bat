@@ -2,32 +2,37 @@
 
 cls
 echo Lancement des tests du projet !
-pip check pytest
+python requirement.py
 pause
 
 cls
 echo test Parser.py
-pytest ./TestParser.py
+pytest ./TestParser.py -v
 pause
 
 cls
 echo test FileInteraction.py
-pytest ./TestFileInteraction.py
+pytest ./TestFileInteraction.py -v
 pause
 
 cls
 echo test Cellule.py
-pytest ./TestCellule.py
+pytest ./TestCellule.py -v
 pause
 
 cls
 echo test Zone.py
-pytest ./TestZone.py
+pytest ./TestZone.py -v
 pause
 
 cls
 echo test Grille.py
-pytest ./TestGrille.py
+pytest ./TestGrille.py -v
+pause
+
+cls
+echo test SolverBacktrack.py
+pytest ./TestSolverBacktrack.py -v
 pause
 
 cls
