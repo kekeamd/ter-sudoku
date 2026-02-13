@@ -68,13 +68,11 @@ def test_verifString(strComplete : str):
 
 # test grilleToFile
 def test_grilleToFile():
-    myP = Parser()
-    
+    pass # test Impossible pour le moment (setCelluleValueIndex)
 
 # test fileToGrille
 def test_fileToGrille():
-    myP = Parser()
-    myP.getFileDescriptor()
+    pass # test Impossible pour le moment (getCelluleValueIndex)
 
 # test tabToGrille
 def test_tabToGrille():
@@ -122,6 +120,30 @@ def test_fileDescriptors():
 # test de fileInputFormat avec une entrée bien formaté
 def test_fileInputFormatValid(fdTest : FileInteraction, strComplete : str):
     fdTest.write(strComplete)
+    formated = strComplete.split('\n')
+    assert formated == Parser._Parser__fileInputFormat(fdTest.read())
+    fdTest.clearDirectory()
+
+# test de fileInputFormat avec une entrée mal formaté
+def test_fileInputFormatBadEasy(fdTest : FileInteraction, strComplete : str):
+    StrComplete : str= ""
+    StrComplete+="619375824725814369348692571976123485\n"
+    StrComplete+="\n"
+    StrComplete+="\n"
+    StrComplete+="\n"
+    StrComplete+="451789632\n"
+    StrComplete+="832456197\n"
+    StrComplete+="164237958\n"
+    StrComplete+="293548716\n"
+    StrComplete+="587961243"
+    fdTest.write(StrComplete)
+    formated = strComplete.split('\n')
+    assert formated == Parser._Parser__fileInputFormat(fdTest.read())
+    fdTest.clearDirectory()
+
+def test_fileInputFormatBadLine(fdTest : FileInteraction, strComplete : str):
+    StrComplete : str= "619375824725814369348692571976123485451789632832456197164237958293548716587961243\n"
+    fdTest.write(StrComplete)
     formated = strComplete.split('\n')
     assert formated == Parser._Parser__fileInputFormat(fdTest.read())
     fdTest.clearDirectory()
