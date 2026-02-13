@@ -175,13 +175,18 @@ class Parser:
                     else:
                         saved.append(c)
             i+=1
+        i=0
+        while(len(out)<size):
+            out.append("")
         if saved!=[]: # Si il y a des nombres qu'on a pas pu placer
             for s in out: # On itère sur les listes de out pour finir de les remplir
-                    while(len(s)<size): # Tant que la liste n'est pas à la taille requise
-                        if AutoComplet and len(saved)>0: # Si l'autoComplet est activé et qu'il me reste des éléments à placer
-                            s.append(saved.pop(0)) # Je place le permier élément de saved
-                        else: # Sinon
-                            s.append(0)
+                while(len(s)<size): # Tant que la liste n'est pas à la taille requise
+                    if AutoComplet and len(saved)>0: # Si l'autoComplet est activé et qu'il me reste des éléments à placer
+                        s = s + saved.pop(0) # Je place le permier élément de saved
+                    else: # Sinon
+                        s= s + '0'
+                out[i]=s
+                i+=1
         return out
     
     def __modifFileInteraction(self, directory : str = "", fileName : str = "", who_ : str = ""):
