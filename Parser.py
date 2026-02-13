@@ -137,7 +137,7 @@ class Parser:
         return s
     
     def getFileDescriptor(self) -> FileInteraction:
-        return self.__fileDescriptor
+        return self.__fileInteraction
     
     def setFileDescriptor(self,fileDescriptor : FileInteraction) -> None:
         self.__fileInteraction=fileDescriptor

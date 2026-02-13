@@ -14,7 +14,6 @@ class Solver(ABC): #transformation de la classe en classe static parce qu'on ne 
     def isValid(grille : Grille, row : int, column : int, value : int) -> bool: 
         if grille.columnContainsValue(column, value) or grille.rowContainsValue(row, value):
                     return False
-
         zone_index = indexOfZone(row, column, grille.getSize())
         zone = grille.getZone(zone_index)
         if zone and zone.containsValue(value):

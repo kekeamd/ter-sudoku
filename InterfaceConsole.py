@@ -51,6 +51,7 @@ class InterfaceConsole(Interface): # extends Interface
         }
         return difficulte_map.get(choix, "Facile")
     
+    # Gérer dans grille ?
     def nbretraites(self, difficulte : str) -> int:
         nb_retraites = 0
         if difficulte == "Facile":
@@ -69,9 +70,13 @@ class InterfaceConsole(Interface): # extends Interface
         difficulty = self.askDifficulty()
 
         grille_generator = GrilleBacktrack()
-        completedGrille = grille_generator.generateEntireGrille()
+        grille_generator.generateEntireGrille()
 
-        if completedGrille is None:
+        # GrilleJeu
+        # GrilleComplete = clone GrilleJeu complete
+
+
+        if grille_generator is None:
             print("Erreur lors de la génération de la grille complète.")
             return
         print("\nGrille prête à résoudre:")
@@ -79,16 +84,18 @@ class InterfaceConsole(Interface): # extends Interface
         # Retirer des valeurs selon la difficulte
         nb_retraites = self.nbretraites(difficulty)
         
-        grille_copie = [row[:] for row in completedGrille] # copie pour ne pas modifier la grille complète
-        grille_pour_resoudre = self.retirer_valeurs(grille_copie, nb_retraites)
+        # grille_copie = [row[:] for row in grille_generator] # copie pour ne pas modifier la grille complète
+        # grille_pour_resoudre = self.retirer_valeurs(grille_copie, nb_retraites)
 
         print("\nGrille prête à résoudre:")
-        self.print_grille(grille_pour_resoudre)
+        # self.print_grille(grille_pour_resoudre)
 
-        Parser.grilleToFile(grille_pour_resoudre, "Directory", "Generated_grille_uncompleted")
+        # Parser doit être instancier (C'est un objet)
+        # Parser.grilleToFile(grille_pour_resoudre, "Directory", "Generated_grille_uncompleted")
 
-        self.gameLoop(grille_pour_resoudre, completedGrille)
+        # self.gameLoop(grille_pour_resoudre, grille_generator)
 
+    # Gérer dans la classe Grille
     def print_grille(self, grille):
         for row in range(9):
             line = ""
@@ -103,6 +110,7 @@ class InterfaceConsole(Interface): # extends Interface
             if row % 3 == 2 and row != 8:
                 print("-" * 21)
 
+    # Gérer dans Grille (Grille pas un tableau)
     def retirer_valeurs(self, grille, nb_retraites : int):
         count = 0
         while count < nb_retraites:
