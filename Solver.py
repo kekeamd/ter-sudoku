@@ -11,11 +11,21 @@ class Solver(ABC): #transformation de la classe en classe static parce qu'on ne 
 
 
     @staticmethod
-    def isValid(grille : Grille, row : int, column : int, value : int) -> bool: 
+    def isValid(grille: Grille, row: int, column: int, value: int) -> bool:
+        n = grille.getSize()
+        N = n * n
+
+        # ligne / colonne
         if grille.columnContainsValue(column, value) or grille.rowContainsValue(row, value):
-                    return False
-        zone_index = indexOfZone(row, column, grille.getSize())
-        zone = grille.getZone(zone_index)
-        if zone and zone.containsValue(value):
             return False
+
+        # bloc
+        start_row = (row // n) * n
+        start_col = (column // n) * n
+        for r in range(start_row, start_row + n):
+            for c in range(start_col, start_col + n):
+                if grille.getCelluleValueCoord(r, c) == value:
+                    return False
+
         return True
+

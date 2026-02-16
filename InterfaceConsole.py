@@ -55,9 +55,11 @@ class InterfaceConsole(Interface): # extends Interface
         difficulty = self.askDifficulty()
 
         grilleVide = GrilleBacktrack()
-        
         self.grilleComplete = grilleVide.generateEntireGrille()
+
+        self.grilleDeJeu = GrilleBacktrack()
         self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
+
 
         if self.grilleComplete is None:
             print("Erreur lors de la génération de la grille complète.")
