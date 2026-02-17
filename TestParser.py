@@ -121,7 +121,7 @@ def test_fileDescriptors():
 def test_fileInputFormatValid(fdTest : FileInteraction, strComplete : str):
     fdTest.write(strComplete)
     formated = strComplete.split('\n')
-    assert formated == Parser._Parser__fileInputFormat(fdTest.read())
+    assert formated == Parser._fileInputFormat(fdTest.read())
     fdTest.clearDirectory()
 
 # test de fileInputFormat avec une entrée mal formaté
@@ -138,14 +138,14 @@ def test_fileInputFormatBadEasy(fdTest : FileInteraction, strComplete : str):
     StrComplete+="587961243"
     fdTest.write(StrComplete)
     formated = strComplete.split('\n')
-    assert formated == Parser._Parser__fileInputFormat(fdTest.read())
+    assert formated == Parser._fileInputFormat(fdTest.read())
     fdTest.clearDirectory()
 
 def test_fileInputFormatBadLine(fdTest : FileInteraction, strComplete : str):
     StrComplete : str= "619375824725814369348692571976123485451789632832456197164237958293548716587961243\n"
     fdTest.write(StrComplete)
     formated = strComplete.split('\n')
-    assert formated == Parser._Parser__fileInputFormat(fdTest.read())
+    assert formated == Parser._fileInputFormat(fdTest.read())
     fdTest.clearDirectory()
 
 def test_stop():

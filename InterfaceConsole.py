@@ -112,7 +112,7 @@ class InterfaceConsole(Interface): # extends Interface
         if self.grilleDeJeu.getCelluleValueCoord(row, col) != 0:
             print("\nCette case est déjà remplie.")
             return
-        if SolverBacktrack.isValid(self.grille, row, col, val):
+        if SolverBacktrack.isValid(self.grilleDeJeu, row, col, val):
             self.grilleDeJeu.setCelluleValueCoord(row, col, val)
             if self.grilleDeJeu.getCelluleValueCoord(row, col) == self.grilleComplete.getCelluleValueCoord(row, col): # je compares avec la grille complète
                 print("\nValeur insérée avec succès.")

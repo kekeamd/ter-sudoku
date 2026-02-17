@@ -5,22 +5,22 @@ from Except.ParserError import ParserError
 class Parser:
     
     def __init__(self, fileDescriptor : FileInteraction = FileInteraction()):
-        self.__fileInteraction=fileDescriptor
+        self._fileInteraction=fileDescriptor
     
     #@classmethod
     def grilleToFile(self,g : Grille, directory : str = "", fileName : str = "") -> None:
-        self.__modifFileInteraction(directory,fileName,"grilleToFile")
+        self._modifFileInteraction(directory,fileName,"grilleToFile")
         strG = ""
         for i in range (g.getSize()*g.getSize):
             if i==g.getSize():
                 strG = strG + "\n"
             # strG = strG + g.getCelluleValueIndex(None,i) || -> Utilisation de getCelluleValueIndex Impossible !
-        self.__fileInteraction.write(strG)
+        self._fileInteraction.write(strG)
     
     #@classmethod
     def fileToGrille(self,directory : str = "", fileName : str = ""): # -> Grille
-        self.__modifFileInteraction(directory,fileName,"fileToGrille")
-        Gstr = self.__fileInputFormat(self.__fileInteraction.read())
+        self._modifFileInteraction(directory,fileName,"fileToGrille")
+        Gstr = self._fileInputFormat(self._fileInteraction.read())
         Gout = Grille()
         w=0
         for s in Gstr:
@@ -54,10 +54,10 @@ class Parser:
     # Prends un fichier et le renvoie sous forme de tableau en 2D
     #@classmethod
     def fileToTab(self,directory : str = "", fileName : str = "") -> list[list[int]]:
-        self.__modifFileInteraction(directory,fileName,"fileToTab")
+        self._modifFileInteraction(directory,fileName,"fileToTab")
         out = []
         i=0
-        for s in self.__fileInputFormat(self.__fileInteraction.read()):
+        for s in self._fileInputFormat(self._fileInteraction.read()):
             out.append([])
             for c in s:
                 out[i].append(int(c))
@@ -148,10 +148,10 @@ class Parser:
         return s
     
     def getFileDescriptor(self) -> FileInteraction:
-        return self.__fileInteraction
+        return self._fileInteraction
     
     def setFileDescriptor(self,fileDescriptor : FileInteraction) -> None:
-        self.__fileInteraction=fileDescriptor
+        self._fileInteraction=fileDescriptor
     
     # Fonction qui permet de formater un fichier en entrée
     # fileContent est le contenue d'un fichier lu (tab of str)
@@ -159,7 +159,7 @@ class Parser:
     # size défini la taille de notre tableau de sortie (size*size)
     # AutoComplet dit si jamais on veut compléter les cases vides avec des nombres trouver en dehors des bornes ou pas
     @staticmethod
-    def __fileInputFormat(fileContent : list[str], nombreAuth : list[chr] = ['0','1','2','3','4','5','6','7','8','9'], size : int = 9, AutoComplet : bool = True) -> list[str]:
+    def _fileInputFormat(fileContent : list[str], nombreAuth : list[chr] = ['0','1','2','3','4','5','6','7','8','9'], size : int = 9, AutoComplet : bool = True) -> list[str]:
         out = [] # Tableau de chaine de char (sortie)
         saved = [] # Items qui lors de la première lecture n'ont pas pu être placé
         nbItems = 0 # Nombre d'item qui respecte les conditions
@@ -190,20 +190,20 @@ class Parser:
                 i+=1
         return out
     
-    def __modifFileInteraction(self, directory : str = "", fileName : str = "", who_ : str = ""):
+    def _modifFileInteraction(self, directory : str = "", fileName : str = "", who_ : str = ""):
         if who_=="":
             who="modifFileInteraction"
         else:
             who=who_
         if directory != "": # Utilisation du dossier de fileDescriptor
             try:
-                self.__fileInteraction.setDirectory(directory)
+                self._fileInteraction.setDirectory(directory)
             except:
                 Error="Parser : "+who+" -> Erreur lors de la modification du nom du directory !"
                 raise(ParserError(Error))
         elif fileName != "": # Utilisation du fichier de fileDescriptor
             try:
-                self.__fileInteraction.setFile(fileName)
+                self._fileInteraction.setFile(fileName)
             except:
                 Error="Parser : "+who+" -> Erreur lors de la modification du nom du fichier !"
                 raise(ParserError(Error))
