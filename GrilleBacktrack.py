@@ -37,21 +37,25 @@ class GrilleBacktrack(Grille):
             return potentialMaximum-offset
         elif self._difficulte == None:
             raise(GrilleError("GrilleBacktrack : "))
+        raise GrilleError(f"GrilleBacktrack : difficulté inconnue → {self._difficulte}")
         
 
     #purpose retire une valeur de la grille et renvoie sa valeur avec ses coordonnées
     def _removeValue(self) -> tuple[int, int, int]:# retour:  valeur, ligne, colonne
-        rows=[i for i in range (9)]
-        columns=[i for i in range (9)]
+        N = self.getSize() * self.getSize()
+        rows=[i for i in range (N)]
+        columns=[i for i in range (N)]
         shuffle(rows)
         shuffle(columns)
         tempGrille = self.clone()
         for row in rows:
             for col in columns:
                 oldValue = self.getCelluleValueCoord(row, col)                          # On sauvegarde la valeur de la case
-                if oldValue!=0:                                                         # On teste si la case est vide 
+                if oldValue!=0:                                                         # On teste si la case est vide
+                    tempGrille = self.clone()
                     tempGrille.removeCelluleValueCoord(row, col)                        # Si elle ne l'est pas alors on la vide
                     if (SolverBacktrack.solutionIsUnique(tempGrille)):         # On vérifie qu'il n'y ait qu'une seule possibilité de résolution
+                        self.removeCelluleValueCoord(row, col)
                         return oldValue, row, col                                       # Si oui alors on renvoie valeur, ligne, colonne
                     else:                                                               # Sinon
                         tempGrille.setCelluleValueCoord(row, col, oldValue)             # On remets l'ancienne valeur
@@ -62,8 +66,9 @@ class GrilleBacktrack(Grille):
         removedCells=[]
         i=0
         nbRemoved=0
-        maxIteration = 9*nbValues
-        while(i<=maxIteration) and (nbRemoved<=nbValues):
+        N = self.getSize() * self.getSize() # = 9
+        maxIteration = N * nbValues
+        while i <= maxIteration and nbRemoved < nbValues:
             val, row, col = self._removeValue()        # On tente de supprimer une valeur
             if (val!=-1):                               # Si c'est possible alors j'ajoute la valeur à l'historique
                 removedCells.append([val, row, col])
@@ -94,11 +99,14 @@ class GrilleBacktrack(Grille):
         if grille == None:
             self.generateEntireGrille()
         else:
-            self.grille = grille
-        Parser.grilleToFile(self, fileName="grilleSolution") #à modifier en fonction de comment on veux organiser les files
+            N = self.getSize() * self.getSize()
+            for i in range(N):
+                for j in range(N):
+                    self.setCelluleValueCoord(i, j, grille.getCelluleValueCoord(i, j))
+        #Parser.grilleToFile(self, fileName="grilleSolution") #à modifier en fonction de comment on veux organiser les files
         nbValuesToRemove = self.emptyCelluleCount()
         self._removeValues(nbValuesToRemove)
-        Parser.grilleToFile(self, fileName="grilleInitale") #à modifier en fonction de comment on veux organiser les files
+        #Parser.grilleToFile(self, fileName="grilleInitale") #à modifier en fonction de comment on veux organiser les files
 
 
     #purpose: clone la grille
@@ -106,4 +114,4 @@ class GrilleBacktrack(Grille):
         newGrille = []
         for i in range(self._size**2):
             newGrille.append(self._grille[i].clone())
-        return GrilleBacktrack(newGrille)
+        return GrilleBacktrack(newGrille, self._size)

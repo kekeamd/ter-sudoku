@@ -21,8 +21,8 @@ class SolverBacktrack(Solver):
 
     @staticmethod
     def solutionIsUnique(grille : Grille) -> bool:
-            copie=Grille.clone(grille) 
-            return SolverBacktrack.countPossibilityLimit(copie) == 1
+            copie = grille.clone() 
+            return SolverBacktrack.countPossibilityLimit(copie,limit=2) == 1
 
 
     @staticmethod
@@ -32,13 +32,13 @@ class SolverBacktrack(Solver):
         for i in range(taille):
             for j in range(taille): 
                 if grille.getCelluleValueCoord(i, j) == 0: 
-                    for val in range(1, taille+1):
+                    for val in range(1, taille + 1):
                         if Solver.isValid(grille, i, j, val):
                             grille.setCelluleValueCoord(i, j, val)
-                            count += SolverBacktrack.countPossibilityLimit(grille)
+                            count += SolverBacktrack.countPossibilityLimit(grille, limit)
+                            grille.setCelluleValueCoord(i, j, 0)
                             if count >= limit:
                                 return count
-                            grille.setCelluleValueCoord(i, j, 0)
                     return count
         return 1
 

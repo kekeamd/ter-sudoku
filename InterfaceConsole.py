@@ -43,13 +43,17 @@ class InterfaceConsole(Interface): # extends Interface
         choix = input("Votre choix: ")
 
         difficulte_map = {
-            '1': "Facile",
-            '2': "Moyen",
-            '3': "Difficile",
-            '4': "Extrême",
-            '5': "God Mode"
+            '1': Difficulte.FACILE,
+            '2': Difficulte.MOYEN,
+            '3': Difficulte.DIFFICILE,
+            '4': Difficulte.EXTREME,
+            '5': Difficulte.GODMODE
         }
-        return difficulte_map.get(choix, "Facile")
+
+        if choix in difficulte_map:
+            return difficulte_map[choix]
+
+        print("Choix invalide. Réessayez.")
 
     def playSudoku(self): # prends la difficulté, la grille complete, fait la grille prete à resoudre et appele gameLoop
         difficulty = self.askDifficulty()
