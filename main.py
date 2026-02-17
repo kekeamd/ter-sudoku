@@ -2,11 +2,13 @@ from Interface import Interface
 from InterfaceConsole import InterfaceConsole
 from InterfaceWeb import InterfaceWeb
 import os
+from requirement import verifyRequire
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 if __name__ == "__main__":
+    verifyRequire()
     while True:
         print("==============================")
         print("=========== Sudoku ===========")
@@ -17,13 +19,13 @@ if __name__ == "__main__":
         print("==============================")
         
         try:
-            TypeDeJeu = int(input("Faites votre choix : "))
+            TypeDeJeu = input("Faites votre choix : ")
         except ValueError:
             clear()
             continue
         clear()
 
-        if TypeDeJeu == 1:                                          # Jeu dans la console
+        if TypeDeJeu == '1':                                          # Jeu dans la console
             print("======================================")
             print("========== Bienvenue dans : ==========")
             print("====== Sudoku Interface Console ======")
@@ -32,7 +34,7 @@ if __name__ == "__main__":
             interface : Interface = InterfaceConsole()
             interface.startPlaying()
 
-        elif TypeDeJeu == 2:                                        # Jeu sur serveur Web
+        elif TypeDeJeu == '2':                                        # Jeu sur serveur Web
             print("==============================")
             print("====== Bienvenue dans : ======")
             print("==== Sudoku : Serveur Web ====")
@@ -43,7 +45,7 @@ if __name__ == "__main__":
             if answer == 'O':
                 interface.startPlaying()
         
-        elif TypeDeJeu == 3:                                        # Tests Haut niveaux
+        elif TypeDeJeu == '3':                                        # Tests Haut niveaux
             print("==============================")
             print("====== Bienvenue dans : ======")
             print("====== Test haut niveau ======")

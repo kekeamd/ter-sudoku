@@ -90,10 +90,21 @@ class GrilleBacktrack(Grille):
 
 
     #purpose: génère des valeurs et rempli la grille
-    def generateValues(self, difficulte : Difficulte) -> None:
+    def generateValues(self, difficulte : Difficulte, grille : Grille = None) -> None:#avec grille la grille complète (optionnel)
         self.__setDifficulte(difficulte)
-        self.generateEntireGrille()
-        Parser.grilleToFile(self, "grilleSolution") #à modifier en fonction de comment on veux organiser les files
+        if grille == None:
+            self.generateEntireGrille()
+        else:
+            self.grille = grille
+        Parser.grilleToFile(self, fileName="grilleSolution") #à modifier en fonction de comment on veux organiser les files
         nbValuesToRemove = self.emptyCelluleCount()
         self.__removeValues(nbValuesToRemove)
-        Parser.grilleToFile(self, "grilleInitale") #à modifier en fonction de comment on veux organiser les files
+        Parser.grilleToFile(self, fileName="grilleInitale") #à modifier en fonction de comment on veux organiser les files
+
+
+    #purpose: clone la grille (duh!)
+    def clone(self):# -> Grille
+        newGrille = []
+        for i in range(self.__size**2):
+            newGrille.append(self.__grille[i].clone())
+        return Grille(newGrille)

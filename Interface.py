@@ -1,13 +1,16 @@
 from abc import ABC, abstractmethod
 from Difficulte import Difficulte
+from Grille import Grille
+
 
 # ABC = Abstract Base Class
 # ABC existe pour forcer Python à se comporter comme Java avec les classes abstraites
 
 class Interface(ABC): # ne peux pas l'instancier, sert de modele
     def __init__(self):
-        self.grilleDeJeu = None
-        self.grilleComplete = None
+        self.grilleDeJeu : Grille = None
+        self.grilleComplete : Grille = None
+
     
     @abstractmethod # Toute classe qui hérite de Interface doit implémenter cette méthode
     def startPlaying(self):

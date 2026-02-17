@@ -94,11 +94,11 @@ class Zone:
     # Renvoie un clone de l'objet courant Zone
     def clone(self):# -> Zone (Erreur lors de la compilation)
         NewZone=[]
-        for e in self.zone: # Ajouts des cellules cloné dans une liste
+        for e in self.__zone: # Ajouts des cellules cloné dans une liste
             NewZone.append(e.clone())
         return Zone(NewZone, self.__size)
     
-    """Dans Parser?
+    """ Va être utilisé ?
     def toString(self) -> str:
         size = len(self.__zone)
         s = "["
