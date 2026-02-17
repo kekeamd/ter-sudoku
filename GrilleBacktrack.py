@@ -19,28 +19,28 @@ class GrilleBacktrack(Grille):
     
     #purpose: renvoie le nombre de retraits(aka de cellules vides)
     def emptyCelluleCount(self) -> int: #gardez en tête qu'il n'y a pas de réponse exact pour ça donc j'ai fait des approximations(à revoir?)
-        celluleCount = self.__size**4                       #nombre de cellule dans la grille
-        minCelluleCount = (17//3)*self.__size               #nombre minimal de cellule avec une valeur pour grille autre que 9x9(approximatif)
-        if (self.__size==3):
+        celluleCount = self._size**4                       #nombre de cellule dans la grille
+        minCelluleCount = (17//3)*self._size               #nombre minimal de cellule avec une valeur pour grille autre que 9x9(approximatif)
+        if (self._size==3):
             minCelluleCount = 17                            #nombre minimal de cellule avec une valeur pour grille 9x9 (exact)
         potentialMaximum = celluleCount-minCelluleCount     #nombre maximal de cellule vide
-        offset = 2**(self.__size-1)                         #nombre qu'il faut enlever pour éviter que ce soit trop dure
-        if self.__difficulte == Difficulte.FACILE: #pour une grille 9*9: 28
+        offset = 2**(self._size-1)                         #nombre qu'il faut enlever pour éviter que ce soit trop dure
+        if self._difficulte == Difficulte.FACILE: #pour une grille 9*9: 28
             return potentialMaximum-(9*offset)
-        elif self.__difficulte == Difficulte.MOYEN: #pour une grille 9x9: 40
+        elif self._difficulte == Difficulte.MOYEN: #pour une grille 9x9: 40
             return potentialMaximum-(6*offset)
-        elif self.__difficulte == Difficulte.DIFFICILE:#pour une grille 9x9: 48
+        elif self._difficulte == Difficulte.DIFFICILE:#pour une grille 9x9: 48
             return potentialMaximum-(4*offset)
-        elif self.__difficulte == Difficulte.EXTREME: #pour une grille 9x9: 56
+        elif self._difficulte == Difficulte.EXTREME: #pour une grille 9x9: 56
             return potentialMaximum-(2*offset)
-        elif self.__difficulte == Difficulte.GODMODE: #pour une grille 9x9: 60
+        elif self._difficulte == Difficulte.GODMODE: #pour une grille 9x9: 60
             return potentialMaximum-offset
-        elif self.__difficulte == None:
+        elif self._difficulte == None:
             raise(GrilleError("GrilleBacktrack : "))
-
+        
 
     #purpose retire une valeur de la grille et renvoie sa valeur avec ses coordonnées
-    def __removeValue(self) -> tuple[int, int, int]:# retour:  valeur, ligne, colonne
+    def _removeValue(self) -> tuple[int, int, int]:# retour:  valeur, ligne, colonne
         rows=[i for i in range (9)]
         columns=[i for i in range (9)]
         shuffle(rows)
@@ -58,14 +58,13 @@ class GrilleBacktrack(Grille):
         return -1, -1, -1
 
     #purpose retire 'nbValues' valeurs de la grille
-    def __removeValues(self, nbValues : int) -> None:
-        tempGrille=self.clone()
+    def _removeValues(self, nbValues : int) -> None:
         removedCells=[]
         i=0
         nbRemoved=0
         maxIteration = 9*nbValues
         while(i<=maxIteration) and (nbRemoved<=nbValues):
-            val, row, col = self.__removeValue()        # On tente de supprimer une valeur
+            val, row, col = self._removeValue()        # On tente de supprimer une valeur
             if (val!=-1):                               # Si c'est possible alors j'ajoute la valeur à l'historique
                 removedCells.append([val, row, col])
                 nbRemoved+=1
@@ -91,20 +90,20 @@ class GrilleBacktrack(Grille):
 
     #purpose: génère des valeurs et rempli la grille
     def generateValues(self, difficulte : Difficulte, grille : Grille = None) -> None:#avec grille la grille complète (optionnel)
-        self.__setDifficulte(difficulte)
+        self._setDifficulte(difficulte)
         if grille == None:
             self.generateEntireGrille()
         else:
             self.grille = grille
         Parser.grilleToFile(self, fileName="grilleSolution") #à modifier en fonction de comment on veux organiser les files
         nbValuesToRemove = self.emptyCelluleCount()
-        self.__removeValues(nbValuesToRemove)
+        self._removeValues(nbValuesToRemove)
         Parser.grilleToFile(self, fileName="grilleInitale") #à modifier en fonction de comment on veux organiser les files
 
 
     #purpose: clone la grille
     def clone(self):# -> GrilleBacktrack
         newGrille = []
-        for i in range(self.__size**2):
-            newGrille.append(self.__grille[i].clone())
+        for i in range(self._size**2):
+            newGrille.append(self._grille[i].clone())
         return GrilleBacktrack(newGrille)
