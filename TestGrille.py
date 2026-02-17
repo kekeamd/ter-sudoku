@@ -61,16 +61,23 @@ def test_columnDoesntContainsValue():
 
 
 # Test que la méthode renvoie la bonne cellule
-def test_getCelluleValueCoordReturnsRightCellule():
+def test_getCelluleValueCoordReturnsRightValue():
     grille : Grille = GrilleBacktrack([Zone([Cellule(v) for v in range(i, i+9)]) for i in range(1, 26, 3)])
     assert grille.getCelluleValueCoord(3, 1)==11
 
 
 # Test que la méthode renvoie la bonne cellule
-def test_getCelluleValueZoneIndexReturnsRightCellule():
+def test_getCelluleValueZoneIndexReturnsRightValue():
     zone = Zone([Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(16), Cellule(0), Cellule(0)])
     grille : Grille = GrilleBacktrack([zone]+[Zone([Cellule(v) for v in range(i, i+9)]) for i in range(4, 26, 3)])
     assert grille.getCelluleValueZoneIndex(0, 6)==16
+
+
+# Test que la méthode renvoie la bonne cellule
+def test_getCelluleValueIndexReturnsRightValue():
+    grille : Grille = GrilleBacktrack([Zone([Cellule(v) for v in range(i, i+9)]) for i in range(1, 26, 3)])
+    assert grille.getCelluleValueIndex(28)==11
+
 
 """
     def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
