@@ -60,7 +60,6 @@ class InterfaceConsole(Interface): # extends Interface
         self.grilleDeJeu = GrilleBacktrack()
         self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 
-
         if self.grilleComplete is None:
             print("Erreur lors de la génération de la grille complète.")
             return

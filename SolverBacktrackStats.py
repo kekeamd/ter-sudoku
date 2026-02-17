@@ -10,21 +10,22 @@ class SolverBacktrackStats(SolverBacktrack): #transformation de la classe en cla
             "valid": False
         }
     @staticmethod
-    def solveGrille(self,grille : Grille) -> bool:
-        taille=grille.getSize()*grille.getSize()
-        self.stats["appelsRecursifs"] += 1
+    def solveGrille(grille : Grille) -> bool:
+        taille = grille.getSize() * grille.getSize()
+        SolverBacktrackStats.stats["appelsRecursifs"] += 1
+        
         for i in range(taille):
             for j in range(taille):
                 if grille.getCelluleValueCoord(i, j) == 0:
-                    for val in range(1, 10):
-                        self.stats["testsEffectues"] += 1
-                        if self.isValid(grille, i, j, val):
+                    for val in range(1, taille + 1):
+                        SolverBacktrackStats.stats["testsEffectues"] += 1
+                        if SolverBacktrackStats.isValid(grille, i, j, val):
                             grille.setCelluleValueCoord(i, j, val)
-                            if self.solveGrille(grille):
-                                self.stats["valid"] = True
+                            if SolverBacktrackStats.solveGrille(grille):
+                                SolverBacktrackStats.stats["valid"] = True
                                 return True
                             grille.setCelluleValueCoord(i, j, 0)
-                            self.stats["nbBacktracks"] += 1
+                            SolverBacktrackStats.stats["nbBacktracks"] += 1
                     return False
-        self.stats["valid"] = True
+        SolverBacktrackStats.stats["valid"] = True
         return True

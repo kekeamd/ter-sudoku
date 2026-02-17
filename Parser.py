@@ -11,7 +11,7 @@ class Parser:
     def grilleToFile(self,g : Grille, directory : str = "", fileName : str = "") -> None:
         self._modifFileInteraction(directory,fileName,"grilleToFile")
         strG = ""
-        for i in range (g.getSize()*g.getSize):
+        for i in range (g.getSize()*g.getSize()):
             if i==g.getSize():
                 strG = strG + "\n"
             # strG = strG + g.getCelluleValueIndex(None,i) || -> Utilisation de getCelluleValueIndex Impossible !
