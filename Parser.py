@@ -44,7 +44,7 @@ class Parser:
     def grilleToTab(g : Grille) -> list[list[int]]:
         out = []
         j = 0
-        for i in range (g.getSize()*g.getSize):
+        for i in range (g.getSize()*g.getSize()):
             if g.getSize()==i:
                 out.append([])
                 j+=1
@@ -70,7 +70,7 @@ class Parser:
     @staticmethod
     def stringToGrille(strG : str): # -> Grille
         chffr = [0,1,2,3,4,5,6,7,8,9]
-        outG : Grille = Grille()
+        outG : Grille = Grille()            #il va y avoir un problème d'instanciation car grille est abstraite
         strG.split(",")
         i=0
         for e in strG:
@@ -95,11 +95,12 @@ class Parser:
     """
     
     @staticmethod
-    def grilleToString(g) -> str: # ??
+    def grilleToString(g : Grille) -> str: # ??
         size = g.getSize()**2
+        numberOfCellule = size**2
         s = "[ "
-        for i in range(size):
-            s +=g.getValueIndex(i)
+        for i in range(numberOfCellule):
+            s +=g.getCelluleValueIndex(i)       #je me suis permis de fix ça vu que j'ai rajouter cette méthode
             if (i!=size-1):
                 s+= ", "
         s += " ]"

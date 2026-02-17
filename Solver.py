@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from Grille import Grille
 from Zone import Zone
-from GrilleUtils import indexOfZone
+from GrilleUtils import zoneIndexFromCoord
 
 class Solver(ABC): #transformation de la classe en classe static parce qu'on ne veut absolument pas instancier des solvers T-T
     @staticmethod

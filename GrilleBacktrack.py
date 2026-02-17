@@ -102,9 +102,9 @@ class GrilleBacktrack(Grille):
         Parser.grilleToFile(self, fileName="grilleInitale") #à modifier en fonction de comment on veux organiser les files
 
 
-    #purpose: clone la grille (duh!)
-    def clone(self):# -> Grille
+    #purpose: clone la grille
+    def clone(self):# -> GrilleBacktrack
         newGrille = []
         for i in range(self.__size**2):
             newGrille.append(self.__grille[i].clone())
-        return Grille(newGrille)
+        return GrilleBacktrack(newGrille)

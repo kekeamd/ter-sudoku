@@ -6,29 +6,37 @@ def indexOfFirstZoneInColumn(col : int, l : int) -> int:#col commence à 0    ; 
     return (col//l)
 
 
-def indexOfZone(row : int, column : int, l : int) -> int: #l = nombre de zones/lignes/colonnes
-        rowIndex = indexOfFirstZoneInRow(row, l)            #example: pour une grille 3x3, a pour valeur 0, 3, 6
-        colIndex = indexOfFirstZoneInColumn(column, l)         #example: pour une grille 3x3, a pour valeur 0, 1, 2
-        zoneIndex = rowIndex+colIndex             #example: pour une grille 3x3 avec row=3 et col=4, a pour valeur 3 + 1
+def zoneIndexFromCoord(row : int, column : int, l : int) -> int: #l = nombre de zones par ligne/colonne
+        rowIndex = indexOfFirstZoneInRow(row, l)            #example: pour une grille 9x9, a pour valeur 0, 3, 6
+        colIndex = indexOfFirstZoneInColumn(column, l)         #example: pour une grille 9x9, a pour valeur 0, 1, 2
+        zoneIndex = rowIndex+colIndex             #example: pour une grille 9x9 avec row=3 et col=4, a pour valeur 3 + 1
         return zoneIndex
 
 
 def indexRowOrColumnInZone(rowOrcol : int, l : int) -> int:#rowOrcol commence à 0    ;    l = nombre de lignes/colonnes par zone
-    return rowOrcol%l
+    return rowOrcol%l           #renvoie l'index relatif de la ligne ou colonne (par rapport à la zone dans laquel elle est située)
 
 
-def indexOfRow(zoneI : int, index : int, l : int) -> int:#row commence à 0    ;   l = nombre de lignes
+def indexOfRow(zoneI : int, index : int, l : int) -> int:#row commence à 0    ;   l = nombre de lignes par zone
     globalRowIndex = zoneI//l
     localRowIndex = index//l
     rowIndex = l*globalRowIndex + localRowIndex
     return rowIndex
 
 
-def indexOfColumn(zoneI : int, index : int, l : int) -> int:#col commence à 0    ;   l = nombre de colonnes
+def indexOfColumn(zoneI : int, index : int, l : int) -> int:#col commence à 0    ;   l = nombre de colonnes par zone
     globalColumnIndex = zoneI%l
     localColumnIndex = index%l
     columnIndex = l*globalColumnIndex + localColumnIndex
     return columnIndex
+
+
+def rowIndexFromCelluleIndex(index : int, l : int) -> int: #index commence à 0   ;
+    size = l**2
+    return index//size
+def columnIndexFromCelluleIndex(index : int, l : int) -> int: #index commence à 0   ;
+    size = l**2
+    return index%size
 
 
 def valuesWithoutZero(values : list[int]) -> list[int]:

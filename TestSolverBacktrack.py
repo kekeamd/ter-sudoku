@@ -2,6 +2,8 @@ from SolverBacktrack import SolverBacktrack
 from Grille import Grille
 from Cellule import Cellule
 from Except.GrilleError import GrilleError
+from Zone import Zone
+from GrilleBacktrack import GrilleBacktrack 
 
 # Merci de garder les commentaire ci-dessous, ils pourront être copier coller dans d'autres fichiers tests
 
@@ -18,3 +20,16 @@ from Except.GrilleError import GrilleError
 # les fonctions doivent être nommée de cette manière :
 # def test_leNomDeMonTest():
 # Si besoin d'exemple consulter d'autres fichiers tests
+
+def test_solveGrilleReturnsTrueOnValidGrille():
+    zoneListe = [Zone([Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0)]) for _ in range(9)]
+    grille: GrilleBacktrack = GrilleBacktrack(zoneListe)
+    print("Grille initiale:")
+    grille.printGrille()
+    # Exécute le solveur et retourne le résultat (True si résolue)
+    result = SolverBacktrack.solveGrille(grille)
+    print("Grille après tentative de résolution:")
+    grille.printGrille()
+    assert result == True
+    
+    
