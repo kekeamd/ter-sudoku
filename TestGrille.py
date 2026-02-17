@@ -67,10 +67,10 @@ def test_getCelluleValueCoordReturnsRightCellule():
 
 
 # Test que la méthode renvoie la bonne cellule
-def test_getCelluleValueIndexReturnsRightCellule():
+def test_getCelluleValueZoneIndexReturnsRightCellule():
     zone = Zone([Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(0), Cellule(16), Cellule(0), Cellule(0)])
     grille : Grille = GrilleBacktrack([zone]+[Zone([Cellule(v) for v in range(i, i+9)]) for i in range(4, 26, 3)])
-    assert grille.getCelluleValueIndex(zone, 6)==16
+    assert grille.getCelluleValueZoneIndex(0, 6)==16
 
 """
     def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
@@ -79,67 +79,4 @@ def test_getCelluleValueIndexReturnsRightCellule():
         self.__grille : list[Zone] = zoneList
         self.__sizeCote : int = sizeCote
         self.__difficulte : Difficulte = None    
-
-
-    #purpose: rectifie les listes de candidats de la cellule en fonction des candidats impossibles 'imp'
-    def __adjustCandidatesCellule(self, cellule : Cellule, imp : list[int]) -> None:
-        newCandidates = listDifference(cellule.getCandidates(), imp)
-        cellule.setCandidates(newCandidates)
-
-
-    #purpose: rectifie les listes de candidats des cellules de la zone 'zone'
-    def __adjustCandidatesZone(self, zone : Zone) -> None:
-        for i in range(self.__sizeCote*self.__sizeCote):
-            cellule =  self.__getCelluleIndex(zone, i)
-            impossible = [valuesWithoutZero(zone.getValues())]
-            self.__adjustCandidatesCellule(cellule, impossible)
-
-
-    #purpose: rectifie les listes de candidats des cellules de la ligne 'row'
-    def __adjustCandidatesRow(self, row : int) -> None:
-        for i in range(self.__sizeCote*self.__sizeCote):
-            cellule =  self.__getCelluleCoord(row, i)
-            impossible = [valuesWithoutZero(self.getRow(row))]
-            self.__adjustCandidatesCellule(cellule, impossible)
-            
-
-
-    #purpose: rectifie les listes de candidats des cellules de la colonne 'column'
-    def __adjustCandidatesColumn(self, column : int) -> None:
-        for i in range(self.__sizeCote*self.__sizeCote):
-            cellule =  self.__getCelluleCoord(i, column)
-            impossible = [valuesWithoutZero(self.getColumn(column))]
-            self.__adjustCandidatesCellule(cellule, impossible)
-
-
-    #purpose: rectifie les listes de candidats des cellules de la grille
-    def adjustCandidates(self) -> None:
-        size = self.__sizeCote*self.__sizeCote
-        for i in range(size):
-            self.__adjustCandidatesZone(self.__grille[i])
-            self.__adjustCandidatesRow(i)
-            self.__adjustCandidatesColumn(i)
-
-
-    #purpose: rectifie la liste de candidats de la cellule aux coordonnées ('row', 'column')
-    def adjustCandidatesAfterAddingValueCoord(self, row : int, column : int) -> None:
-        zone = self.__grille[indexOfZone(row, column, self.__sizeCote)]
-        self.__adjustCandidatesZone(zone)
-        self.__adjustCandidatesRow(row)
-        self.__adjustCandidatesColumn(column)
-
-
-    #purpose: rectifie la liste de candidats de la cellule d'index 'index' dans la zone 'zone'
-    def adjustCandidatesAfterAddingValueIndex(self, zone : Zone, index : int) -> None:
-        zoneI = -1
-        for z in range(self.__sizeCote*self.__sizeCote):
-            if (self.__grille[z]==zone):
-                zoneI = z
-        if (zoneI==-1):
-            raise(GrilleError("Grille : impossible d'identifier la zone en ajustant les candidats après modification de la valeur d'une cellule par index"))
-        row = indexOfRow(zoneI, index, self.__sizeCote)
-        column = indexOfColumn(zoneI, index, self.__sizeCote)
-        self.__adjustCandidatesZone(zone)
-        self.__adjustCandidatesRow(row)
-        self.__adjustCandidatesColumn(column)
 """
