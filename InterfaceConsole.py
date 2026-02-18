@@ -124,11 +124,14 @@ class InterfaceConsole(Interface): # extends Interface
                 # CHECK FIN DE JEU
                 size = self.grilleDeJeu.getSize() ** 2
                 hasZero = False
-                for row in size:
+                for row in range(size):
                     for cell in self.grilleDeJeu.getRow(row):
                         if cell == 0:
                             hasZero = True
-                if hasZero != True:
+                            break
+                    if hasZero:
+                        break
+                if not hasZero:
                     print("\nBravo ! Grille complétée !")
             else:
                 print("\nValeur invalide pour cette position.")
