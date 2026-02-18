@@ -1,3 +1,4 @@
+from random import shuffle
 from Solver import Solver
 from Grille import Grille
 
@@ -9,7 +10,9 @@ class SolverBacktrack(Solver):
         for i in range(taille):
             for j in range(taille):
                 if grille.getCelluleValueCoord(i, j) == 0:
-                    for val in range(1, taille + 1):
+                    vals = list(range(1, taille + 1))
+                    shuffle(vals)
+                    for val in vals:
                         if Solver.isValid(grille, i, j, val):
                             grille.setCelluleValueCoord(i, j, val)
                             if SolverBacktrack.solveGrille(grille):
