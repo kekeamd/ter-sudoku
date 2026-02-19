@@ -186,32 +186,34 @@ class Grille(ABC):
     #purpose: rectifie les listes de candidats des cellules de la zone 'zone'
     def _adjustCandidatesZone(self, zone : int) -> None: #zone commence
         z = self._getZone(zone)
+        impossible = valuesWithoutZero(z.getValues())
         for i in range(self._size**2):
             cellule =  self._getCelluleZoneIndex(zone, i)
-            impossible = [valuesWithoutZero(z.getValues())]
             self._adjustCandidatesCellule(cellule, impossible)
 
 
     #purpose: rectifie les listes de candidats des cellules de la ligne 'row'
     def _adjustCandidatesRow(self, row : int) -> None:
+        impossible = valuesWithoutZero(self.getRow(row))
         for i in range(self._size**2):
             cellule =  self._getCelluleCoord(row, i)
-            impossible = [valuesWithoutZero(self.getRow(row))]
             self._adjustCandidatesCellule(cellule, impossible)
             
 
 
     #purpose: rectifie les listes de candidats des cellules de la colonne 'column'
     def _adjustCandidatesColumn(self, column : int) -> None:
+        impossible = valuesWithoutZero(self.getColumn(column))
         for i in range(self._size**2):
             cellule =  self._getCelluleCoord(i, column)
-            impossible = [valuesWithoutZero(self.getColumn(column))]
             self._adjustCandidatesCellule(cellule, impossible)
 
 
     #purpose: rectifie les listes de candidats des cellules de la grille
     def adjustCandidates(self) -> None:
         size = self._size**2
+        for i in range(size**2):
+            self._getCelluleIndex(i).setCandidates([v for v in range(1, size)])
         for i in range(size):
             self._adjustCandidatesZone(i)
             self._adjustCandidatesRow(i)

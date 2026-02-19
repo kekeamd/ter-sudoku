@@ -57,6 +57,7 @@ def valuesWithoutZero(values : list[int]) -> list[int]:
         val = values[i]
         if (val!=0):
             newValues.append(val)
+    return newValues
 
 
 def listUnion(list1 : list[int], list2: list[int]) -> list[int]:
