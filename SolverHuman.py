@@ -7,7 +7,7 @@ class SolverHuman(Solver): #transformation de la classe en classe static parce q
     def solveGrille(grille : Grille) -> bool:
         pass
 
-
+    
     @staticmethod
     def singleton() -> bool:
         pass
