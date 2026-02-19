@@ -213,7 +213,7 @@ class Grille(ABC):
     def adjustCandidates(self) -> None:
         size = self._size**2
         for i in range(size**2):
-            self._getCelluleIndex(i).setCandidates([v for v in range(1, size)])
+            self._getCelluleIndex(i).setCandidates([v for v in range(1, size+1)])
         for i in range(size):
             self._adjustCandidatesZone(i)
             self._adjustCandidatesRow(i)
