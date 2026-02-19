@@ -236,7 +236,7 @@ class Grille(ABC):
 
 
     #purpose: rectifie la liste de candidats de la cellule d'index absolu 'index'
-    def adjustCandidatesAfterAddingValueZoneIndex(self, index : int) -> None:
+    def adjustCandidatesAfterAddingValueIndex(self, index : int) -> None:
         row = rowIndexFromCelluleIndex(index, self._size)
         column = columnIndexFromCelluleIndex(index, self._size)
         zone = zoneIndexFromCoord(row, column, self._size)
