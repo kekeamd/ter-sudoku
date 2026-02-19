@@ -10,6 +10,10 @@ class SolverHuman(Solver):
     def solveGrille(grille : Grille) -> bool:
         grille.adjustCandidates()
         while not SolverHuman.isCompleted(grille):      #on boucle tant que la grille n'est pas complètement résolue
+            #---------------debug:
+            #for c in range(grille.getSize()**4):
+            #    print("c:", c, ", v=", grille.getCelluleValueIndex(c), ", ca=", grille.getCelluleCandidatesIndex(c))
+            #---------------
             if SolverHuman.singletonNu(grille):         #on essaye les techniques de la moins couteuse à la plus couteuse
                 continue                                #on retourne au départ de la boucle si jamais une des techniques fonctionne
             if SolverHuman.dernierNombre(grille):
@@ -96,7 +100,7 @@ class SolverHuman(Solver):
         columnCandidates = []
         for cell in range(size):        #on crée la liste de tout les candidats dans la colonne sauf ceux de la cellule en question
             if cell!=relatifIndex:
-                columnCandidates = listUnion(columnCandidates, grille.getCelluleCandidatesIndex(columnIndex*size + cell))
+                columnCandidates = listUnion(columnCandidates, grille.getCelluleCandidatesIndex(columnIndex + cell*size))
         candidatesOnlyInThisCellule = listDifference(celluleCandidates, columnCandidates)     #on enlève les candidats de la cellule qui sont autre part dans la colonne
         if len(candidatesOnlyInThisCellule)>1:
             raise(GrilleError("SolverHuman: Il y a deux solutions possible pour une cellule en utilisant le singleton caché (sur la colonne)!"))

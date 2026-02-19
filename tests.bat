@@ -36,6 +36,11 @@ python -m pytest ./TestSolverBacktrack.py -v
 pause
 
 cls
+echo test SolverHuman.py
+python -m pytest ./TestSolverHuman.py -v
+pause
+
+cls
 echo FIN TESTS
 pause
 cls
