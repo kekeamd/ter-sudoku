@@ -61,6 +61,13 @@ class Grille(ABC):
         return colValues
 
 
+    #purpose: renvoie la zone numéro 'zone'
+    def getZone(self, zone : int) -> list[int]:
+        z = self._getZone(zone)
+        return z.getValues()
+
+
+
     #purpose: renvoie vrai si la ligne numéro 'row' contient la valeur 'value' et faux sinon
     def rowContainsValue(self, row : int, value : int) ->  bool:
         return value in self.getRow(row)

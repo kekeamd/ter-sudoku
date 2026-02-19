@@ -11,6 +11,8 @@ class SolverHuman(Solver):
         while not SolverHuman.isCompleted(grille):      #on boucle tant que la grille n'est pas complètement résolue
             if SolverHuman.singletonNu(grille):         #on essaye les techniques de la moins couteuse à la plus couteuse
                 continue                                #on retourne au départ de la boucle si jamais une des techniques fonctionne
+            if SolverHuman.dernierNombre(grille):
+                continue
             if SolverHuman.singletonCache(grille):
                 continue
             raise(SolverError("SolverHuman: Impossible de résoudre la grille à partir des techniques actuellement implémentées."))      #si on a testé toutes les techniques et aucune fonctionne alors il nous manque des techniques
@@ -128,3 +130,65 @@ class SolverHuman(Solver):
                 grille.setCelluleValueIndex(cell, resList[0])
                 return True
         return False            #renvoie faux car on a pas trouvé de valeur adéquate
+
+
+    #applique la méthode dernier nombre afin de trouver une valeur dans la grille, renvoie True si une valeur a été trouvée et False sinon
+    @staticmethod
+    def dernierNombre(grille: Grille) -> bool:  #il est peut-être possible d'optimiser le nombre de ligne de code
+        sizeCote = grille.getSize()
+        size = sizeCote**2
+        celluleCount = size**2          #on calcule le nombre de cellules
+        for cell in range(celluleCount):            #on itère sur chaque cellule
+            value = grille.getCelluleValueIndex(cell)
+            if value==0:        #si la cellule est vide alors on regarde si il y en a une autre dans sa zone/ligne/colonne
+                rowIndex = rowIndexFromCelluleIndex(cell, sizeCote)
+                relatifIndexRow = relatifIndexFromAbsoluteIndex(cell, sizeCote, "row")
+                columnIndex = columnIndexFromCelluleIndex(cell, sizeCote)
+                relatifIndexColumn = relatifIndexFromAbsoluteIndex(cell, sizeCote, "column")
+                zoneIndex = zoneIndexFromCoord(rowIndex, columnIndex, sizeCote)
+                relatifIndexZone = relatifIndexFromAbsoluteIndex(cell, sizeCote, "zone")
+                isTheOnlyZero = True
+                for c in range(size):                    #-------------------- on teste la ligne
+                    valueC = grille.getCelluleValueCoord(rowIndex, c)
+                    if c!=relatifIndexRow and valueC==0:  #si il y a un deuxième zero alors on passe au type de région suivant
+                        isTheOnlyZero = False
+                        break
+                if isTheOnlyZero:                       #si il n'y a qu'un seul zero alors on remplie la case
+                    values= grille.getRow(rowIndex)     #on récupère les valeurs de la région pour déterminer la valeur de la case
+                    for v in range(1, size):
+                        if v not in values:
+                            if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), v):    #failsafe au cas où la solution proposée n'est pas valide
+                                raise(SolverError("SolverHuman: la technique de résolution dernierNombre propose une valeur rendant la grille invalide!"))
+                            grille.setCelluleValueIndex(cell, v)
+                            return True
+                else:
+                    isTheOnlyZero=True
+                for c in range(size):                    #-------------------- on teste la colonne
+                    valueC = grille.getCelluleValueCoord(c, columnIndex)
+                    if c!=relatifIndexColumn and valueC==0:  #si il y a un deuxième zero alors on passe au type de région suivant
+                        isTheOnlyZero = False
+                        break
+                if isTheOnlyZero:                       #si il n'y a qu'un seul zero alors on remplie la case
+                    values= grille.getColumn(columnIndex)   #on récupère les valeurs de la région pour déterminer la valeur de la case
+                    for v in range(1, size):
+                        if v not in values:
+                            if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), v):    #failsafe au cas où la solution proposée n'est pas valide
+                                raise(SolverError("SolverHuman: la technique de résolution dernierNombre propose une valeur rendant la grille invalide!"))
+                            grille.setCelluleValueIndex(cell, v)
+                            return True
+                else:
+                    isTheOnlyZero=True
+                for c in range(size):                    #-------------------- on teste la zone
+                    valueC = grille.getCelluleValueZoneIndex(zoneIndex, c)
+                    if c!=relatifIndexZone and valueC==0:  #si il y a un deuxième zero alors on passe au type de région suivant
+                        isTheOnlyZero = False
+                        break
+                if isTheOnlyZero:                       #si il n'y a qu'un seul zero alors on remplie la case
+                    values= grille.getZone(zoneIndex)   #on récupère les valeurs de la région pour déterminer la valeur de la case
+                    for v in range(1, size):
+                        if v not in values:
+                            if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), v):    #failsafe au cas où la solution proposée n'est pas valide
+                                raise(SolverError("SolverHuman: la technique de résolution dernierNombre propose une valeur rendant la grille invalide!"))
+                            grille.setCelluleValueIndex(cell, v)
+                            return True
+        return False        #on renvoie False si on a parcouru toute les cellules sans trouver une cellule vide unique
