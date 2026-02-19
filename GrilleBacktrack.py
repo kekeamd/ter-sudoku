@@ -1,4 +1,3 @@
-from Parser import Parser
 from Grille import Grille 
 from Difficulte import Difficulte
 from Zone import Zone

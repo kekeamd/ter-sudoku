@@ -1,6 +1,7 @@
 from FileInteraction import FileInteraction
 from Grille import Grille
 from Except.ParserError import ParserError
+from GrilleBacktrack import GrilleBacktrack
 
 class Parser:
     
@@ -11,44 +12,47 @@ class Parser:
     def grilleToFile(self,g : Grille, directory : str = "", fileName : str = "") -> None:
         self._modifFileInteraction(directory,fileName,"grilleToFile")
         strG = ""
-        for i in range (g.getSize()*g.getSize()):
-            if i==g.getSize():
+        for i in range ((g.getSize())**4):
+            if i%(g.getSize()**2)==0 and i!=0:
                 strG = strG + "\n"
-            # strG = strG + g.getCelluleValueIndex(None,i) || -> Utilisation de getCelluleValueIndex Impossible !
+            strG = strG + str(g.getCelluleValueIndex(i))
         self._fileInteraction.write(strG)
     
+    # Permet de passer d'un fichier à une Grille de type Grille
+    # Le type exact est défini par "typeGrille" :
+    # 0 = GrilleBackTrack
     #@classmethod
-    def fileToGrille(self,directory : str = "", fileName : str = ""): # -> Grille
-        self._modifFileInteraction(directory,fileName,"fileToGrille")
-        Gstr = self._fileInputFormat(self._fileInteraction.read())
-        Gout = Grille()
-        w=0
+    def fileToGrille(self,directory : str = "", fileName : str = "", typeGrille : int = 0) -> Grille:
+        self._modifFileInteraction(directory,fileName,"fileToGrille") # Modification de FileInteraction
+        Gstr : str = self._fileInputFormat(self._fileInteraction.read()) # Formattage de l'entrée
+        Gout : Grille = self._chooseTypeGrille(typeGrille,"fileToGrille") # Set du type de Grille
+        i=0
         for s in Gstr:
             for c in s:
-                # Gout.setCelluleValueIndex(None,i,c) || -> Utilisation de setCelluleValueIndex Impossible !
+                Gout.setCelluleValueIndex(i,int(c))
                 i+=1
         return Gout # Retourne une grille
     
     @staticmethod
-    def tabToGrille(tab : list[list[int]]): # -> Grille
-        outG : Grille = Grille()
+    def tabToGrille(tab : list[list[int]],typeGrille : int = 0): # -> Grille
+        Gout : Grille = Parser._chooseTypeGrille(typeGrille,"tabToGrille")
         i=0
         for Stab in tab:
             for e in Stab:
-                # Grille.setCelluleValueIndex(None,i,e) || -> Utilisation de setCelluleValueIndex Impossible !
+                Gout.setCelluleValueIndex(i,e)
                 i+=1
-        return outG
+        return Gout
     
     # Transforme une Grille en tableau en 2D
     @staticmethod
     def grilleToTab(g : Grille) -> list[list[int]]:
-        out = []
+        out = [[]]
         j = 0
-        for i in range (g.getSize()*g.getSize()):
-            if g.getSize()==i:
+        for i in range (g.getSize()**4):
+            if i!=0 and i%(g.getSize()**2)==0:
                 out.append([])
                 j+=1
-            # out[j].append(g.getCelluleValueIndex(None,i))  || -> Utilisation de getCelluleValueIndex Impossible !
+            out[j].append(g.getCelluleValueIndex(i))
         return out
     
     # Prends un fichier et le renvoie sous forme de tableau en 2D
@@ -68,17 +72,17 @@ class Parser:
     # Ne prends pas en charge les candidats
     # NON FONCTIONNEL !
     @staticmethod
-    def stringToGrille(strG : str): # -> Grille
+    def stringToGrille(strG : str, typeGrille : int = 0): # -> Grille
         chffr = [0,1,2,3,4,5,6,7,8,9]
-        outG : Grille = Grille()            #il va y avoir un problème d'instanciation car grille est abstraite
+        Gout : Grille = Parser._chooseTypeGrille(typeGrille,"stringToGrille")
         strG.split(",")
         i=0
         for e in strG:
             for c in e:
-                if abs(c) in chffr:
-                    # Grille.setCelluleValueIndex(None,i,abs(c)) || -> Utilisation de setCelluleValueIndex Impossible !
+                if int(c) in chffr:
+                    Gout.setCelluleValueIndex(i,int(c))
                     pass
-        return outG # Retourne une grille
+        return Gout # Retourne une grille
     
     """ CELLULE IMPOSSIBLE A OBTENIR DONC PAS DE TOSTRING
     # Probablement remplacer par une manière d'afficher les candidats dans grilleToString
@@ -94,13 +98,15 @@ class Parser:
         pass
     """
     
+    # Transforme une Grille en String
     @staticmethod
-    def grilleToString(g : Grille) -> str: # ??
+    def grilleToString(g : Grille) -> str:
         size = g.getSize()**2
         numberOfCellule = size**2
         s = "[ "
         for i in range(numberOfCellule):
-            s +=g.getCelluleValueIndex(i)       #je me suis permis de fix ça vu que j'ai rajouter cette méthode
+            s += g.getCelluleValueIndex(i)              # On mets la valeur de la cellule
+            s += str(g.getCelluleCandidatesIndex(i))    # suivi de ses candidats
             if (i!=size-1):
                 s+= ", "
         s += " ]"
@@ -190,6 +196,7 @@ class Parser:
                 i+=1
         return out
     
+    # Fonction permettante de faire la modification sur l'attribut FileInteraction en sécurité
     def _modifFileInteraction(self, directory : str = "", fileName : str = "", who_ : str = ""):
         if who_=="":
             who="modifFileInteraction"
@@ -207,3 +214,18 @@ class Parser:
             except:
                 Error="Parser : "+who+" -> Erreur lors de la modification du nom du fichier !"
                 raise(ParserError(Error))
+    
+    # Fonction permettante de choisir un type de grille dépendant des paramètres en entrée
+    @staticmethod
+    def _chooseTypeGrille(type : int, who_ : str = "") -> Grille:
+        if who_=="":
+            who="chooseTypeGrille"
+        else:
+            who = who_
+        match type:
+            case 0:
+                Gout = GrilleBacktrack()
+            case _:
+                Error = who+" -> Paramètre typeGrille mal entré : "+str(type)
+                raise(ParserError("Parser : "+Error))
+        return Gout
