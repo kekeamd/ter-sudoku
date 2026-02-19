@@ -31,13 +31,25 @@ def indexOfColumn(zoneI : int, index : int, l : int) -> int:#col commence à 0  
     return columnIndex
 
 
-def rowIndexFromCelluleIndex(index : int, l : int) -> int: #index commence à 0   ;
+def rowIndexFromCelluleIndex(index : int, l : int) -> int: #index commence à 0
     size = l**2
     return index//size
-def columnIndexFromCelluleIndex(index : int, l : int) -> int: #index commence à 0   ;
+
+def columnIndexFromCelluleIndex(index : int, l : int) -> int: #index commence à 0
     size = l**2
     return index%size
 
+def relatifIndexFromAbsoluteIndex(index : int, l : int, regionType : str= "zone") -> int:#index commence à 0   ; regionType = "zone" pour zone, "row" pour ligne et "column" pour colonne
+    rowIndex = rowIndexFromCelluleIndex(index, l)
+    colIndex = columnIndexFromCelluleIndex(index, l)
+    if regionType == "zone":
+        relatifRowIndex = indexRowOrColumnInZone(rowIndex, l)
+        relatifColIndex = indexRowOrColumnInZone(colIndex, l)
+        return relatifRowIndex * l + relatifColIndex
+    if regionType == "row":
+        return colIndex
+    if regionType == "column":
+        return rowIndex
 
 def valuesWithoutZero(values : list[int]) -> list[int]:
     newValues = []
@@ -45,6 +57,14 @@ def valuesWithoutZero(values : list[int]) -> list[int]:
         val = values[i]
         if (val!=0):
             newValues.append(val)
+
+
+def listUnion(list1 : list[int], list2: list[int]) -> list[int]:
+    newList = list1
+    for i in range(len(list2)):
+        if (list2[i] not in newList):
+            newList.append(list2[i])
+    return newList
 
 
 def listDifference(list1 : list[int], list2: list[int]) -> list[int]:

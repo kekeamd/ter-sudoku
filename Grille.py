@@ -61,6 +61,13 @@ class Grille(ABC):
         return colValues
 
 
+    #purpose: renvoie la zone numéro 'zone'
+    def getZone(self, zone : int) -> list[int]:
+        z = self._getZone(zone)
+        return z.getValues()
+
+
+
     #purpose: renvoie vrai si la ligne numéro 'row' contient la valeur 'value' et faux sinon
     def rowContainsValue(self, row : int, value : int) ->  bool:
         return value in self.getRow(row)
@@ -229,7 +236,7 @@ class Grille(ABC):
 
 
     #purpose: rectifie la liste de candidats de la cellule d'index absolu 'index'
-    def adjustCandidatesAfterAddingValueZoneIndex(self, index : int) -> None:
+    def adjustCandidatesAfterAddingValueIndex(self, index : int) -> None:
         row = rowIndexFromCelluleIndex(index, self._size)
         column = columnIndexFromCelluleIndex(index, self._size)
         zone = zoneIndexFromCoord(row, column, self._size)

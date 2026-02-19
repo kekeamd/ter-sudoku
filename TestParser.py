@@ -4,7 +4,7 @@ from FileInteraction import FileInteraction
 import pytest
 import os
 import shutil
-
+from GrilleBacktrack import GrilleBacktrack
 
 
 global StrComplete
@@ -13,11 +13,11 @@ def test_start():
     os.mkdir("./ForTests/")
 
 @pytest.fixture
-def fdTest():
+def fdTest() -> FileInteraction:
     return FileInteraction("ForTests","Complete")
 
 @pytest.fixture
-def strComplete():
+def strComplete() -> str:
     StrComplete : str= ""
     StrComplete+="619375824\n"
     StrComplete+="725814369\n"
@@ -31,7 +31,7 @@ def strComplete():
     return StrComplete
 
 @pytest.fixture
-def tabWanted():
+def tabWanted() -> list[list[int]]:
     TabWanted = [[] for _ in range (9)]
     i=0
     for c in "619375824":
@@ -67,23 +67,62 @@ def test_verifString(strComplete : str):
     assert strComplete == "619375824\n725814369\n348692571\n976123485\n451789632\n832456197\n164237958\n293548716\n587961243"
 
 # test grilleToFile
-def test_grilleToFile():
-    pass # test Impossible pour le moment (setCelluleValueIndex)
+def test_grilleToFile(strComplete : str,tabWanted : list[list[int]],fdTest : FileInteraction):
+    fdTest.write(strComplete)
+    i=0
+    GWanted = GrilleBacktrack()
+    for l in tabWanted:
+        for c in l:
+            GWanted.setCelluleValueIndex(i,c)
+            i+=1
+    p = Parser(FileInteraction("ForTests","GrilleToFile"))
+    p.grilleToFile(GWanted)
+    assert fdTest.read()==p.getFileDescriptor().read()
 
 # test fileToGrille
-def test_fileToGrille():
-    pass # test Impossible pour le moment (getCelluleValueIndex)
+def test_fileToGrille(strComplete : str, fdTest : FileInteraction,tabWanted : list[list[int]]):
+    fdTest.write(strComplete)
+    Tfin=[]
+    TToComp=[]
+    p = Parser(fdTest)
+    g = p.fileToGrille()
+    i=0
+    for l in tabWanted:
+        for c in l:
+            Tfin.append(c)
+            TToComp.append(g.getCelluleValueIndex(i))
+            i+=1
+    assert TToComp==Tfin
+
 
 # test tabToGrille
-def test_tabToGrille():
-    pass # test Impossible pour le moment (setCelluleValueIndex)
+def test_tabToGrille(tabWanted : list[list[int]]):
+    GWanted = GrilleBacktrack()
+    i=0
+    for l in tabWanted:
+        for c in l:
+            GWanted.setCelluleValueIndex(i,c)
+            i+=1
+    g=Parser.tabToGrille(tabWanted)
+    Twant=[]
+    Tout=[]
+    for i in range(GWanted.getSize()**4):
+        Twant.append(GWanted.getCelluleValueIndex(i))
+        Tout.append(g.getCelluleValueIndex(i))
+    assert Twant==Tout
 
 # test grilleToTab
-def test_grilleToTab():
-    pass # test Impossible pour le moment (setCelluleValueIndex)
+def test_grilleToTab(tabWanted : list[list[int]]):
+    g = GrilleBacktrack()
+    i=0
+    for l in tabWanted:
+        for c in l:
+            g.setCelluleValueIndex(i,c)
+            i+=1
+    assert tabWanted==Parser.grilleToTab(g)
 
 # test fileToTab
-def test_fileToTab(strComplete,fdTest,tabWanted):
+def test_fileToTab(strComplete,fdTest,tabWanted : list[list[int]]):
     fdTest.write(strComplete)
     assert os.path.exists("./ForTests/Complete.txt")
     p=Parser(fdTest)

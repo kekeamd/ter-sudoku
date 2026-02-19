@@ -2,11 +2,13 @@
 # __init__ = constructeur
 
 from random import randint
+from Except.SolverError import SolverError
 from Interface import Interface  # import le classe parent (Interface)
 from Difficulte import Difficulte # askDifficulte()
 from Parser import Parser # playSudoku()
 from SolverBacktrack import SolverBacktrack # playMove()
-from GrilleBacktrack import GrilleBacktrack # playSudoku()
+from GrilleBacktrack import GrilleBacktrack
+from SolverHuman import SolverHuman # gameLoop()
 
 
 class InterfaceConsole(Interface): # extends Interface
@@ -80,21 +82,37 @@ class InterfaceConsole(Interface): # extends Interface
             else:
                 print("\nActions disponibles: ")
                 print("1. Entrer un valeur")
-                print("2. Résoudre automatiquement la grille")
-                print("3. Quitter")
+                print("2. Résoudre automatiquement la grille (backtrack)")
+                print("3. Résoudre automatiquement la grille (méthode humaine)")
+                print("4. Quitter")
 
             choix = input("Votre choix: ")
             if finish:
-                choix='3'
+                choix='4'
 
             if choix == '1':
                 self.playMove()
             elif choix == '2':
-                print("\nLa grille résolue automatiquement:")
+                print("\nLa grille résolue automatiquement (backtrack):")
                 self.grilleComplete.printGrille()
                 print("\nLE JEU EST TERMINÉ!")
                 finish=True
             elif choix == '3':
+                print("\nRésolution avec méthode humaine...")
+                
+                try:
+                    SolverHuman.solveGrille(self.grilleDeJeu)
+
+                    print("\nRésolution humaine terminée :")
+                    self.grilleDeJeu.printGrille()
+
+                except SolverError as e:
+                    print("\n", e)
+                    print("\nGrille partiellement résolue :")
+                    self.grilleDeJeu.printGrille()
+                print("\nLE JEU EST TERMINÉ!")
+                finish = True
+            elif choix == '4':
                 return
             else:
                 print("\nChoix invalide, veuillez réessayer.")
