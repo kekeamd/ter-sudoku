@@ -2,14 +2,32 @@ from Solver import Solver
 from Grille import Grille
 from GrilleUtils import *
 from Except.GrilleError import GrilleError
+from Except.SolverError import SolverError
 
 
-class SolverHuman(Solver): #transformation de la classe en classe static parce qu'on ne veut absolument pas instancier des solvers T-T
+class SolverHuman(Solver):
     @staticmethod
     def solveGrille(grille : Grille) -> bool:
-        pass
+        while not SolverHuman.isCompleted(grille):      #on boucle tant que la grille n'est pas complètement résolue
+            if SolverHuman.singletonNu(grille):         #on essaye les techniques de la moins couteuse à la plus couteuse
+                continue                                #on retourne au départ de la boucle si jamais une des techniques fonctionne
+            if SolverHuman.singletonCache(grille):
+                continue
+            raise(SolverError("SolverHuman: Impossible de résoudre la grille à partir des techniques actuellement implémentées."))      #si on a testé toutes les techniques et aucune fonctionne alors il nous manque des techniques
 
-    
+
+    #vérifie si la grille est complète ou pas (si il reste des cellule vide)
+    @staticmethod
+    def isCompleted(grille : Grille) -> bool:
+        sizeCote = grille.getSize()
+        size = sizeCote**2
+        celluleCount = size**2
+        for cell in range(celluleCount):
+            if grille.getCelluleValueIndex(cell)==0:
+                return False
+        return True
+
+
     #applique la méthode de singleton nu afin de trouver une valeur dans la grille, renvoie True si une valeur a été trouvée et False sinon
     @staticmethod
     def singletonNu(grille : Grille) -> bool:
@@ -20,6 +38,8 @@ class SolverHuman(Solver): #transformation de la classe en classe static parce q
             candidates = grille.getCelluleCandidatesIndex(cell)
             value =  grille.getCelluleValueIndex(cell)
             if value==0 and len(candidates)==1:     #si la cellule n'a pas encore de valeur et a seulement un candidat alors on lui attribut la valeur du candidat
+                if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), candidates[0]):    #failsafe au cas où la solution proposée n'est pas valide
+                    raise(SolverError("SolverHuman: la technique de résolution singletonNu propose une valeur rendant la grille invalide!"))
                 grille.setCelluleValueIndex(candidates[0])
                 return True             #pas besoin d'aller plus loin, on renvoie vrai
         return False    #si on a pas trouvé de valeur alors on renvoie faux
@@ -91,14 +111,20 @@ class SolverHuman(Solver): #transformation de la classe en classe static parce q
                 continue
             resList = SolverHuman._singletonCacheZone(grille, cell) #vérifie si on trouve une valeur adéquate à partir de la zone
             if resList==1:
+                if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), resList[0]):    #failsafe au cas où la solution proposée n'est pas valide
+                    raise(SolverError("SolverHuman: la technique de résolution singletonCache propose une valeur rendant la grille invalide!"))
                 grille.setCelluleValueIndex(cell, resList[0])
                 return True
             resList = SolverHuman._singletonCacheRow(grille, cell) #vérifie si on trouve une valeur adéquate à partir de la ligne
             if resList==1:
+                if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), resList[0]):    #failsafe au cas où la solution proposée n'est pas valide
+                    raise(SolverError("SolverHuman: la technique de résolution singletonCache propose une valeur rendant la grille invalide!"))
                 grille.setCelluleValueIndex(cell, resList[0])
                 return True
             resList = SolverHuman._singletonCacheColumn(grille, cell) #vérifie si on trouve une valeur adéquate à partir de la colonne
             if resList==1:
+                if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), resList[0]):    #failsafe au cas où la solution proposée n'est pas valide
+                    raise(SolverError("SolverHuman: la technique de résolution singletonCache propose une valeur rendant la grille invalide!"))
                 grille.setCelluleValueIndex(cell, resList[0])
                 return True
         return False            #renvoie faux car on a pas trouvé de valeur adéquate
