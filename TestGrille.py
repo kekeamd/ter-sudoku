@@ -79,6 +79,21 @@ def test_getCelluleValueIndexReturnsRightValue():
     assert grille.getCelluleValueIndex(28)==11
 
 
+#Test que la méthode initialise bien les candidats
+def test_adjustCandidatesInit():
+    grille : Grille =  GrilleBacktrack([Zone([Cellule() for _ in range(9)]) for _ in range(9)])
+    grille.adjustCandidates()
+    for cell in range(grille.getSize()**4):
+        assert grille.getCelluleCandidatesIndex(cell)==[i+1 for i in range(grille.getSize()**2)]
+
+# Test que la méthode ajuste correctement les candidats de la cellule
+def test_adjustCandidatesCellule():
+    grille : Grille =  GrilleBacktrack([Zone([Cellule() for _ in range(9)]) for _ in range(9)])
+    grille.adjustCandidates()
+    grille.setCelluleValueCoord(2, 5, 7)
+    cellule = grille._getCelluleCoord(2, 0)
+    grille._adjustCandidatesCellule(cellule, [7])
+    assert grille.getCelluleCandidatesCoord(2, 0)==[1, 2, 3, 4, 5, 6, 8, 9]
 """
     def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
         if ((sizeCote*sizeCote)!=len(zoneList) or len(zoneList) < 3):
