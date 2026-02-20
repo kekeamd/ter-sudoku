@@ -101,9 +101,11 @@ class InterfaceConsole(Interface): # extends Interface
                 print("\nRésolution avec méthode humaine...")
                 
                 try:
-                    SolverHuman.solveGrille(self.grilleDeJeu)
-
-                    print("\nRésolution humaine terminée :")
+                    #SolverHuman.solveGrille(self.grilleDeJeu)
+                    res = SolverHuman.solveWithStats(self.grilleDeJeu)
+                    print("\nRésolution humaine terminée.")
+                    print("Solved:", res["solved"], "| Steps:", res["steps"], "| MaxTech:", res["maxTechnique"])
+                    print("Counts:", {k.name: v for k, v in res["counts"].items()})
                     self.grilleDeJeu.printGrille()
 
                 except SolverError as e:
