@@ -9,6 +9,7 @@ from Parser import Parser # playSudoku()
 from SolverBacktrack import SolverBacktrack # playMove()
 from GrilleBacktrack import GrilleBacktrack
 from SolverHuman import SolverHuman # gameLoop()
+from SolverHumanStats import SolverHumanStats # gameLoop()
 
 
 class InterfaceConsole(Interface): # extends Interface
@@ -102,7 +103,7 @@ class InterfaceConsole(Interface): # extends Interface
                 
                 try:
                     #SolverHuman.solveGrille(self.grilleDeJeu)
-                    res = SolverHuman.solveWithStats(self.grilleDeJeu)
+                    res = SolverHumanStats.solveWithStats(self.grilleDeJeu)
                     print("\nRésolution humaine terminée.")
                     print("Solved:", res["solved"], "| Steps:", res["steps"], "| MaxTech:", res["maxTechnique"])
                     print("Counts:", {k.name: v for k, v in res["counts"].items()})
