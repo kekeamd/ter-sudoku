@@ -1,3 +1,4 @@
+from Except import SolverError
 from SolverHuman import SolverHuman
 from Grille import Grille
 from Technique import Technique
