@@ -65,7 +65,14 @@ class InterfaceConsole(Interface): # extends Interface
         self.grilleComplete = grilleVide.generateEntireGrille()
 
         self.grilleDeJeu = GrilleBacktrack()
-        self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
+        stats = self.grilleDeJeu.generateValuesHumanRated(difficulty, self.grilleComplete.clone())
+
+        rated = SolverHuman.rateFromStats(stats)
+        print("\nDifficulté estimée (méthodes humaines):", rated)
+        print("Steps:", stats["steps"])
+        print("Max technique:", stats["maxTechnique"].name if stats["maxTechnique"] else None)
+
+        #self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 
         if self.grilleComplete is None:
             print("Erreur lors de la génération de la grille complète.")

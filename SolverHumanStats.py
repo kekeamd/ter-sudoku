@@ -42,7 +42,6 @@ class SolverHumanStats(SolverHuman):
                 record(Technique.SINGLETON_CACHE)
                 continue
 
-
             # bloqué
             stats["stuck"] = True
             stats["solved"] = False

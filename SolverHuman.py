@@ -1,9 +1,11 @@
+from Difficulte import Difficulte
 from Solver import Solver
 from Grille import Grille
 from GrilleUtils import *
 from Except.GrilleError import GrilleError
 from Except.SolverError import SolverError
 from Technique import Technique
+from SolverBacktrackStats import SolverBacktrackStats
 
 
 class SolverHuman(Solver):
@@ -205,3 +207,25 @@ class SolverHuman(Solver):
                             grille.adjustCandidatesAfterAddingValueIndex(cell)
                             return True
         return False        #on renvoie False si on a parcouru toute les cellules sans trouver une cellule vide unique
+
+
+    # J'ai decidé de choisir la difficulté à propos des methodes humaines, càd que je vois les stats et selon les 
+    # stats je choisit la difficulté
+    # Idée pour l'instant:
+    # FACILE : resolue sans SINGLETON_CACHE (donc maxTechnique <= DERNIER_NOMBRE)
+    # MOYEN : resolue avec SINGLETON_CACHE au moins une fois (ÉLARGI pour inclure plus de cas)
+    # DIFFICILE : le solveur humain est bloqué (stuck = True) ou techniques > SINGLETON_CACHE
+    # SI VOUS AVEZ D'AUTRES IDEE N'HESITEZ PAS
+    def rateFromStats(stats: dict) -> Difficulte:
+        if stats["stuck"]:
+            return Difficulte.DIFFICILE
+        maxTech = stats["maxTechnique"]
+        if maxTech is None or maxTech <= Technique.DERNIER_NOMBRE:
+            return Difficulte.FACILE
+        if maxTech == Technique.SINGLETON_CACHE or maxTech == Technique.SINGLETON_NU: 
+            return Difficulte.MOYEN
+        return Difficulte.DIFFICILE
+    
+    # Car j'ai testé plein de fois et j'ai remarqué que MOYEN prends enormemnt temps pour se
+    # generer, alors pour l'instant tq on n'a pas beacoup de techniques humaines jai fais que cest 
+    # MOYEN quand il peut etre aussi SINGLETON_NU
