@@ -25,15 +25,39 @@ def test_initParameters():
 
 
 # Test que la méthode renvoie bien la liste des valeurs
-def test_getRowIsValueList():
+def test_getRow():
     grille : Grille = GrilleBacktrack([Zone([Cellule(v) for v in range(i, i+9)]) for i in range(1, 26, 3)])
-    assert grille.getRow(0)==[i for i in range(1, 10)]
+    for i in range(grille.getSize()**2):
+        assert grille.getRow(i)==[v for v in range(1+(i*grille.getSize()), 1+(i*grille.getSize())+9)]
 
 
 # Test que la méthode renvoie bien la liste des valeurs
-def test_getColumnIsValueList():
+def test_getColumn():
     grille : Grille = GrilleBacktrack([Zone([Cellule(v) for v in range(i, i+9)]) for i in range(1, 26, 3)])
-    assert grille.getColumn(0)==[i for i in range(1, 26, 3)]
+    for i in range(grille.getSize()**2):
+        assert grille.getColumn(i)==[v+i for v in range(1, 26, 3)]
+
+# Test que la méthode renvoie bien la liste des valeurs
+def test_getZone():
+    grille : Grille = GrilleBacktrack([Zone([Cellule(v) for v in range(i, i+9)]) for i in range(1, 26, 3)])
+    for i in range(grille.getSize()**2):
+        assert grille.getZone(i)==[v for v in range(1+(i*grille.getSize()), 1+(i*grille.getSize())+9)]
+
+
+# Test que la méthode renvoie bien la bonne liste de régions(sous forme de listes de cellules)
+def test_getRegions():
+    grille : Grille = GrilleBacktrack([Zone([Cellule(v) for v in range(i, i+9)]) for i in range(1, 26, 3)])
+    size = grille.getSize()**2
+    regions = grille.getRegions()
+    regionsValues = [[regions[r][c].getValue() for c in range(size)] for r in range(size*3)]#size*3 parce qu'il y a zones, lignes et colonnes
+    for i in range(size):
+        assert grille.getZone(i) in regionsValues
+        assert grille.getRow(i) in regionsValues
+        assert grille.getColumn(i) in regionsValues
+        """assert grille.getZone(i) == [regions[i][c].getValue() for c in range(size)]
+        assert grille.getRow(i) == [regions[i+1][c].getValue() for c in range(size)]
+        assert grille.getColumn(i) == [regions[i+2][c].getValue() for c in range(size)]"""
+
 
 
 # Test que la méthode renvoie true quand la ligne contient la valeur

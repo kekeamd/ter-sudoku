@@ -67,6 +67,24 @@ class Grille(ABC):
         return z.getValues()
 
 
+    #purpose: renvoie les régions(zone/ligne/colonne) sous formes de listes de cellules
+    def getRegions(self) -> list[list[Cellule]]:
+        regions = []
+        size = self._size**2
+        for r in range(size):
+            zone = []
+            row = []
+            column = []
+            for c in range(size):
+                zone.append(self._getCelluleZoneIndex(r, c))
+                row.append(self._getCelluleCoord(r, c))
+                column.append(self._getCelluleCoord(c, r))
+            regions.append(zone)
+            regions.append(row)
+            regions.append(column)
+        return regions
+
+
 
     #purpose: renvoie vrai si la ligne numéro 'row' contient la valeur 'value' et faux sinon
     def rowContainsValue(self, row : int, value : int) ->  bool:

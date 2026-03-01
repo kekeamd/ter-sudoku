@@ -50,6 +50,17 @@ def relatifIndexFromAbsoluteIndex(index : int, l : int, regionType : str= "zone"
         return colIndex
     if regionType == "column":
         return rowIndex
+    
+def AbsoluteIndexFromRelatifIndex(regionIndex : int, index : int, l : int, regionType : str= "zone") -> int:#regionIndex et index commencent à 0   ; regionType = "zone" pour zone, "row" pour ligne et "column" pour colonne
+    size = l**2
+    if regionType == "zone":
+        rowIndex = indexOfRow(regionIndex, index, l)
+        columnIndex = indexOfColumn(regionIndex, index, l)
+        return rowIndex*size+columnIndex
+    if regionType == "row":
+        return regionIndex*size + index
+    if regionType == "column":
+        return regionIndex +  index*size
 
 def valuesWithoutZero(values : list[int]) -> list[int]:
     newValues = []
