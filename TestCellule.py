@@ -7,12 +7,14 @@ def test_initEmpty():
     myCel = Cellule()
     assert myCel.getValue() == 0
     assert myCel.getCandidates() == []
+    assert myCel.getPosition() == -1
 
 # Test de l'initialisation d'une cellule avec une valeur
 def test_initValue():
     myCel = Cellule(0)
     assert myCel.getValue() == 0
     assert myCel.getCandidates() == []
+    assert myCel.getPosition() == -1
 
 # Test de l'initialisation d'une cellule avec valeur négative
 def test_initValueNeg():
@@ -23,14 +25,43 @@ def test_initValueNeg():
 def test_initCandidates():
     myCel = Cellule(5)
     assert myCel.getValue() == 5
-    cand=[0,1,2,3,4,6,7,8,9]
+    cand=[1,2,3,4,6,7,8,9]
     myCel.setCandidates(cand)
     assert myCel.getCandidates() == cand
+    assert myCel.getPosition() == -1
 
 # Test de l'initialisation d'une cellule ainsi que ces candidats (AVEC CONFLITS)
-def test_initCandidates():
+def test_initCandidatesConflicts():
     myCel = Cellule(5)
     assert myCel.getValue() == 5
-    cand=[0,1,2,3,4,5,6,7,8,9]
+    cand=[1,2,3,4,5,6,7,8,9]
     myCel.setCandidates(cand)
-    assert myCel.getCandidates() == [0,1,2,3,4,6,7,8,9]
+    assert myCel.getCandidates() == [1,2,3,4,6,7,8,9]
+    assert myCel.getPosition() == -1
+
+# Test de l'assignation d'une position à une cellule (première fois)
+def test_setPosition():
+    myCel = Cellule(5)
+    position = 10
+    myCel.setPosition(position)
+    assert myCel.getPosition() == position
+
+# Test de l'assignation d'une position à une cellule (deuxième fois)
+def test_setPositionOverwrite():
+    myCel = Cellule(5)
+    position = 10
+    myCel.setPosition(position)
+    oldPos = myCel.getPosition()
+    position = 23
+    with pt.raises(GrilleError):
+        myCel.setPosition(position)
+    assert myCel.getPosition() == oldPos
+
+# Test de l'assignation d'une position négative à une cellule
+def test_setPositionNeg():
+    myCel = Cellule(5)
+    oldPos = myCel.getPosition()
+    position = -10
+    with pt.raises(GrilleError):
+        myCel.setPosition(position)
+    assert myCel.getPosition() == oldPos
