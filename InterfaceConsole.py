@@ -17,6 +17,7 @@ class InterfaceConsole(Interface): # extends Interface
 
     def __init__(self): # constructeur InterfaceConsole()
         super().__init__()
+        self.errorCount = 0  # compteur d'erreurs pour la partie en cours
 
     def startPlaying(self): # demande le choix: si 1:  playSudoku; si 2: quitter
         while True:
@@ -60,6 +61,7 @@ class InterfaceConsole(Interface): # extends Interface
         print("Choix invalide. Réessayez.")
 
     def playSudoku(self): # prends la difficulté, la grille complete, fait la grille prete à resoudre et appele gameLoop
+        self.errorCount = 0  # Réinitialiser le compteur d'erreurs
         difficulty = self.askDifficulty()
 
         grilleVide = GrilleBacktrack()
@@ -85,28 +87,35 @@ class InterfaceConsole(Interface): # extends Interface
         self.gameLoop()
 
     def gameLoop(self): # soit entrer une valeur(appelle playMove()), soit donner la grille complete, soit quitter
-        finish=False
+        finish = False
         while True:
-            if finish:
+            if finish or self.errorCount >= 3:
+                if self.errorCount >= 3:
+                    print("\nGAME OVER - 3 erreurs atteintes!")
                 print("\nVeuillez appuyer sur une touche pour quitter.")
+                print("2. Résoudre automatiquement la grille (backtrack)")
+                print("3. Résoudre automatiquement la grille (méthode humaine)")
+                print("4. Quitter")
             else:
+                print(f"Erreurs: {self.errorCount}/3")
                 print("\nActions disponibles: ")
-                print("1. Entrer un valeur")
+                print("1. Entrer une valeur")
                 print("2. Résoudre automatiquement la grille (backtrack)")
                 print("3. Résoudre automatiquement la grille (méthode humaine)")
                 print("4. Quitter")
 
             choix = input("Votre choix: ")
-            if finish:
-                choix='4'
 
             if choix == '1':
-                self.playMove()
+                if self.errorCount >= 3:
+                    print("\nGame Over! Vous ne pouvez plus jouer.")
+                else:
+                    self.playMove()
             elif choix == '2':
                 print("\nLa grille résolue automatiquement (backtrack):")
                 self.grilleComplete.printGrille()
-                print("\nLE JEU EST TERMINÉ!")
-                finish=True
+                print("\nLE JEU EST TERMINÉ !\n")
+                return  # sortir après résolution
             elif choix == '3':
                 print("\nRésolution avec méthode humaine...")
                 
@@ -122,8 +131,8 @@ class InterfaceConsole(Interface): # extends Interface
                     print("\n", e)
                     print("\nGrille partiellement résolue :")
                     self.grilleDeJeu.printGrille()
-                print("\nLE JEU EST TERMINÉ!")
-                finish = True
+                print("\nLE JEU EST TERMINÉ !\n")
+                return  # terminer la boucle après affichage
             elif choix == '4':
                 return
             else:
@@ -175,6 +184,10 @@ class InterfaceConsole(Interface): # extends Interface
                     print("\nBravo ! Grille complétée !")
             else:
                 print("\nValeur invalide pour cette position.")
+                self.errorCount += 1
+                print(f"Erreur ! \n")
                 self.grilleDeJeu.setCelluleValueCoord(row, col, 0)
         else:
             print("\nValeur invalide pour cette position.")
+            self.errorCount += 1
+            print(f"Erreur ! \n")
