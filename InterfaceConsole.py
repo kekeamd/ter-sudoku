@@ -3,6 +3,7 @@
 
 from random import randint
 from Except.SolverError import SolverError
+from Grille import Grille
 from Interface import Interface  # import le classe parent (Interface)
 from Difficulte import Difficulte # askDifficulte()
 from Parser import Parser # playSudoku()
@@ -66,6 +67,7 @@ class InterfaceConsole(Interface): # extends Interface
 
         self.grilleDeJeu = GrilleBacktrack()
         stats = self.grilleDeJeu.generateValuesHumanRated(difficulty, self.grilleComplete.clone())
+        self.grilleDeJeu.adjustCandidates()  # Initialiser les candidats après génération
 
         rated = SolverHuman.rateFromStats(stats)
         print("\nDifficulté estimée (méthodes humaines):", rated)
@@ -131,7 +133,6 @@ class InterfaceConsole(Interface): # extends Interface
         try:
             row = int(input("Ligne (1-9): ")) -1
             col = int(input("Colonne (1-9): ")) -1
-            val = int(input("Valeur (1-9): "))
         except ValueError:
             print("\nEntrée invalide. Veuillez entrer des nombres entre 1 et 9.")
             return
@@ -143,8 +144,19 @@ class InterfaceConsole(Interface): # extends Interface
         if self.grilleDeJeu.getCelluleValueCoord(row, col) != 0:
             print("\nCette case est déjà remplie.")
             return
+        
+        candidats = Grille.getCelluleCandidatesCoord(self.grilleDeJeu, row, col)
+        print("Candidats possibles pour la case avec row:", row+1, "col:", col+1, ":", candidats)
+        
+        try:
+            val = int(input("Valeur (1-9): "))
+        except ValueError:
+            print("\nEntrée invalide. Veuillez entrer un nombre entre 1 et 9.")
+            return
+        
         if SolverBacktrack.isValid(self.grilleDeJeu, row, col, val):
             self.grilleDeJeu.setCelluleValueCoord(row, col, val)
+            self.grilleDeJeu.adjustCandidatesAfterAddingValueCoord(row, col)  # Mettre à jour les candidats
             if self.grilleDeJeu.getCelluleValueCoord(row, col) == self.grilleComplete.getCelluleValueCoord(row, col): # je compares avec la grille complète
                 print("\nValeur insérée avec succès.")
                 self.grilleDeJeu.printGrille()
@@ -166,7 +178,3 @@ class InterfaceConsole(Interface): # extends Interface
                 self.grilleDeJeu.setCelluleValueCoord(row, col, 0)
         else:
             print("\nValeur invalide pour cette position.")
-
-
-    def quit(self): # ou tout simplement break
-        pass

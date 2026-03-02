@@ -240,7 +240,7 @@ class Grille(ABC):
 
     #purpose: rectifie la liste de candidats de la cellule aux coordonnées ('row', 'column')
     def adjustCandidatesAfterAddingValueCoord(self, row : int, column : int) -> None:
-        zone = self._grille[zoneIndexFromCoord(row, column, self._size)]
+        zone = zoneIndexFromCoord(row, column, self._size)
         self._adjustCandidatesZone(zone)
         self._adjustCandidatesRow(row)
         self._adjustCandidatesColumn(column)
