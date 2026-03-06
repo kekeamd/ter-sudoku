@@ -1,7 +1,8 @@
 from FileInteraction import FileInteraction
 from Grille import Grille
 from Except.ParserError import ParserError
-from GrilleBacktrack import GrilleBacktrack
+from GrilleBacktrack import GrilleBacktrack as GBacktrack
+from GrilleWithDataBase import GrilleWithDataBase as GDataBase
 
 class Parser:
     
@@ -20,7 +21,7 @@ class Parser:
     
     # Permet de passer d'un fichier à une Grille de type Grille
     # Le type exact est défini par "typeGrille" :
-    # 0 = GrilleBackTrack
+    # 0 = GBacktrack
     #@classmethod
     def fileToGrille(self,directory : str = "", fileName : str = "", typeGrille : int = 0) -> Grille:
         self._modifFileInteraction(directory,fileName,"fileToGrille") # Modification de FileInteraction
@@ -33,6 +34,7 @@ class Parser:
                 i+=1
         return Gout # Retourne une grille
     
+    # Transforme un tableau en 2D en une Grille
     @staticmethod
     def tabToGrille(tab : list[list[int]],typeGrille : int = 0): # -> Grille
         Gout : Grille = Parser._chooseTypeGrille(typeGrille,"tabToGrille")
@@ -70,18 +72,20 @@ class Parser:
     
     # Prends une chaine de char et la transforme en Grille
     # Ne prends pas en charge les candidats
-    # NON FONCTIONNEL !
+    # typeGrille :
+    # - 0 = GBacktrack
+    # - 1 = GDataBase
     @staticmethod
     def stringToGrille(strG : str, typeGrille : int = 0): # -> Grille
-        chffr = [0,1,2,3,4,5,6,7,8,9]
+        chffr = ["0","1","2","3","4","5","6","7","8","9"]
         Gout : Grille = Parser._chooseTypeGrille(typeGrille,"stringToGrille")
-        strG.split(",")
+        #strG.split(",")
         i=0
         for e in strG:
             for c in e:
-                if int(c) in chffr:
+                if c in chffr:
                     Gout.setCelluleValueIndex(i,int(c))
-                    pass
+                    i+=1
         return Gout # Retourne une grille
     
     """ CELLULE IMPOSSIBLE A OBTENIR DONC PAS DE TOSTRING
@@ -224,7 +228,9 @@ class Parser:
             who = who_
         match type:
             case 0:
-                Gout = GrilleBacktrack()
+                Gout = GBacktrack()
+            case 1:
+                Gout = GDataBase()
             case _:
                 Error = who+" -> Paramètre typeGrille mal entré : "+str(type)
                 raise(ParserError("Parser : "+Error))

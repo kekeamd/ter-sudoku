@@ -129,12 +129,20 @@ def test_fileToTab(strComplete,fdTest,tabWanted : list[list[int]]):
     assert p.fileToTab()==tabWanted
 
 # test stringToGrille
-def test_stringToGrille():
-    pass # test Impossible pour le moment (setCelluleValueIndex)
+def test_stringToGrille(strComplete,tabWanted):
+    G = Parser.stringToGrille(strComplete,0)
+    tabW=[]
+    for l in tabWanted:
+        for e in l:
+            tabW.append(e)
+    tab=[]
+    for i in range(81):
+        tab.append(G.getCelluleValueIndex(i))
+    assert tabW==tab
 
 # test grilleToString
 def test_grilleToString():
-    pass # test Impossible pour le moment (setCelluleValueIndex)
+    pass # Possiblité de changement de retour de la fonction testé donc pas de tests
 
 # test stringToTab
 def test_stringToTab(strComplete,tabWanted):

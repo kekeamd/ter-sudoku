@@ -41,6 +41,11 @@ python -m pytest ./TestSolverHuman.py -v
 pause
 
 cls
+echo test GrilleWithDataBase.py
+python -m pytest ./TestGrilleWithDataBase.py -v
+pause
+
+cls
 echo FIN TESTS
 pause
 cls

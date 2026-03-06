@@ -8,6 +8,7 @@ from GrilleUtils import *
 #purpose: bah la grille de sudoku
 #dependencies: Difficulte, Cellule ,Zone, GrilleUtils, GrilleError
 class Grille(ABC):
+    # JAMAIS UTILISER ?
     def __init__(self, sizeCote : int = 3): #faire un constructeur avec que la taille
         self._grille : list[Zone] = []
         self._size : int = sizeCote
