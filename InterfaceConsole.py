@@ -4,6 +4,7 @@
 from random import randint
 from Except.SolverError import SolverError
 from Grille import Grille
+from GrilleHuman import GrilleHuman
 from Interface import Interface  # import le classe parent (Interface)
 from Difficulte import Difficulte # askDifficulte()
 from Parser import Parser # playSudoku()
@@ -67,7 +68,7 @@ class InterfaceConsole(Interface): # extends Interface
         grilleVide = GrilleBacktrack()
         self.grilleComplete = grilleVide.generateEntireGrille()
 
-        self.grilleDeJeu = GrilleBacktrack()
+        self.grilleDeJeu = GrilleHuman()
         stats = self.grilleDeJeu.generateValuesHumanRated(difficulty, self.grilleComplete.clone())
         self.grilleDeJeu.adjustCandidates()  # Initialiser les candidats après génération
 
@@ -167,7 +168,7 @@ class InterfaceConsole(Interface): # extends Interface
             self.grilleDeJeu.setCelluleValueCoord(row, col, val)
             self.grilleDeJeu.adjustCandidatesAfterAddingValueCoord(row, col)  # Mettre à jour les candidats
             if self.grilleDeJeu.getCelluleValueCoord(row, col) == self.grilleComplete.getCelluleValueCoord(row, col): # je compares avec la grille complète
-                print("\nValeur insérée avec succès.")
+                print("\nValeur insérée avec succès.\n")
                 self.grilleDeJeu.printGrille()
 
                 # CHECK FIN DE JEU
