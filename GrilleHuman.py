@@ -20,7 +20,13 @@ class GrilleHuman(GrilleBacktrack):
         max_attempts = 100 #limite de nbr de tentatives
         holes = 0 # compte le nbr de case suprimees
 
-        min_holes = {Difficulte.FACILE: 28, Difficulte.MOYEN: 34, Difficulte.DIFFICILE: 40}.get(target, 32)
+        min_holes = {
+            Difficulte.FACILE: 28, 
+            Difficulte.MOYEN: 34, 
+            Difficulte.DIFFICILE: 40, 
+            Difficulte.EXTREME: 48,
+            Difficulte.GODMODE: 55
+            }.get(target, 32)
 
         for _ in range(max_attempts):
             # essaie une suppression (unicité gérée dans _removeValue via solutionIsUnique)

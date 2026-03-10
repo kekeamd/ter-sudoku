@@ -209,6 +209,50 @@ class SolverHuman(Solver):
         return False        #on renvoie False si on a parcouru toute les cellules sans trouver une cellule vide unique
 
 
+    # Quand deux cellules d’une même région contiennent exactement les mêmes deux candidats, elle permet d’éliminer ces 
+    # candidats ailleurs, ce qui débloque ensuite d’autres techniques comme singletonNu
+    @staticmethod
+    def paireNu(grille: Grille) -> bool:
+        for region in grille.getRegions():   # chaque région = zone, ligne, colonne
+            pairCells = []
+
+            # 1) récupérer les cellules vides avec exactement 2 candidats
+            for cellule in region:
+                if cellule.getValue() == 0: # cellule vide
+                    candidats = cellule.getCandidates()
+                    if len(candidats) == 2: # si la cellule possede exactement 2 candidats
+                        pairCells.append((cellule, sorted(candidats))) # on trie les candidats
+                        
+            # 2) chercher deux cellules ayant exactement la même paire
+            for i in range(len(pairCells)):
+                for j in range(i + 1, len(pairCells)):
+                    cellule1, cand1 = pairCells[i]
+                    cellule2, cand2 = pairCells[j]
+
+                    if cand1 == cand2:
+                        paire = cand1 # la paire trouvée
+                        changed = False
+
+                        # 3) retirer ces deux candidats des autres cellules de la région
+                        for cellule in region:
+                            # on ignore les deux cellules de la paire
+                            if cellule is cellule1 or cellule is cellule2:
+                                continue
+                            # on ignore les cellules deja remplies
+                            if cellule.getValue() != 0:
+                                continue
+
+                            oldCandidates = cellule.getCandidates()
+                            # on enleve les valeurs de la paire des candidats
+                            newCandidates = listDifference(oldCandidates, paire)
+
+                            if newCandidates != oldCandidates:
+                                cellule.setCandidates(newCandidates)
+                                changed = True
+                        if changed:
+                            return True
+        return False
+
     # J'ai decidé de choisir la difficulté à propos des methodes humaines, càd que je vois les stats et selon les 
     # stats je choisit la difficulté
     # Idée pour l'instant:
@@ -224,6 +268,8 @@ class SolverHuman(Solver):
             return Difficulte.FACILE
         if maxTech == Technique.SINGLETON_CACHE or maxTech == Technique.SINGLETON_NU: 
             return Difficulte.MOYEN
+        if maxTech == Technique.PAIR_NU:
+            return Difficulte.DIFFICILE
         return Difficulte.DIFFICILE
     
     # Car j'ai testé plein de fois et j'ai remarqué que MOYEN prends enormemnt temps pour se
