@@ -101,9 +101,10 @@ class InterfaceConsole(Interface): # extends Interface
                 print(f"Erreurs: {self.errorCount}/3")
                 print("\nActions disponibles: ")
                 print("1. Entrer une valeur")
-                print("2. Résoudre automatiquement la grille (backtrack)")
-                print("3. Résoudre automatiquement la grille (méthode humaine)")
-                print("4. Quitter")
+                print("2. Afficher la grille des candidats")
+                print("3. Résoudre automatiquement la grille (backtrack)")
+                print("4. Résoudre automatiquement la grille (méthode humaine)")
+                print("5. Quitter")
 
             choix = input("Votre choix: ")
 
@@ -113,11 +114,17 @@ class InterfaceConsole(Interface): # extends Interface
                 else:
                     self.playMove()
             elif choix == '2':
+                if self.errorCount >= 3:
+                    print("\nGame Over! Vous ne pouvez plus jouer.")
+                else:
+                    self.printCandidatesGrid()
+
+            elif choix == '3':
                 print("\nLa grille résolue automatiquement (backtrack):")
                 self.grilleComplete.printGrille()
                 print("\nLE JEU EST TERMINÉ !\n")
                 return  # sortir après résolution
-            elif choix == '3':
+            elif choix == '4':
                 print("\nRésolution avec méthode humaine...")
                 
                 try:
@@ -134,7 +141,7 @@ class InterfaceConsole(Interface): # extends Interface
                     self.grilleDeJeu.printGrille()
                 print("\nLE JEU EST TERMINÉ !\n")
                 return  # terminer la boucle après affichage
-            elif choix == '4':
+            elif choix == '5':
                 return
             else:
                 print("\nChoix invalide, veuillez réessayer.")
@@ -192,3 +199,25 @@ class InterfaceConsole(Interface): # extends Interface
             print("\nValeur invalide pour cette position.")
             self.errorCount += 1
             print(f"Erreur ! \n")
+
+    # affiche la grille avec tous le candidats
+    def printCandidatesGrid(self):
+        print("\n=== Grille des candidats ===\n")
+        for row in range(9):
+            for col in range(9):
+                val = self.grilleDeJeu.getCelluleValueCoord(row,col)
+                
+                if val != 0:
+                    cell = f"{val}"
+                else:
+                    candidats = Grille.getCelluleCandidatesCoord(self.grilleDeJeu, row, col)
+                    cell = "{" + ",".join(map(str, candidats)) + "}"
+                print(f"{cell:12}", end="") # :12 cest le formatage de largeur car on peut avoir bcp de candidats, end="" pour ne pas passer à la ligne
+
+                if (col + 1)  % 3 == 0 and col < 8:
+                    print(" | ", end="")
+            print()
+
+            if (row + 1) % 3 == 0 and row < 8:
+                print("-" * 120) # 120 au cas où on a bcp de candidats
+        print("\n")

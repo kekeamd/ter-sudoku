@@ -42,9 +42,12 @@ if __name__ == "__main__":
             print("==============================")
 
             interface : Interface = InterfaceWeb()
-            answer : chr = input("Voulez-vous lancer le serveur ? (O/N) ")
+            answer : str = input("Voulez-vous lancer le serveur ? (O/N) ").upper() # pour o et O, n et N
             if answer == 'O':
+                print("Lancement du serveur Web...")
                 interface.startPlaying()
+            else:
+                print("Serveur non lancé.")
         
         elif TypeDeJeu == '3':                                        # Tests Haut niveaux
             print("==============================")
