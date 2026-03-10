@@ -289,7 +289,7 @@ class Grille(ABC):
             print(line)
             if row % self._size == self._size-1 and row != size-1:
                 print("-" * numCharPerLine)
-
+        print("\n")
 
     #purpose: clone la grille
     @abstractmethod
