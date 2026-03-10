@@ -25,6 +25,8 @@ class SolverHuman(Solver):
                 continue
             if SolverHuman.paireNu(grille):
                 continue
+            if SolverHuman.paireCachee(grille):
+                continue
             raise(SolverError("SolverHuman: Impossible de résoudre la grille à partir des techniques actuellement implémentées."))      #si on a testé toutes les techniques et aucune fonctionne alors il nous manque des techniques
 
 
@@ -160,7 +162,7 @@ class SolverHuman(Solver):
                 c = regionValues.index(0)
                 cellule = region[c] #on récupère la cellule vide
                 if len(cellule.getCandidates())!=1:     #failsafe si jamais on ne cherche pas correctement la cellule vide
-                    raise(SolverError("SolverHuman: la technique de résolution dernierNombre à trouvé une unique cellule vide dans une région qui ne contient pas seulement un candidat"))
+                    raise(SolverError("SolverHuman: la technique de résolution dernierNombre à trouvé une unique cellule vide dans sa région qui ne contient pas seulement un candidat"))
                 value = cellule.getCandidates()[0]
                 pos = cellule.getPosition()
                 if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(pos, sizeCote), columnIndexFromCelluleIndex(pos , sizeCote), value):    #failsafe au cas où la solution proposée n'est pas valide
@@ -217,6 +219,56 @@ class SolverHuman(Solver):
                         if changed:
                             return True
         return False
+    
+
+    # Quand deux cellules d’une même région contiennent les mêmes deux candidats et que ces candidats ne sont pas dans le reste de la région
+    @staticmethod
+    def paireCachee(grille: Grille) -> bool:
+        sizeCote = grille.getSize()
+        size = sizeCote**2
+        regions = grille.getRegions()
+
+        paires = []
+        for ca1 in range(1, size+1):    #on créer toutes les paires de candidats possibles
+                for ca2 in range(ca1+1, size+1):
+                    paires.append([ca1, ca2])
+
+        for region in regions:   #on itère sur toutes les lignes/colonnes/zones de la grille
+            #-----------------identification de la paire cachée
+            for paire in paires:    #on itère sur toutes les paires de candidats possibles et on vérifie si il y a exactement deux cellules contenant la paire dans leurs candidats(c'est-à-dire si on trouve une paire cachée à partir de cette paire)
+                cell1 = None
+                cell2 = None
+                for cellule in region:
+                    if cellule.getValue()!=0:
+                        continue
+                    candidats = cellule.getCandidates()
+                    if paire[0] in candidats and paire[1] in candidats: #on vérifie si la cellule contient la paire dans ses candidats
+                        if cell1 == None:
+                            cell1 = cellule
+                        elif cell2 == None:
+                            cell2 = cellule
+                        else:        #si on avait déjà deux cellules contenant la paire dans leurs candidats alors on passe à la prochaine paire
+                            cell1 = None
+                            cell2 = None
+                            break
+                    elif paire[0] in candidats or paire[1] in candidats: #si la cellule ne contient qu'un seul des deux candidats de la paire alors il ne peux pas y avoir de paire cachée avec cette paire dans cette région
+                        cell1 = None
+                        cell2 = None
+                        break
+                if cell1!=None and cell2!=None:     #on a une paire cachée
+                    #-------------conséquences de la paire cachée
+                    cell1.setCandidates(paire)   #on élimine les autres candidats des cellules de la paire cachée
+                    cell2.setCandidates(paire)
+                    for region2 in regions:             #on élimine les candidats de la paire de candidats dans la deuxième région qui contient entièrement la paire cachée si jamais elle existe
+                        if cell1 in region2 and cell2 in region2 and region2!=region:
+                            for cellule2 in region2:
+                                if cellule2==cell1 or cellule2==cell2:
+                                    continue
+                                cellule2.setCandidates(listDifference(cellule2.getCandidates(), paire))
+                            break
+                    return True
+        return False
+    
 
     # J'ai decidé de choisir la difficulté à propos des methodes humaines, càd que je vois les stats et selon les 
     # stats je choisit la difficulté
@@ -228,6 +280,6 @@ class SolverHuman(Solver):
             return Difficulte.FACILE
         if maxTech == Technique.SINGLETON_CACHE or maxTech == Technique.SINGLETON_NU: 
             return Difficulte.MOYEN
-        if maxTech == Technique.PAIR_NU:
+        if maxTech == Technique.PAIR_NU or maxTech == Technique.PAIR_CACHEE:
             return Difficulte.DIFFICILE
         return Difficulte.EXTREME
