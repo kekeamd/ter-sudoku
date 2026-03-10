@@ -15,12 +15,17 @@ class Grille(ABC):
         for _ in range(self._size**2):
             self._grille.append(Zone(size=sizeCote))
         self._difficulte : Difficulte = None
+        for c in range(self._size**4):
+            self._getCelluleIndex(c).setPosition(c)
+
     def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
         if ((sizeCote*sizeCote)!=len(zoneList) or len(zoneList) < 3):
             raise(GrilleError("Grille : deuxième argument invalide ou alors la taille de 'zoneList' est différente de la valeur par défaut (avez-vous pensé à préciser la taille?)"))
         self._grille : list[Zone] = zoneList
         self._size : int = sizeCote
         self._difficulte : Difficulte = None
+        for c in range(self._size**4):
+            self._getCelluleIndex(c).setPosition(c)
     
 
     #purpose: génère des valeurs et rempli la grille
