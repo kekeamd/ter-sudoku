@@ -16,6 +16,7 @@ class SolverHumanStats(SolverHuman):
                 Technique.DERNIER_NOMBRE: 0,
                 Technique.SINGLETON_CACHE: 0,
                 Technique.PAIR_NU: 0,
+                Technique.PAIR_CACHEE: 0,
             },
             "maxTechnique": None, # Technique la plus dur
         }
@@ -45,6 +46,10 @@ class SolverHumanStats(SolverHuman):
 
             if SolverHuman.paireNu(grille):
                 record(Technique.PAIR_NU)
+                continue
+
+            if SolverHuman.paireCachee(grille):
+                record(Technique.PAIR_CACHEE)
                 continue
 
             # bloqué
