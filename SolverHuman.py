@@ -187,7 +187,7 @@ class SolverHuman(Solver):
                     candidats = cellule.getCandidates()
                     if len(candidats) == 2: # si la cellule possede exactement 2 candidats
                         pairCells.append((cellule, sorted(candidats))) # on trie les candidats
-                        
+
             # 2) chercher deux cellules ayant exactement la même paire
             for i in range(len(pairCells)):
                 for j in range(i + 1, len(pairCells)):
@@ -220,14 +220,9 @@ class SolverHuman(Solver):
 
     # J'ai decidé de choisir la difficulté à propos des methodes humaines, càd que je vois les stats et selon les 
     # stats je choisit la difficulté
-    # Idée pour l'instant:
-    # FACILE : resolue sans SINGLETON_CACHE (donc maxTechnique <= DERNIER_NOMBRE)
-    # MOYEN : resolue avec SINGLETON_CACHE au moins une fois (ÉLARGI pour inclure plus de cas)
-    # DIFFICILE : le solveur humain est bloqué (stuck = True) ou techniques > SINGLETON_CACHE
-    # SI VOUS AVEZ D'AUTRES IDEE N'HESITEZ PAS
     def rateFromStats(stats: dict) -> Difficulte:
         if stats["stuck"]:
-            return Difficulte.DIFFICILE
+            return Difficulte.GODMODE
         maxTech = stats["maxTechnique"]
         if maxTech is None or maxTech <= Technique.DERNIER_NOMBRE:
             return Difficulte.FACILE
@@ -235,8 +230,4 @@ class SolverHuman(Solver):
             return Difficulte.MOYEN
         if maxTech == Technique.PAIR_NU:
             return Difficulte.DIFFICILE
-        return Difficulte.DIFFICILE
-    
-    # Car j'ai testé plein de fois et j'ai remarqué que MOYEN prends enormemnt temps pour se
-    # generer, alors pour l'instant tq on n'a pas beacoup de techniques humaines jai fais que cest 
-    # MOYEN quand il peut etre aussi SINGLETON_NU
+        return Difficulte.EXTREME
