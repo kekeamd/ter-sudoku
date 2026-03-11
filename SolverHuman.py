@@ -68,7 +68,6 @@ class SolverHuman(Solver):
     def singletonCache(grille : Grille) -> bool:
         sizeCote = grille.getSize()
         size = sizeCote**2
-        celluleCount = size**2          #on calcule le nombre de cellules
         regions = grille.getRegions()
         for region in regions:  #on itère sur chaque zone/ligne/colonne
                 for ca in range(1, size+1):  #on itère sur chaque candidat possible et on vérifie si il est dans les candidats d'exactement une cellule
