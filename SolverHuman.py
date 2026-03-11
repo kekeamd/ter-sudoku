@@ -222,9 +222,11 @@ class SolverHuman(Solver):
             for ca in range(1, size+1):
                 cellList= []   #liste des cellules contenants le candidat enfermé
                 region2Type = "" #"zone"/"row"/"column"
-                for c in range(len(region)):
+                for c in range(len(region)):    #on cherche les cellules contenant le candidat
                     cellule = region[c]
-                    if ca in cellule.getCandidates():   #on cherche les cellules contenant le candidat
+                    if cellule.getValue()!=0:
+                        continue
+                    if ca in cellule.getCandidates():   #la cellule contient le candidat
                         if len(cellList)==0:    #si c'est la première alors juste on l'ajoute à la liste
                             pass
                         elif len(cellList)==1:  #si c'est la deuxième alors on l'ajoute à la liste, on peut aussi déterminer si la deuxième région sera une zone/ligne/colonne, on s'arrête si on ne peut pas car ça rend le candidat impossible a enfermer
