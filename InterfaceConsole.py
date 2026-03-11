@@ -39,15 +39,7 @@ class InterfaceConsole(Interface): # extends Interface
         return choix
 
 
-    def askDifficulty(self) -> str: # demande la difficulté à propos de nbr de retraites
-        print("\nChoisissez une difficulté:")
-        print("1. Facile")
-        print("2. Moyen")
-        print("3. Difficile")
-        print("4. Extrême")
-        print("5. God Mode")
-        choix = input("Votre choix: ")
-
+    def askDifficulty(self) -> Difficulte:  # demande la difficulté
         difficulte_map = {
             '1': Difficulte.FACILE,
             '2': Difficulte.MOYEN,
@@ -56,10 +48,20 @@ class InterfaceConsole(Interface): # extends Interface
             '5': Difficulte.GODMODE
         }
 
-        if choix in difficulte_map:
-            return difficulte_map[choix]
+        while True:
+            print("\nChoisissez une difficulté:")
+            print("1. Facile")
+            print("2. Moyen")
+            print("3. Difficile")
+            print("4. Extrême")
+            print("5. God Mode")
 
-        print("Choix invalide. Réessayez.")
+            choix = input("Votre choix: ")
+
+            if choix in difficulte_map:
+                return difficulte_map[choix]
+
+            print("\nChoix invalide. Réessayez.")
 
     def playSudoku(self): # prends la difficulté, la grille complete, fait la grille prete à resoudre et appele gameLoop
         self.errorCount = 0  # Réinitialiser le compteur d'erreurs
@@ -139,7 +141,7 @@ class InterfaceConsole(Interface): # extends Interface
                     print("\n", e)
                     print("\nGrille partiellement résolue :")
                     self.grilleDeJeu.printGrille()
-                print("\nLE JEU EST TERMINÉ !\n")
+                print("LE JEU EST TERMINÉ !\n")
                 return  # terminer la boucle après affichage
             elif choix == '5':
                 return
@@ -161,9 +163,6 @@ class InterfaceConsole(Interface): # extends Interface
         if self.grilleDeJeu.getCelluleValueCoord(row, col) != 0:
             print("\nCette case est déjà remplie.")
             return
-        
-        candidats = Grille.getCelluleCandidatesCoord(self.grilleDeJeu, row, col)
-        print("Candidats possibles pour la case avec row:", row+1, "col:", col+1, ":", candidats)
         
         try:
             val = int(input("Valeur (1-9): "))
