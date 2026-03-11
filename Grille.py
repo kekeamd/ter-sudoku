@@ -8,28 +8,24 @@ from GrilleUtils import *
 #purpose: bah la grille de sudoku
 #dependencies: Difficulte, Cellule ,Zone, GrilleUtils, GrilleError
 class Grille(ABC):
-    # JAMAIS UTILISER ?
-    def __init__(self, sizeCote : int = 3): #faire un constructeur avec que la taille
+    def __init__(self, zoneList : list[Zone]=[], size : int = 3):
+        if zoneList!=[] and ((size*size)!=len(zoneList) or len(zoneList) < 3):
+                raise(GrilleError("Grille : deuxième argument invalide ou alors la taille de 'zoneList' est différente de la valeur par défaut (avez-vous pensé à préciser la taille?)"))
+        #----------------initialisation des attributs
         self._grille : list[Zone] = []
-        self._size : int = sizeCote
-        for _ in range(self._size**2):
-            self._grille.append(Zone(size=sizeCote))
+        self._size : int = size
         self._difficulte : Difficulte = None
-        try:
-            self.setPositions()
-        except:
-            pass
+        #----------------remplissage de grille
+        if zoneList==[]: 
+            for _ in range(self._size**2):
+                self._grille.append(Zone(size=self._size))
+        else:
+            for zone in zoneList:
+                self._grille.append(zone.clone())
+        #----------------attribution des positions des cellules
+        for c in range(self._size**4):
+            self._getCelluleIndex(c).setPosition(c)
 
-    def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
-        if ((sizeCote*sizeCote)!=len(zoneList) or len(zoneList) < 3):
-            raise(GrilleError("Grille : deuxième argument invalide ou alors la taille de 'zoneList' est différente de la valeur par défaut (avez-vous pensé à préciser la taille?)"))
-        self._grille : list[Zone] = zoneList
-        self._size : int = sizeCote
-        self._difficulte : Difficulte = None
-        try:
-            self.setPositions()
-        except:
-            pass
 
     def setPositions(self):
         for c in range(self._size**4):

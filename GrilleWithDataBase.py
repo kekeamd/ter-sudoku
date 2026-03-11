@@ -11,11 +11,7 @@ from Difficulte import Difficulte
 
 class GrilleWithDataBase(Grille):
     
-    # Probablement pas le bon constructeur A MODIFIER
-    def __init__(self, sizeCote : int = 3, zoneList : list[Zone] = []):
-        if zoneList==[]:
-            for _ in range(sizeCote**2):
-                zoneList.append(Zone(size=sizeCote))
+    def __init__(self, zoneList : list[Zone] = [], sizeCote : int = 3):
         super().__init__(zoneList,sizeCote)
         self._parser = p.Parser()
 
@@ -178,8 +174,8 @@ class GrilleWithDataBase(Grille):
         else:
             raise(GrilleError("GrilleWithDataBase : _flipIndexAdvanced -> cas non géré ! sym =",str(sym)))
     
-    def clone(self):# -> GrilleBacktrack
+    def clone(self):# -> GrilleWithDataBase
         newGrille = []
         for i in range(self._size**2):
             newGrille.append(self._grille[i].clone())
-        return GrilleWithDataBase(self._size, newGrille)
+        return GrilleWithDataBase(newGrille, self._size)

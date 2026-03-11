@@ -10,11 +10,7 @@ from random import shuffle
 #purpose: la grille de jeu avec le contenu généré par backtrack
 #dependencies: Parser, Grille, Difficulte , SolveBacktrack, GrillError, shuffle
 class GrilleBacktrack(Grille):
-    #def __init__(): #overwritten
-    #    super()
-    def __init__(self, zoneList=None, size: int = 3):
-        if zoneList is None:
-            zoneList = [Zone() for _ in range(size * size)]
+    def __init__(self, zoneList : list = [] , size : int = 3):
         super().__init__(zoneList, size)
 
     

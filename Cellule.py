@@ -6,7 +6,7 @@ class Cellule:
         if value!=0:
             self.setValue(value)
         self._candidates : list[int] = []
-        self._position : int = -5
+        self._position : int = -1
     
     def getValue(self) -> int:
         return self._value
@@ -35,14 +35,15 @@ class Cellule:
         if position<0:
             Error = "Position négative ! ("+str(position)+")"
             raise(GrilleError("Cellule : setPosition -> "+Error))
-        elif self._position >= 0:
-            Error = "Tentative de changer la position de la cellule alors qu'elle est déjà établie ! ("+str(self._position)+"->"+str(position)+")"
-            raise(GrilleError("Cellule : setPosition -> "+Error))
-        else:
-            self._position = position
+        #pas nécessaire et cause des erreurs pour rien
+        # if self._position >= 0:
+        #     Error = "Tentative de changer la position de la cellule alors qu'elle est déjà établie ! ("+str(self._position)+"->"+str(position)+")"
+        #     raise(GrilleError("Cellule : setPosition -> "+Error))
+        self._position = position
 
     def clone(self): # -> Cellule (Erreur lors de la compilation)
         newCellule=Cellule(self._value)
         newCellule.setCandidates(self._candidates.copy())
-        newCellule.setPosition(self._position)
+        if self._position>=0:   #si la cellule n'as pas de position (c'est-à-dire -1 alors pas besoin de le set dans le clone)
+            newCellule.setPosition(self._position)
         return newCellule

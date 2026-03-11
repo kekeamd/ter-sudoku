@@ -39,23 +39,12 @@ def test_initCandidatesConflicts():
     assert myCel.getCandidates() == [1,2,3,4,6,7,8,9]
     assert myCel.getPosition() == -1
 
-# Test de l'assignation d'une position à une cellule (première fois)
+# Test de l'assignation d'une position conforme à une cellule
 def test_setPosition():
     myCel = Cellule(5)
     position = 10
     myCel.setPosition(position)
     assert myCel.getPosition() == position
-
-# Test de l'assignation d'une position à une cellule (deuxième fois)
-def test_setPositionOverwrite():
-    myCel = Cellule(5)
-    position = 10
-    myCel.setPosition(position)
-    oldPos = myCel.getPosition()
-    position = 23
-    with pt.raises(GrilleError):
-        myCel.setPosition(position)
-    assert myCel.getPosition() == oldPos
 
 # Test de l'assignation d'une position négative à une cellule
 def test_setPositionNeg():
