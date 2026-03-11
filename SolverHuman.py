@@ -61,60 +61,6 @@ class SolverHuman(Solver):
                 grille.adjustCandidatesAfterAddingValueIndex(cell)
                 return True             #pas besoin d'aller plus loin, on renvoie vrai
         return False    #si on a pas trouvé de valeur alors on renvoie faux
-    
-
-    #applique la méthode de singleton caché sur la zone de la cellule numéro 'index', renvoie une liste avec la valeur si elle a été trouvée et vide sinon
-    @staticmethod
-    def _singletonCacheZone(grille : Grille, index : int) -> list[int]:
-        sizeCote = grille.getSize()
-        size = sizeCote**2
-        zoneIndex = zoneIndexFromCoord(rowIndexFromCelluleIndex(index, sizeCote), columnIndexFromCelluleIndex(index, sizeCote), sizeCote)   #index de la zone
-        relatifIndex = relatifIndexFromAbsoluteIndex(index, sizeCote)   #index de la cellule relatif à la zone
-        celluleCandidates = grille.getCelluleCandidatesZoneIndex(zoneIndex, relatifIndex)
-        zoneCandidates = []
-        for cell in range(size):        #on crée la liste de tout les candidats dans la zone sauf ceux de la cellule en question
-            if cell!=relatifIndex:
-                zoneCandidates = listUnion(zoneCandidates, grille.getCelluleCandidatesZoneIndex(zoneIndex, cell))
-        candidatesOnlyInThisCellule = listDifference(celluleCandidates, zoneCandidates)     #on enlève les candidats de la cellule qui sont autre part dans la zone
-        if len(candidatesOnlyInThisCellule)>1:
-            raise(GrilleError("SolverHuman: Il y a deux solutions possible pour une cellule en utilisant le singleton caché (sur la zone)!"))
-        return candidatesOnlyInThisCellule
-
-
-    #applique la méthode de singleton caché sur la ligne de la cellule numéro 'index', renvoie une liste avec la valeur si elle a été trouvée et vide sinon
-    @staticmethod
-    def _singletonCacheRow(grille : Grille, index : int) -> list[int]:
-        sizeCote = grille.getSize()
-        size = sizeCote**2
-        rowIndex = rowIndexFromCelluleIndex(index, sizeCote)   #index de la ligne
-        relatifIndex = relatifIndexFromAbsoluteIndex(index, sizeCote, "row")   #index de la cellule relatif à la ligne
-        celluleCandidates = grille.getCelluleCandidatesIndex(index)
-        rowCandidates = []
-        for cell in range(size):        #on crée la liste de tout les candidats dans la ligne sauf ceux de la cellule en question
-            if cell!=relatifIndex:
-                rowCandidates = listUnion(rowCandidates, grille.getCelluleCandidatesIndex(rowIndex*size + cell))
-        candidatesOnlyInThisCellule = listDifference(celluleCandidates, rowCandidates)     #on enlève les candidats de la cellule qui sont autre part dans la ligne
-        if len(candidatesOnlyInThisCellule)>1:
-            raise(GrilleError("SolverHuman: Il y a deux solutions possible pour une cellule en utilisant le singleton caché (sur la ligne)!"))
-        return candidatesOnlyInThisCellule
-    
-
-    #applique la méthode de singleton caché sur la colonne de la cellule numéro 'index', renvoie une liste avec la valeur si elle a été trouvée et vide sinon
-    @staticmethod
-    def _singletonCacheColumn(grille : Grille, index : int) -> list[int]:
-        sizeCote = grille.getSize()
-        size = sizeCote**2
-        columnIndex = columnIndexFromCelluleIndex(index, sizeCote)   #index de la colonne
-        relatifIndex = relatifIndexFromAbsoluteIndex(index, sizeCote, "column")   #index de la cellule relatif à la colonne
-        celluleCandidates = grille.getCelluleCandidatesIndex(index)
-        columnCandidates = []
-        for cell in range(size):        #on crée la liste de tout les candidats dans la colonne sauf ceux de la cellule en question
-            if cell!=relatifIndex:
-                columnCandidates = listUnion(columnCandidates, grille.getCelluleCandidatesIndex(columnIndex + cell*size))
-        candidatesOnlyInThisCellule = listDifference(celluleCandidates, columnCandidates)     #on enlève les candidats de la cellule qui sont autre part dans la colonne
-        if len(candidatesOnlyInThisCellule)>1:
-            raise(GrilleError("SolverHuman: Il y a deux solutions possible pour une cellule en utilisant le singleton caché (sur la colonne)!"))
-        return candidatesOnlyInThisCellule
 
 
     #applique la méthode de singleton caché afin de trouver une valeur dans la grille, renvoie True si une valeur a été trouvée et False sinon
@@ -123,32 +69,28 @@ class SolverHuman(Solver):
         sizeCote = grille.getSize()
         size = sizeCote**2
         celluleCount = size**2          #on calcule le nombre de cellules
-        for cell in range(celluleCount):            #on itère sur chaque cellule
-            value = grille.getCelluleValueIndex(cell)
-            if value!=0:            #si la cellule a une valeur alors on ne s'en occupe pas
-                continue
-            resList = SolverHuman._singletonCacheZone(grille, cell) #vérifie si on trouve une valeur adéquate à partir de la zone
-            if len(resList) == 1:
-                if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), resList[0]):    #failsafe au cas où la solution proposée n'est pas valide
-                    raise(SolverError("SolverHuman: la technique de résolution singletonCache propose une valeur rendant la grille invalide!"))
-                grille.setCelluleValueIndex(cell, resList[0])
-                grille.adjustCandidatesAfterAddingValueIndex(cell)
-                return True
-            resList = SolverHuman._singletonCacheRow(grille, cell) #vérifie si on trouve une valeur adéquate à partir de la ligne
-            if len(resList) == 1:
-                if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), resList[0]):    #failsafe au cas où la solution proposée n'est pas valide
-                    raise(SolverError("SolverHuman: la technique de résolution singletonCache propose une valeur rendant la grille invalide!"))
-                grille.setCelluleValueIndex(cell, resList[0])
-                grille.adjustCandidatesAfterAddingValueIndex(cell)
-                return True
-            resList = SolverHuman._singletonCacheColumn(grille, cell) #vérifie si on trouve une valeur adéquate à partir de la colonne
-            if len(resList) == 1:
-                if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(cell, sizeCote), columnIndexFromCelluleIndex(cell , sizeCote), resList[0]):    #failsafe au cas où la solution proposée n'est pas valide
-                    raise(SolverError("SolverHuman: la technique de résolution singletonCache propose une valeur rendant la grille invalide!"))
-                grille.setCelluleValueIndex(cell, resList[0])
-                grille.adjustCandidatesAfterAddingValueIndex(cell)
-                return True
-        return False            #renvoie faux car on a pas trouvé de valeur adéquate
+        regions = grille.getRegions()
+        for region in regions:  #on itère sur chaque zone/ligne/colonne
+                for ca in range(1, size+1):  #on itère sur chaque candidat possible et on vérifie si il est dans les candidats d'exactement une cellule
+                    cell = None
+                    for cellule in region:
+                        if cellule.getValue()!=0:   #si la cellule a une valeur on passe à la prochaine
+                            continue
+                        candidats = cellule.getCandidates()
+                        if ca in candidats:
+                            if cell!=None:  #si il est candidat dans plus d'une cellule alors on passe au prochain candidat
+                                cell=None
+                                break
+                            cell = cellule
+                    if cell!=None:  #singleton caché trouvé
+                        pos = cell.getPosition()
+                        if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(pos, sizeCote), columnIndexFromCelluleIndex(pos , sizeCote), ca):    #failsafe au cas où la solution proposée n'est pas valide
+                            raise(SolverError("SolverHuman: la technique de résolution singletonCache propose une valeur rendant la grille invalide!"))
+                        grille.setCelluleValueIndex(pos, ca)
+                        grille.adjustCandidatesAfterAddingValueIndex(pos)
+                        return True
+
+        return False
 
 
     #applique la méthode dernier nombre afin de trouver une valeur dans la grille, renvoie True si une valeur a été trouvée et False sinon
