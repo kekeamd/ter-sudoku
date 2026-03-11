@@ -63,7 +63,7 @@ class GrilleWithDataBase(Grille):
                     newIndex=self._flipIndexClassic(i,sym)
                 else:
                     newIndex=self._flipIndexAdvanced(i,sym)
-                self.setCelluleValueIndex(newIndex,save.getCelluleCandidatesIndex(i))
+                self.setCelluleValueIndex(newIndex,save.getCelluleValueIndex(i))
                 self._getCelluleIndex(newIndex).setCandidates(save.getCelluleCandidatesIndex(i))
 
     # fais un changement de nombre dans la grille
@@ -140,12 +140,20 @@ class GrilleWithDataBase(Grille):
         size=self._size**2-1
         rowIndex=rowIndexFromCelluleIndex(index,self._size)
         colIndex=columnIndexFromCelluleIndex(index,self._size)
-        if (size+1)%2!=0 and (rowIndex==(size/2)) or (colIndex==(size/2)): # On est dans des cases qui ne changent pas !
-            return index
-        elif sym==0:                                        # Axe de symétrie verticale
-            return (rowIndex*size)+size-colIndex
+        if sym==0:                                        # Axe de symétrie verticale
+            if (size+1)%2!=0 and (colIndex==(size/2)):
+                return index
+            nColIndex=size-colIndex
+            nRowIndex=rowIndex
+            nIndex=(nRowIndex*(size+1))+nColIndex
+            return nIndex
         elif sym==1:                                        # Axe de symétrie horizontale
-            return (size-rowIndex)*size+colIndex
+            if (size+1)%2!=0 and (rowIndex==(size/2)):
+                return index
+            nColIndex=colIndex
+            nRowIndex=size-rowIndex
+            nIndex=(nRowIndex*(size+1))+nColIndex
+            return nIndex
         else:
             raise(GrilleError("GrilleWithDataBase : _flipIndexClassic -> cas non géré ! sym =",str(sym)))
     
