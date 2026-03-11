@@ -277,14 +277,14 @@ class Grille(ABC):
     #purpose: affiche la grille
     def printGrille(self) -> None:
         size = self._size**2
-        numCharPerCellule = valueNumCount(size)+1 # +1 pour l'espace
+        numCharPerCellule = digitCount(size)+1 # +1 pour l'espace
         numCharPerZoneDelimitation = (self._size-1)*2 #x2 parce qu'il y a une barre et un espace (l'espace à gauche est compté dans numCharPerCellule)
         numCharPerLine = size*numCharPerCellule + numCharPerZoneDelimitation
         for row in range(size):
             line = ""
             for column in range(size):
                 val = self.getCelluleValueCoord(row, column)
-                line += valueToString(val, valueNumCount(size))
+                line += valueToString(val, digitCount(size))
                 if column % self._size == self._size-1 and column != size-1:
                     line += " | "
                 else:

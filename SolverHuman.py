@@ -2,10 +2,8 @@ from Difficulte import Difficulte
 from Solver import Solver
 from Grille import Grille
 from GrilleUtils import *
-from Except.GrilleError import GrilleError
 from Except.SolverError import SolverError
 from Technique import Technique
-from SolverBacktrackStats import SolverBacktrackStats
 
 
 class SolverHuman(Solver):
@@ -26,6 +24,8 @@ class SolverHuman(Solver):
             if SolverHuman.paireNu(grille):
                 continue
             if SolverHuman.paireCachee(grille):
+                continue
+            if SolverHuman.candidatEnferme(grille):
                 continue
             raise(SolverError("SolverHuman: Impossible de résoudre la grille à partir des techniques actuellement implémentées."))      #si on a testé toutes les techniques et aucune fonctionne alors il nous manque des techniques
 
@@ -162,7 +162,7 @@ class SolverHuman(Solver):
         return False
     
 
-    # Quand deux cellules d’une même région contiennent les mêmes deux candidats et que ces candidats ne sont pas dans le reste de la région
+    # Quand deux cellules d’une même région contiennent les mêmes deux candidats et que ces candidats ne sont pas dans le reste de la région, renvoie True si ces cellules sont trouvées et False sinon
     @staticmethod
     def paireCachee(grille: Grille) -> bool:
         sizeCote = grille.getSize()
@@ -210,6 +210,58 @@ class SolverHuman(Solver):
                     return True
         return False
     
+
+    # quand un candidat est dans des cellules strictement à l'intersection de deux régions, renvoie True si ce candidat est trouvé et False sinon
+    @staticmethod
+    def candidatEnferme(grille : Grille) -> bool:
+        sizeCote = grille.getSize()
+        size = sizeCote**2
+        regions = grille.getRegions()   #liste des régions alternant entre zone,ligne,colonne,zone,ligne,etc...
+        for r in range(len(regions)):
+            region = regions[r]
+            for ca in range(1, size+1):
+                cellList= []   #liste des cellules contenants le candidat enfermé
+                region2Type = "" #"zone"/"row"/"column"
+                for c in range(len(region)):
+                    cellule = region[c]
+                    if ca in cellule.getCandidates():   #on cherche les cellules contenant le candidat
+                        if len(cellList)==0:    #si c'est la première alors juste on l'ajoute à la liste
+                            pass
+                        elif len(cellList)==1:  #si c'est la deuxième alors on l'ajoute à la liste, on peut aussi déterminer si la deuxième région sera une zone/ligne/colonne, on s'arrête si on ne peut pas car ça rend le candidat impossible a enfermer
+                            #----------------identification des régions----------------------
+                            if r%3==0:  #la première région est une zone
+                                if compareIndexRegion(cellList[0].getPosition(), cellule.getPosition(), sizeCote, "row"):    #la deuxième région est une ligne
+                                    region2Type= "row"
+                                if compareIndexRegion(cellList[0].getPosition(), cellule.getPosition(), sizeCote, "column"): #la deuxième région est une colonne
+                                    region2Type= "column"
+                            else:       #la première région est une ligne/colonne
+                                if compareIndexRegion(cellList[0].getPosition(), cellule.getPosition(), sizeCote, "zone"):   #la deuxième région est une zone
+                                    region2Type= "zone"
+                            #-----------------------------------------------------------------
+                            if region2Type=="": #les deux cellules ne sont pas à l'intersection de deux régions et donc le candidat ne peut pas être enfermé
+                                cellList=[]
+                                break
+                        else:                   #si c'est au dessus de la deuxième alors on l'ajoute à la liste sauf si elle n'appartient pas à la deuxième région
+                            if not compareIndexRegion(cellList[0].getPosition(), cellule.getPosition(), sizeCote, region2Type):
+                                cellList=[]
+                                break
+                        cellList.append(cellule)
+                if len(cellList)>1: #---------on a trouvé un candidat enfermé---------
+                    region2 = None
+                    rowIndex = rowIndexFromCelluleIndex(cellList[0].getPosition(), sizeCote)
+                    columnIndex = columnIndexFromCelluleIndex(cellList[0].getPosition(), sizeCote)
+                    zoneIndex = zoneIndexFromCoord(rowIndex, columnIndex, sizeCote)
+                    if region2Type=="zone":
+                        region2= regions[zoneIndex*3]
+                    if region2Type=="row":
+                        region2= regions[rowIndex*3+1]
+                    if region2Type=="column":
+                        region2= regions[columnIndex*3+2]
+                    for cellule in region2:
+                        if cellule.getValue()==0 and cellule not in cellList:
+                            cellule.setCandidates(listDifference(cellule.getCandidates(), [ca]))
+                    return True
+        return False
 
     # J'ai decidé de choisir la difficulté à propos des methodes humaines, càd que je vois les stats et selon les 
     # stats je choisit la difficulté

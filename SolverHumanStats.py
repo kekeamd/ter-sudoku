@@ -17,6 +17,7 @@ class SolverHumanStats(SolverHuman):
                 Technique.SINGLETON_CACHE: 0,
                 Technique.PAIR_NU: 0,
                 Technique.PAIR_CACHEE: 0,
+                Technique.CANDIDAT_ENFERME: 0,
             },
             "maxTechnique": None, # Technique la plus dur
         }
@@ -52,6 +53,8 @@ class SolverHumanStats(SolverHuman):
                 record(Technique.PAIR_CACHEE)
                 continue
 
+            if SolverHuman.candidatEnferme(grille):
+                record(Technique.CANDIDAT_ENFERME)
             # bloqué
             stats["stuck"] = True
             stats["solved"] = False

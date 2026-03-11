@@ -1,7 +1,5 @@
 from SolverHuman import SolverHuman
 from GrilleBacktrack import GrilleBacktrack
-from Zone import Zone
-from Cellule import Cellule
 import pytest as pt
 
 
@@ -99,3 +97,41 @@ def test_paireCacheeFonctionnePourUneColonne():
     for i in range(2, 9):
         assert 4 not in grille.getCelluleCandidatesCoord(i, 6) and 5 not in grille.getCelluleCandidatesCoord(i, 6)
     assert grille.getCelluleCandidatesCoord(0, 6)==[4, 5] and grille.getCelluleCandidatesCoord(1, 6)==[4, 5]
+
+
+def test_candidatEnfermeFonctionnePourUneZone():
+    grille = GrilleBacktrack()
+    grille._getCelluleZoneIndex(0, 7).setCandidates([2])
+    grille._getCelluleZoneIndex(0, 8).setCandidates([2])
+    for i in range(3, 9):
+        grille._getCelluleCoord(2, i).setCandidates([2])
+    assert SolverHuman.candidatEnferme(grille)
+    for i in range(9):
+        if i!=1 and i!=2:
+            assert 2 not in grille.getCelluleCandidatesCoord(2, i)
+
+
+def test_candidatEnfermeFonctionnePourUneLigne():
+    grille = GrilleBacktrack()
+    grille._getCelluleCoord(1, 3).setCandidates([5])
+    grille._getCelluleCoord(1, 5).setCandidates([5])
+    for i in range(6, 9):
+        grille._getCelluleZoneIndex(1, i).setCandidates([5])
+    assert SolverHuman.candidatEnferme(grille)
+    for i in range(9):
+        if i!=3 and i!=5:
+            assert 5 not in grille.getCelluleCandidatesZoneIndex(1, i)
+
+
+def test_candidatEnfermeFonctionnePourUneColonne():
+    grille = GrilleBacktrack()
+    grille._getCelluleCoord(3, 1).setCandidates([8])
+    grille._getCelluleCoord(5, 1).setCandidates([8])
+    for i in range(9):
+        if i%3==2:
+            grille._getCelluleZoneIndex(3, i).setCandidates([8])
+    grille._getCelluleCoord(3, 3).setCandidates([8])
+    assert SolverHuman.candidatEnferme(grille)
+    for i in range(9):
+        if i!=1 and i!=7:
+            assert 8 not in grille.getCelluleCandidatesZoneIndex(3, i)

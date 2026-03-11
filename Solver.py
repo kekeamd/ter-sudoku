@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 from Grille import Grille
-from Zone import Zone
-from GrilleUtils import zoneIndexFromCoord
 
 class Solver(ABC):
     @staticmethod

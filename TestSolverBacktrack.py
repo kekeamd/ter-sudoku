@@ -1,7 +1,5 @@
 from SolverBacktrack import SolverBacktrack
-from Grille import Grille
 from Cellule import Cellule
-from Except.GrilleError import GrilleError
 from Zone import Zone
 from GrilleBacktrack import GrilleBacktrack 
 
