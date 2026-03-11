@@ -50,8 +50,8 @@ class GrilleWithDataBase(Grille):
     # l'axe de symétrie est déterminer de cette manière :
     # 0 -> verticale
     # 1 -> horizontale
-    # 2 -> diagonale Gauche NON IMPLEMENTER
-    # 3 -> diagonale Droit NON IMPLEMENTER
+    # 2 -> diagonale Gauche
+    # 3 -> diagonale Droit
     def flip(self,sym : int = 0) -> None:
         if not(sym in [0,1,2,3]):
             error = "Mauvaise utilisation : "+sym+" & ATTENDU : (0 -> verticale) | (1 -> horizontale) | (2 -> diagonale Gauche) | (3 -> diagonale Droit)"
@@ -72,14 +72,29 @@ class GrilleWithDataBase(Grille):
     def changeNumber(self,numberToReplace : int = -1, newNumber : int = -1) -> None:
         size = (self._size**2)-1
         while(numberToReplace<0 or numberToReplace==newNumber):
-            numberToReplace = randint(1,size)
-        while(newNumber<0):
-            newNumber = randint(1,size)
-        if newNumber>size or numberToReplace>size:
-            error ="Mauvaise utilisation : numberToReplace = "+numberToReplace+" , newNumber ="+newNumber+" & ATTENDU : >0 & <="+size
-            raise("GrilleWithDataBase : changeNumber ->",error)
+            numberToReplace = randint(1,size+1)
+        while(newNumber<0 or numberToReplace==newNumber):
+            newNumber = randint(1,size+1)
+        if newNumber>size+1 or numberToReplace>size+1:
+            error ="Mauvaise utilisation : numberToReplace = "+str(numberToReplace)+" , newNumber ="+str(newNumber)+" & ATTENDU : >0 & <="+str(size)
+            raise(GrilleError("GrilleWithDataBase : changeNumber ->",error))
         else:
-            pass
+            save=self.clone()
+            for i in range (size**2):
+                oldValue = save.getCelluleValueIndex(i)
+                if oldValue == numberToReplace:
+                    self.setCelluleValueIndex(i,newNumber)
+                    cand=save.getCelluleCandidatesIndex(i)
+                    cand.append(newNumber)
+                    self._getCelluleIndex(i).setCandidates(cand)
+                elif oldValue == newNumber:
+                    self.setCelluleValueIndex(i,numberToReplace)
+                    cand=save.getCelluleCandidatesIndex(i)
+                    cand.append(numberToReplace)
+                    self._getCelluleIndex(i).setCandidates(cand)
+                else:
+                    pass # Rien à faire
+
 
     # Pas sûr que cette methode doit être ici ?
     # Vérifie à quel point 2 grilles sont similaires
@@ -108,16 +123,16 @@ class GrilleWithDataBase(Grille):
         colIndex=columnIndexFromCelluleIndex(index,self._size)
         if (size+1)%2!=0 and (rowIndex==(size/2)) or (colIndex==(size/2)): # On est dans des cases qui ne changent pas !
             return index
-        elif (rowIndex <= size/2) and way==1:   # Partie haute de la grille si way==1 sinon basse
-            if (colIndex <= size/2):            # Côté Gauche
-                return (rowIndex*size)+size-colIndex
-            else:                               # Côté Droit
-                return (size-rowIndex)*size+colIndex
-        else:                                   # Partie basse de la Grille si way==1 sinon haute
-            if (colIndex <= size/2):            # Côté Gauche
-                return (size-rowIndex)*size+colIndex
-            else:                               # Côté Droit
-                return (rowIndex*size)+size-colIndex
+        elif way==1:                            # si sens Droit
+            nColIndex=size-rowIndex
+            nRowIndex=colIndex
+            nIndex = (nRowIndex)*9+(nColIndex)
+            return nIndex
+        else:                                   # si sens Gauche
+            nColIndex=rowIndex
+            nRowIndex=size-colIndex
+            nIndex = (nRowIndex)*9+(nColIndex)
+            return nIndex
     
     # Renvoie l'index de la nouvelle cellule suite à une symétrie
     # Gère uniquement cas 0 et 1
@@ -159,4 +174,4 @@ class GrilleWithDataBase(Grille):
         newGrille = []
         for i in range(self._size**2):
             newGrille.append(self._grille[i].clone())
-        return GrilleWithDataBase(newGrille, self._size)
+        return GrilleWithDataBase(self._size, newGrille)

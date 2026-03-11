@@ -15,8 +15,10 @@ class Grille(ABC):
         for _ in range(self._size**2):
             self._grille.append(Zone(size=sizeCote))
         self._difficulte : Difficulte = None
-        for c in range(self._size**4):
-            self._getCelluleIndex(c).setPosition(c)
+        try:
+            self.setPositions()
+        except:
+            pass
 
     def __init__(self, zoneList : list[Zone] , sizeCote : int = 3):
         if ((sizeCote*sizeCote)!=len(zoneList) or len(zoneList) < 3):
@@ -24,9 +26,14 @@ class Grille(ABC):
         self._grille : list[Zone] = zoneList
         self._size : int = sizeCote
         self._difficulte : Difficulte = None
+        try:
+            self.setPositions()
+        except:
+            pass
+
+    def setPositions(self):
         for c in range(self._size**4):
             self._getCelluleIndex(c).setPosition(c)
-    
 
     #purpose: génère des valeurs et rempli la grille
     @abstractmethod

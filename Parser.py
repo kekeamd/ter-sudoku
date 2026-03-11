@@ -1,8 +1,9 @@
 from FileInteraction import FileInteraction
 from Grille import Grille
 from Except.ParserError import ParserError
-from GrilleBacktrack import GrilleBacktrack as GBacktrack
-from GrilleWithDataBase import GrilleWithDataBase as GDataBase
+import GrilleWithDataBase as GDataBase
+import GrilleBacktrack as GBacktrack
+import GrilleHuman as GHuman
 
 class Parser:
     
@@ -22,6 +23,8 @@ class Parser:
     # Permet de passer d'un fichier à une Grille de type Grille
     # Le type exact est défini par "typeGrille" :
     # 0 = GBacktrack
+    # 1 = GWithData
+    # 2 = GHuman
     #@classmethod
     def fileToGrille(self,directory : str = "", fileName : str = "", typeGrille : int = 0) -> Grille:
         self._modifFileInteraction(directory,fileName,"fileToGrille") # Modification de FileInteraction
@@ -75,6 +78,7 @@ class Parser:
     # typeGrille :
     # - 0 = GBacktrack
     # - 1 = GDataBase
+    # - 2 = GHuman
     @staticmethod
     def stringToGrille(strG : str, typeGrille : int = 0): # -> Grille
         chffr = ["0","1","2","3","4","5","6","7","8","9"]
@@ -228,9 +232,11 @@ class Parser:
             who = who_
         match type:
             case 0:
-                Gout = GBacktrack()
+                Gout = GBacktrack.GrilleBacktrack()
             case 1:
-                Gout = GDataBase()
+                Gout = GDataBase.GrilleWithDataBase()
+            case 2:
+                Gout = GHuman.GrilleHuman()
             case _:
                 Error = who+" -> Paramètre typeGrille mal entré : "+str(type)
                 raise(ParserError("Parser : "+Error))
