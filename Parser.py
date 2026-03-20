@@ -120,7 +120,14 @@ class Parser:
         s += " ]"
         return s
     
-    
+    @staticmethod
+    def grilleToString_v2(g: Grille) -> str:
+        size = g.getSize() ** 2
+        numberOfCellule = size ** 2
+        s = ""
+        for i in range(numberOfCellule):
+            s += str(g.getCelluleValueIndex(i))  # uniquement la valeur, sans candidats
+        return s
     # Transforme une chaine de char en tableau en 2D
     # /!\ ATTENTION /!\ char séparateur : "[]" ou "\n"
     @staticmethod

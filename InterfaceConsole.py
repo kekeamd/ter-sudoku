@@ -12,6 +12,7 @@ from SolverBacktrack import SolverBacktrack # playMove()
 from GrilleBacktrack import GrilleBacktrack
 from SolverHuman import SolverHuman # gameLoop()
 from SolverHumanStats import SolverHumanStats # gameLoop()
+from SudokuScraping import getDifficultyFromGrille # playSudoku() pour afficher la difficulté estimée de la grille générée
 
 
 class InterfaceConsole(Interface): # extends Interface
@@ -78,6 +79,9 @@ class InterfaceConsole(Interface): # extends Interface
         print("\nDifficulté estimée (méthodes humaines):", rated)
         print("Steps:", stats["steps"])
         print("Max technique:", stats["maxTechnique"].name if stats["maxTechnique"] else None)
+       
+        #sudokuCoachRated = getDifficultyFromGrille(self.grilleDeJeu, headless=True)
+        #print(f"Difficulté estimée (sudoku.coach): {sudokuCoachRated  ['label']} (score: {sudokuCoachRated['score']})")
 
         #self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 
