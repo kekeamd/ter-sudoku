@@ -166,12 +166,16 @@ class GrilleWithDataBase(Grille):
             if rowIndex==colIndex: # On est dans des cases qui ne changent pas !
                 return index
             else:
-                return (colIndex*size)+rowIndex
+                nColIndex=rowIndex
+                nRowIndex=colIndex
+                return nRowIndex*(size+1)+nColIndex
         elif sym==3:                                        # Axe de symétrie diagonale droit
             if rowIndex!=colIndex and (rowIndex+colIndex)==size: # On est dans des cases qui ne changent pas !
                 return index
             else:
-                return (size-colIndex)*size+size-rowIndex
+                nColIndex=size-rowIndex
+                nRowIndex=size-colIndex
+                return nRowIndex*(size+1)+nColIndex
         else:
             raise(GrilleError("GrilleWithDataBase : _flipIndexAdvanced -> cas non géré ! sym =",str(sym)))
     
