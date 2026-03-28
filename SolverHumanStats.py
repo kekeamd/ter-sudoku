@@ -6,7 +6,7 @@ from Technique import Technique
 class SolverHumanStats(SolverHuman):
     # Cette fonction applique les methodes humaines jusqu'a resolution ou blocage; retourne des stats
     @staticmethod
-    def solveWithStats(grille : Grille, raise_on_stuck : bool = False) -> dict:
+    def solveWithStats(grille : Grille, raise_on_stuck : bool = False, max_technique: Technique = None) -> dict:
         stats = {
             "solved": False,
             "stuck": False,
@@ -28,6 +28,13 @@ class SolverHumanStats(SolverHuman):
             stats["counts"][tech] += 1
             if stats["maxTechnique"] is None or tech > stats["maxTechnique"]:
                 stats["maxTechnique"] = tech  # la technique la plus dur devient la technique posee en parametre
+            
+            # Early exit: already harder than the target difficulty
+            if max_technique is not None and stats["maxTechnique"] is not None:
+                if stats["maxTechnique"] > max_technique:
+                    stats["stuck"] = True
+                    stats["solved"] = False
+                    return stats
         
         grille.adjustCandidates()
         while not SolverHuman.isCompleted(grille):
@@ -55,6 +62,8 @@ class SolverHumanStats(SolverHuman):
 
             if SolverHuman.candidatEnferme(grille):
                 record(Technique.CANDIDAT_ENFERME)
+                continue
+
             # bloqué
             stats["stuck"] = True
             stats["solved"] = False

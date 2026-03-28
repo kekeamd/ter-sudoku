@@ -15,10 +15,10 @@ class SolverHuman(Solver):
             #for c in range(grille.getSize()**4):
             #    print("c:", c, ", v=", grille.getCelluleValueIndex(c), ", ca=", grille.getCelluleCandidatesIndex(c))
             #---------------
-            if SolverHuman.singletonNu(grille):         #on essaye les techniques de la moins couteuse à la plus couteuse
-                continue                                #on retourne au départ de la boucle si jamais une des techniques fonctionne
             if SolverHuman.dernierNombre(grille):
                 continue
+            if SolverHuman.singletonNu(grille):         #on essaye les techniques de la moins couteuse à la plus couteuse
+                continue                                #on retourne au départ de la boucle si jamais une des techniques fonctionne
             if SolverHuman.singletonCache(grille):
                 continue
             if SolverHuman.paireNu(grille):
@@ -267,14 +267,33 @@ class SolverHuman(Solver):
 
     # J'ai decidé de choisir la difficulté à propos des methodes humaines, càd que je vois les stats et selon les 
     # stats je choisit la difficulté
+    @staticmethod
     def rateFromStats(stats: dict) -> Difficulte:
+        if stats is None:
+            raise ValueError("rateFromStats: stats vaut None")
+
         if stats["stuck"]:
             return Difficulte.GODMODE
+
         maxTech = stats["maxTechnique"]
-        if maxTech is None or maxTech <= Technique.DERNIER_NOMBRE:
+        counts = stats["counts"]
+
+        if maxTech is None or maxTech == Technique.DERNIER_NOMBRE:
             return Difficulte.FACILE
-        if maxTech == Technique.SINGLETON_CACHE or maxTech == Technique.SINGLETON_NU: 
+
+        # plus precis pour la difficulté MOYEN
+        if maxTech == Technique.SINGLETON_NU:
+            if counts.get(Technique.SINGLETON_NU, 0) > 10:
+                return Difficulte.MOYEN
+            return Difficulte.FACILE
+
+        if maxTech == Technique.SINGLETON_CACHE:
             return Difficulte.MOYEN
-        if maxTech == Technique.PAIR_NU or maxTech == Technique.PAIR_CACHEE:
+
+        if maxTech in (Technique.PAIR_NU, Technique.PAIR_CACHEE):
             return Difficulte.DIFFICILE
+
+        if maxTech == Technique.CANDIDAT_ENFERME:
+            return Difficulte.EXTREME
+
         return Difficulte.EXTREME
