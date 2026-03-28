@@ -138,6 +138,7 @@ class SolverHuman(Solver):
                     cellule2, cand2 = pairCells[j]
 
                     if cand1 == cand2:
+                        print(f"PAIRE NUE TROUVEE : {cand1}")  # temporaire
                         paire = cand1 # la paire trouvée
                         changed = False
 
@@ -163,6 +164,7 @@ class SolverHuman(Solver):
     
 
     # Quand deux cellules d’une même région contiennent les mêmes deux candidats et que ces candidats ne sont pas dans le reste de la région, renvoie True si ces cellules sont trouvées et False sinon
+    # Une fonction qui détecte la paire cachée et qui débloque la fonction pairNu
     @staticmethod
     def paireCachee(grille: Grille) -> bool:
         sizeCote = grille.getSize()
@@ -192,22 +194,39 @@ class SolverHuman(Solver):
                             cell1 = None
                             cell2 = None
                             break
-                    elif paire[0] in candidats or paire[1] in candidats: #si la cellule ne contient qu'un seul des deux candidats de la paire alors il ne peux pas y avoir de paire cachée avec cette paire dans cette région
-                        cell1 = None
-                        cell2 = None
-                        break
+                    # Cette elif déclenche presque à chaque fois la fonction
+                    # on ignore les cellules contenant un seul des deux candidats : elles ne font pas partie de la paire cachée
+                    # et leur existence ne l'invalide pas
+                    #elif paire[0] in candidats or paire[1] in candidats: #si la cellule ne contient qu'un seul des deux candidats de la paire alors il ne peux pas y avoir de paire cachée avec cette paire dans cette région
+                    #    cell1 = None
+                    #    cell2 = None
+                    #    break
                 if cell1!=None and cell2!=None:     #on a une paire cachée
+                    print(f"paire cachée détectée : {paire} dans cellules {cell1.getPosition()} et {cell2.getPosition()}")
                     #-------------conséquences de la paire cachée
-                    cell1.setCandidates(paire)   #on élimine les autres candidats des cellules de la paire cachée
-                    cell2.setCandidates(paire)
-                    for region2 in regions:             #on élimine les candidats de la paire de candidats dans la deuxième région qui contient entièrement la paire cachée si jamais elle existe
+                    # vérifier que la réduction change quelque chose
+                    changed = False
+                    if sorted(cell1.getCandidates()) != sorted(paire):
+                        cell1.setCandidates(paire) # on élimine les autres candidats des cellules de la paire cachée
+                        changed = True
+                    if sorted(cell2.getCandidates()) != sorted(paire):
+                        cell2.setCandidates(paire)
+                        changed = True
+                    for region2 in regions:             # on élimine les candidats de la paire de candidats dans la deuxième région qui contient entièrement la paire cachée si jamais elle existe
                         if cell1 in region2 and cell2 in region2 and region2!=region:
                             for cellule2 in region2:
                                 if cellule2==cell1 or cellule2==cell2:
                                     continue
-                                cellule2.setCandidates(listDifference(cellule2.getCandidates(), paire))
+                                old = cellule2.getCandidates()
+                                new = listDifference(old, paire)
+                                if new != old:
+                                    cellule2.setCandidates(new)
+                                    changed = True
                             break
-                    return True
+
+                    if changed:
+                        return True
+                    # sinon continuer à chercher une autre paire cachée qui change quelque chose
         return False
     
 

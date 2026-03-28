@@ -38,42 +38,44 @@ class SolverHumanStats(SolverHuman):
         
         grille.adjustCandidates()
         while not SolverHuman.isCompleted(grille):
-            # L'ordre ici est tres important car il influence la trace et les stats, alors j'ai choisi de les 
-            # faire de plus simple vers le plus dur
             if SolverHuman.dernierNombre(grille):
                 record(Technique.DERNIER_NOMBRE)
+                if stats["stuck"]: return stats  # vérifier après chaque record
                 continue
 
             if SolverHuman.singletonNu(grille):
                 record(Technique.SINGLETON_NU)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.singletonCache(grille):
                 record(Technique.SINGLETON_CACHE)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.paireNu(grille):
                 record(Technique.PAIR_NU)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.paireCachee(grille):
                 record(Technique.PAIR_CACHEE)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.candidatEnferme(grille):
                 record(Technique.CANDIDAT_ENFERME)
+                if stats["stuck"]: return stats
                 continue
 
-            # bloqué
             stats["stuck"] = True
             stats["solved"] = False
-            
             if raise_on_stuck:
                 raise SolverError(
                     "SolverHuman: Impossible de résoudre la grille avec des techniques implémentées !",
                     stats
                 )
             return stats
-        
+
         stats["solved"] = True
         return stats
