@@ -140,9 +140,21 @@ def test_stringToGrille(strComplete,tabWanted):
         tab.append(G.getCelluleValueIndex(i))
     assert tabW==tab
 
-# test grilleToString
-def test_grilleToString():
-    pass # Possiblité de changement de retour de la fonction testé donc pas de tests
+# test grilleToStringWithoutCandidates
+def test_grilleToStringWithoutCand(strComplete,tabWanted):
+    G = Parser.tabToGrille(tabWanted)
+    StrWithoutN = ""
+    for l in tabWanted:
+        for e in l:
+            StrWithoutN += str(e)
+    # Test avec les \n
+    assert strComplete == Parser.grilleToStringWithoutCandidates(G,1)
+    # Test sans les \n
+    assert StrWithoutN == Parser.grilleToStringWithoutCandidates(G,0)
+
+# test grilleToStringWithCandidates
+def test_grilleToStringWithCand():
+    pass # Pas de tests pour le moment
 
 # test stringToTab
 def test_stringToTab(strComplete,tabWanted):

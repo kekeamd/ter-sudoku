@@ -15,10 +15,10 @@ class SolverHuman(Solver):
             #for c in range(grille.getSize()**4):
             #    print("c:", c, ", v=", grille.getCelluleValueIndex(c), ", ca=", grille.getCelluleCandidatesIndex(c))
             #---------------
-            if SolverHuman.singletonNu(grille):         #on essaye les techniques de la moins couteuse à la plus couteuse
-                continue                                #on retourne au départ de la boucle si jamais une des techniques fonctionne
             if SolverHuman.dernierNombre(grille):
                 continue
+            if SolverHuman.singletonNu(grille):         #on essaye les techniques de la moins couteuse à la plus couteuse
+                continue                                #on retourne au départ de la boucle si jamais une des techniques fonctionne
             if SolverHuman.singletonCache(grille):
                 continue
             if SolverHuman.paireNu(grille):
@@ -97,19 +97,24 @@ class SolverHuman(Solver):
     def dernierNombre(grille: Grille) -> bool:  #il est peut-être possible d'optimiser le nombre de ligne de code
         sizeCote = grille.getSize()
         regions = grille.getRegions()
+        
         for region in regions:      #on itère sur toutes les lignes/colonnes/zones de la grille
             regionValues = [c.getValue() for c in region]   #on créer la liste contenant la valeur des cellules dans la région
+            
             if regionValues.count(0)==1:  #on vérifie si la région contient une et une seule cellule vide
                 c = regionValues.index(0)
                 cellule = region[c] #on récupère la cellule vide
+                
                 if len(cellule.getCandidates())!=1:     #failsafe si jamais on ne cherche pas correctement la cellule vide
                     raise(SolverError("SolverHuman: la technique de résolution dernierNombre à trouvé une unique cellule vide dans sa région qui ne contient pas seulement un candidat"))
                 value = cellule.getCandidates()[0]
                 pos = cellule.getPosition()
+                
                 if not SolverHuman.isValid(grille, rowIndexFromCelluleIndex(pos, sizeCote), columnIndexFromCelluleIndex(pos , sizeCote), value):    #failsafe au cas où la solution proposée n'est pas valide
                     raise(SolverError("SolverHuman: la technique de résolution dernierNombre propose une valeur rendant la grille invalide!"))
                 grille.setCelluleValueIndex(pos, value)
                 grille.adjustCandidatesAfterAddingValueIndex(pos)
+                
                 return True
         return False        #on renvoie False si on a parcouru toute les cellules sans trouver une cellule vide unique
 
@@ -119,6 +124,7 @@ class SolverHuman(Solver):
 
     # Quand deux cellules d’une même région contiennent exactement les mêmes deux candidats, elle permet d’éliminer ces 
     # candidats ailleurs, ce qui débloque ensuite d’autres techniques comme singletonNu
+    # "These 2 cells are locked → others must change"
     @staticmethod
     def paireNu(grille: Grille) -> bool:
         for region in grille.getRegions():   # chaque région = zone, ligne, colonne
@@ -138,6 +144,7 @@ class SolverHuman(Solver):
                     cellule2, cand2 = pairCells[j]
 
                     if cand1 == cand2:
+                        #print(f"PAIRE NUE TROUVEE : {cand1}")  # temporaire
                         paire = cand1 # la paire trouvée
                         changed = False
 
@@ -158,11 +165,18 @@ class SolverHuman(Solver):
                                 cellule.setCandidates(newCandidates)
                                 changed = True
                         if changed:
+                            print(f"PAIRE NUE APPLIQUEE : {cand1}")
                             return True
         return False
     
 
     # Quand deux cellules d’une même région contiennent les mêmes deux candidats et que ces candidats ne sont pas dans le reste de la région, renvoie True si ces cellules sont trouvées et False sinon
+    # Une fonction qui détecte la paire cachée et qui débloque la fonction pairNu
+    # "These 2 numbers are locked → these cells must change"
+    # On va le faire plus strict:
+    # - number a appears in exactly two cells in the region
+    # - number b appears in exactly two cells in the region
+    # - and those are the same two cells
     @staticmethod
     def paireCachee(grille: Grille) -> bool:
         sizeCote = grille.getSize()
@@ -179,10 +193,23 @@ class SolverHuman(Solver):
             for paire in paires:    #on itère sur toutes les paires de candidats possibles et on vérifie si il y a exactement deux cellules contenant la paire dans leurs candidats(c'est-à-dire si on trouve une paire cachée à partir de cette paire)
                 cell1 = None
                 cell2 = None
+
+                # nouvelles listes : où apparaît chaque candidat dans la région
+                cells_ca1 = []
+                cells_ca2 = []
+
                 for cellule in region:
-                    if cellule.getValue()!=0:
+                    if cellule.getValue()!= 0:
                         continue
                     candidats = cellule.getCandidates()
+
+                    # on mémorise séparément les cellules contenant chaque candidat
+                    if paire[0] in candidats:
+                        cells_ca1.append(cellule)
+                    if paire[1] in candidats:
+                        cells_ca2.append(cellule)
+
+                    # on garde aussi la logique de base pour repérer 2 cellules contenant la paire complète
                     if paire[0] in candidats and paire[1] in candidats: #on vérifie si la cellule contient la paire dans ses candidats
                         if cell1 == None:
                             cell1 = cellule
@@ -192,22 +219,53 @@ class SolverHuman(Solver):
                             cell1 = None
                             cell2 = None
                             break
-                    elif paire[0] in candidats or paire[1] in candidats: #si la cellule ne contient qu'un seul des deux candidats de la paire alors il ne peux pas y avoir de paire cachée avec cette paire dans cette région
-                        cell1 = None
-                        cell2 = None
-                        break
-                if cell1!=None and cell2!=None:     #on a une paire cachée
+                    # Cette elif déclenche presque à chaque fois la fonction
+                    # on ignore les cellules contenant un seul des deux candidats : elles ne font pas partie de la paire cachée
+                    # et leur existence ne l'invalide pas
+                    #elif paire[0] in candidats or paire[1] in candidats: #si la cellule ne contient qu'un seul des deux candidats de la paire alors il ne peux pas y avoir de paire cachée avec cette paire dans cette région
+                    #    cell1 = None
+                    #    cell2 = None
+                    #    break
+                if (
+                    cell1 is not None and cell2 is not None
+                    and len(cells_ca1) == 2
+                    and len(cells_ca2) == 2
+                    and set(cells_ca1) == set(cells_ca2)
+                    and cell1 in cells_ca1 and cell2 in cells_ca1
+                ):     #on a une paire cachée
+                    #print(f"paire cachée détectée : {paire} dans cellules {cell1.getPosition()} et {cell2.getPosition()}")
                     #-------------conséquences de la paire cachée
-                    cell1.setCandidates(paire)   #on élimine les autres candidats des cellules de la paire cachée
-                    cell2.setCandidates(paire)
-                    for region2 in regions:             #on élimine les candidats de la paire de candidats dans la deuxième région qui contient entièrement la paire cachée si jamais elle existe
-                        if cell1 in region2 and cell2 in region2 and region2!=region:
-                            for cellule2 in region2:
-                                if cellule2==cell1 or cellule2==cell2:
-                                    continue
-                                cellule2.setCandidates(listDifference(cellule2.getCandidates(), paire))
-                            break
-                    return True
+                    # vérifier que la réduction change quelque chose
+                    
+                    changed = False
+
+                    if sorted(cell1.getCandidates()) != sorted(paire):
+                        cell1.setCandidates(paire.copy()) # on élimine les autres candidats des cellules de la paire cachée
+                        changed = True
+                    if sorted(cell2.getCandidates()) != sorted(paire):
+                        cell2.setCandidates(paire.copy())
+                        changed = True
+                    #for region2 in regions:             # on élimine les candidats de la paire de candidats dans la deuxième région qui contient entièrement la paire cachée si jamais elle existe
+                    #    if cell1 in region2 and cell2 in region2 and region2!=region:
+                    #        for cellule2 in region2:
+                    #            if cellule2==cell1 or cellule2==cell2:
+                    #                continue
+                    #            old = cellule2.getCandidates()
+                    #            new = listDifference(old, paire)
+                    #            if new != old:
+                    #                cellule2.setCandidates(new)
+                    #                changed = True
+                    #        break
+
+                    # IMPORTANT :
+                    # on ne supprime pas la paire dans une autre région commune ici
+                    # Une paire cachée agit uniquement dans la région où elle a été détectée
+                    # Le reste sera fait naturellement par les autres techniques
+
+                    if changed:
+                        print(f"paire cachée appliquée : {paire} dans cellules {cell1.getPosition()} et {cell2.getPosition()}")
+                        return True
+                    # sinon continuer à chercher une autre paire cachée qui change quelque chose
         return False
     
 
@@ -253,28 +311,109 @@ class SolverHuman(Solver):
                     rowIndex = rowIndexFromCelluleIndex(cellList[0].getPosition(), sizeCote)
                     columnIndex = columnIndexFromCelluleIndex(cellList[0].getPosition(), sizeCote)
                     zoneIndex = zoneIndexFromCoord(rowIndex, columnIndex, sizeCote)
+                    
                     if region2Type=="zone":
                         region2= regions[zoneIndex*3]
                     if region2Type=="row":
                         region2= regions[rowIndex*3+1]
                     if region2Type=="column":
                         region2= regions[columnIndex*3+2]
+
+                    changed = False # sert pour vraiment savoir si on a changé qqch avec cette technique
+
                     for cellule in region2:
                         if cellule.getValue()==0 and cellule not in cellList:
-                            cellule.setCandidates(listDifference(cellule.getCandidates(), [ca]))
-                    return True
+                            old = cellule.getCandidates()
+                            new = listDifference(old, [ca])
+                            if new != old:
+                                cellule.setCandidates(new)
+                                changed = True
+                    if changed:
+                        return True
         return False
+
+    # Fonction liée au Sudoku Coach avec le score pour chauqe technique
+    @staticmethod
+    def scoreFromStats(stats: dict) -> dict:
+        """
+        Retourne un score numérique "coach-like" inspiré du principe de Sudoku Coach /
+        SukakuExplainer : la technique maximale compte le plus, puis le volume de travail
+        affine légèrement le score.
+
+        IMPORTANT : ce n'est pas le vrai score Sudoku Coach. C'est une approximation locale
+        adaptée uniquement aux techniques implémentées dans ce projet.
+        """
+        if stats is None:
+            raise ValueError("scoreFromStats: stats vaut None")
+
+        if stats["stuck"]:
+            return {
+                "score": 6.0,
+                "label": "God Mode",
+                "reason": "bloquée avec les techniques implémentées"
+            }
+
+        counts = stats["counts"]
+        maxTech = stats["maxTechnique"]
+
+        base_scores = {
+            None: 1.0,
+            Technique.DERNIER_NOMBRE: 1.0,
+            Technique.SINGLETON_NU: 1.2,
+            Technique.SINGLETON_CACHE: 1.8,
+            Technique.PAIR_NU: 2.6,
+            Technique.PAIR_CACHEE: 3.2,
+            Technique.CANDIDAT_ENFERME: 4.2,
+        }
+
+        score = base_scores.get(maxTech, 4.5)
+
+        # petit raffinement par quantité de travail, sans changer radicalement la classe
+        score += min(counts.get(Technique.DERNIER_NOMBRE, 0), 12) * 0.01
+        score += min(counts.get(Technique.SINGLETON_NU, 0), 20) * 0.02
+        score += min(counts.get(Technique.SINGLETON_CACHE, 0), 10) * 0.04
+        score += min(counts.get(Technique.PAIR_NU, 0), 6) * 0.08
+        score += min(counts.get(Technique.PAIR_CACHEE, 0), 6) * 0.10
+        score += min(counts.get(Technique.CANDIDAT_ENFERME, 0), 6) * 0.12
+
+        score = round(score, 2)
+
+        if score <= 1.6:
+            label = "Easy"
+        elif score <= 2.6:
+            label = "Medium"
+        elif score <= 4.2:
+            label = "Hard"
+        elif score <= 5.5:
+            label = "Vicious"
+        else:
+            label = "Fiendish+"
+
+        return {
+            "score": score,
+            "label": label,
+            "reason": maxTech.name if maxTech is not None else "Aucune technique non triviale"
+        }
 
     # J'ai decidé de choisir la difficulté à propos des methodes humaines, càd que je vois les stats et selon les 
     # stats je choisit la difficulté
+    @staticmethod
     def rateFromStats(stats: dict) -> Difficulte:
+        if stats is None:
+            raise ValueError("rateFromStats: stats vaut None")
+
+        coach_like = SolverHuman.scoreFromStats(stats)
+        score = coach_like["score"]
+
         if stats["stuck"]:
             return Difficulte.GODMODE
-        maxTech = stats["maxTechnique"]
-        if maxTech is None or maxTech <= Technique.DERNIER_NOMBRE:
+
+        if score <= 1.6:
             return Difficulte.FACILE
-        if maxTech == Technique.SINGLETON_CACHE or maxTech == Technique.SINGLETON_NU: 
+        if score <= 2.6:
             return Difficulte.MOYEN
-        if maxTech == Technique.PAIR_NU or maxTech == Technique.PAIR_CACHEE:
+        if score <= 4.2:
             return Difficulte.DIFFICILE
-        return Difficulte.EXTREME
+        if score <= 5.5:
+            return Difficulte.EXTREME
+        return Difficulte.GODMODE

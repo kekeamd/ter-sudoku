@@ -18,6 +18,20 @@ def StrBase():
     return StrComplete
 
 @pytest.fixture
+def strWithData() -> str:
+    strWithData : str= ""
+    strWithData+="619375824\n"
+    strWithData+="725814369\n"
+    strWithData+="348692571\n"
+    strWithData+="976123485\n"
+    strWithData+="451789632\n"
+    strWithData+="832456197\n"
+    strWithData+="164237958\n"
+    strWithData+="293548716\n"
+    strWithData+="587961243"
+    return strWithData
+
+@pytest.fixture
 def GrilleBase(StrBase) -> GrilleData:
     return Parser.stringToGrille(StrBase,1)
 
@@ -160,8 +174,86 @@ def test_flipC(GrilleBase : GrilleData):
 
 
 # Test flip Advanced (diagonales)
-def test_flipAdv():
-    pass
+def test_flipAdvDiagGauche():
+    GBase = GrilleData()
+    GFliped = GrilleData()
+    GBase.setCelluleValueCoord(2,1,1)
+    GBase.setCelluleValueCoord(7,6,2)
+    GBase.setCelluleValueCoord(7,1,3)
+    GBase.setCelluleValueCoord(6,3,4)
+    GBase.setCelluleValueCoord(5,2,5)
+    GFliped.setCelluleValueCoord(1,2,1)
+    GFliped.setCelluleValueCoord(2,5,2)
+    GFliped.setCelluleValueCoord(1,7,3)
+    GFliped.setCelluleValueCoord(3,6,4)
+    GFliped.setCelluleValueCoord(2,5,5)
+    print("==========")
+    print("   Base   ")
+    print("==========")
+    GBase.printGrille()
+    print("==========")
+    print("  Attendu ")
+    print("==========")
+    GFliped.printGrille()
+    print("==========")
+    print(" Réalisé  ")
+    print("==========")
+    mGflip = GBase.clone()
+    mGflip.flip(2)      # Flip variante 2 -> Diagonale Gauche
+    mGflip.printGrille()
+    # assert Parser.grilleToTab(mGflip) == Parser.grilleToTab(GFliped)
+
+# Test flip Advanced (diagonales)
+def test_flipAdvDiagDroit():
+    GBase = GrilleData()
+    GFliped = GrilleData()
+    GBase.setCelluleValueCoord(1,1,1)
+    GBase.setCelluleValueCoord(1,6,2)
+    GBase.setCelluleValueCoord(6,1,3)
+    GBase.setCelluleValueCoord(3,2,4)
+    GBase.setCelluleValueCoord(2,3,5)
+    GFliped.setCelluleValueCoord(7,7,1)
+    GFliped.setCelluleValueCoord(2,7,2)
+    GFliped.setCelluleValueCoord(7,2,3)
+    GFliped.setCelluleValueCoord(6,5,4)
+    GFliped.setCelluleValueCoord(5,6,5)
+    print("==========")
+    print("   Base   ")
+    print("==========")
+    GBase.printGrille()
+    print("==========")
+    print("  Attendu ")
+    print("==========")
+    GFliped.printGrille()
+    print("==========")
+    print(" Réalisé  ")
+    print("==========")
+    mGflip = GBase.clone()
+    mGflip.flip(3)      # Flip variante 3 -> Diagonale Droit
+    mGflip.printGrille()
+    assert Parser.grilleToTab(mGflip) == Parser.grilleToTab(GFliped)
+
+# Test de Double flip pour la verification de l'intégrité de la grille
+def test_doubleFlip(strWithData):
+    GBase : GrilleData = Parser.stringToGrille(strWithData,1)
+    TabWanted = Parser.grilleToTab(GBase)
+    GWillModify : GrilleData = GBase.clone()
+    # Double Flip Vertical
+    GWillModify.flip(0)
+    GWillModify.flip(0)
+    assert TabWanted == Parser.grilleToTab(GWillModify)
+    # Double Flip Horizontal
+    GWillModify.flip(1)
+    GWillModify.flip(1)
+    assert TabWanted == Parser.grilleToTab(GWillModify)
+    # Double Flip diagonale Gauche
+    GWillModify.flip(2)
+    GWillModify.flip(2)
+    assert TabWanted == Parser.grilleToTab(GWillModify)
+    # Double Flip Diagonale Droit
+    GWillModify.flip(3)
+    GWillModify.flip(3)
+    assert TabWanted == Parser.grilleToTab(GWillModify)
 
 # Grille de comparaison pour les tests de change number
 # Nombre changer : 5/9
@@ -209,3 +301,4 @@ def test_changeNumberValid(GForChangeNum : list[GrilleData]):
 def test_changeNumberError(GForChangeNum : list[GrilleData]):
     with pytest.raises(GrilleError):
         GForChangeNum[0].changeNumber(10,5)
+

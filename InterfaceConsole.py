@@ -71,8 +71,17 @@ class InterfaceConsole(Interface): # extends Interface
         grilleVide = GrilleBacktrack()
         self.grilleComplete = grilleVide.generateEntireGrille()
 
+        if self.grilleComplete is None:
+            print("Erreur lors de la génération de la grille complète.")
+            return
+
         self.grilleDeJeu = GrilleHuman()
         stats = self.grilleDeJeu.generateValuesHumanRated(difficulty, self.grilleComplete.clone())
+
+        if stats is None:
+            print("Erreur: la génération n'a retourné aucune statistique.")
+            return
+
         self.grilleDeJeu.adjustCandidates()  # Initialiser les candidats après génération
 
         rated = SolverHuman.rateFromStats(stats)
@@ -85,9 +94,7 @@ class InterfaceConsole(Interface): # extends Interface
 
         #self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 
-        if self.grilleComplete is None:
-            print("Erreur lors de la génération de la grille complète.")
-            return
+       
         
         self.grilleDeJeu.printGrille()
     
@@ -126,9 +133,9 @@ class InterfaceConsole(Interface): # extends Interface
                     self.printCandidatesGrid()
 
             elif choix == '3':
-                print("\nLa grille résolue automatiquement (backtrack):")
+                print("\nLa grille résolue automatiquement (backtrack):\n")
                 self.grilleComplete.printGrille()
-                print("\nLE JEU EST TERMINÉ !\n")
+                print("LE JEU EST TERMINÉ !\n")
                 return  # sortir après résolution
             elif choix == '4':
                 print("\nRésolution avec méthode humaine...")

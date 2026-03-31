@@ -38,6 +38,10 @@ class Parser:
         return Gout # Retourne une grille
     
     # Transforme un tableau en 2D en une Grille
+    # Le type exact est défini par "typeGrille" :
+    # 0 = GBacktrack
+    # 1 = GWithData
+    # 2 = GHuman
     @staticmethod
     def tabToGrille(tab : list[list[int]],typeGrille : int = 0): # -> Grille
         Gout : Grille = Parser._chooseTypeGrille(typeGrille,"tabToGrille")
@@ -107,27 +111,38 @@ class Parser:
     """
     
     # Transforme une Grille en String
+    # AVEC LES CANDIDATS AFFICHIER
     @staticmethod
-    def grilleToString(g : Grille) -> str:
+    def grilleToStringWithCandidates(g : Grille) -> str:
         size = g.getSize()**2
         numberOfCellule = size**2
         s = "[ "
         for i in range(numberOfCellule):
             s += g.getCelluleValueIndex(i)              # On mets la valeur de la cellule
-            s += str(g.getCelluleCandidatesIndex(i))    # suivi de ses candidats
+            s += str(g.getCelluleCandidatesIndex(i))    # Suivi de ses candidats
             if (i!=size-1):
                 s+= ", "
         s += " ]"
-        return s
+        return s # On retroune la Grille sous forme de String
     
+    # Transforme une Grille en String
+    # SANS LES CANDIDATS
+    # g : La grille
+    # Type : 
+    # - 0 -> Une seule ligne avec toutes les lignes à la suite
+    # - 1 -> Chaque ligne séparé par un \n
+    # Output : String
     @staticmethod
-    def grilleToString_v2(g: Grille) -> str:
+    def grilleToStringWithoutCandidates(g: Grille, type : int = 0) -> str:
         size = g.getSize() ** 2
         numberOfCellule = size ** 2
         s = ""
         for i in range(numberOfCellule):
-            s += str(g.getCelluleValueIndex(i))  # uniquement la valeur, sans candidats
-        return s
+            s += str(g.getCelluleValueIndex(i))  # On mets la valeur de la cellule
+            if (i+1)%size==0 and type==1 and i!=0 and i<(numberOfCellule-1):            # Cas où on veut des \n
+                s += "\n"
+        return s # On retroune la Grille sous forme de String
+    
     # Transforme une chaine de char en tableau en 2D
     # /!\ ATTENTION /!\ char séparateur : "[]" ou "\n"
     @staticmethod

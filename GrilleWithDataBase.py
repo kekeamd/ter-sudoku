@@ -17,6 +17,7 @@ class GrilleWithDataBase(Grille):
 
     # A IMPLEMENTER !
     def generateValues(self, difficulte : Difficulte) -> None:
+        print("Pas encore implémenter, besoin d'une database")
         pass
 
     # Fais une rotation de la grille
@@ -66,15 +67,15 @@ class GrilleWithDataBase(Grille):
     # replace tous les numberToReplace par newNumber
     # Si pas défini ou avec un nombre négatif prendra un nombre aléatoire
     def changeNumber(self,numberToReplace : int = -1, newNumber : int = -1) -> None:
-        size = (self._size**2)-1
-        while(numberToReplace<0 or numberToReplace==newNumber):
-            numberToReplace = randint(1,size+1)
-        while(newNumber<0 or numberToReplace==newNumber):
-            newNumber = randint(1,size+1)
-        if newNumber>size+1 or numberToReplace>size+1:
+        size = (self._size**2)
+        while(numberToReplace<0 or numberToReplace==newNumber):         # Verification du premier Argument, et mise à une valeur aléatoire si incorrect 
+            numberToReplace = randint(1,size)
+        while(newNumber<0 or numberToReplace==newNumber):               # Verification du premier Argument, et mise à une valeur aléatoire si incorrect 
+            newNumber = randint(1,size)
+        if newNumber>size+1 or numberToReplace>size:                  # Cas ou les arguments sont incohérents, on renvoie une erreur
             error ="Mauvaise utilisation : numberToReplace = "+str(numberToReplace)+" , newNumber ="+str(newNumber)+" & ATTENDU : >0 & <="+str(size)
             raise(GrilleError("GrilleWithDataBase : changeNumber ->",error))
-        else:
+        else:                                                           # Si tout ce passe bien
             save=self.clone()
             for i in range (size**2):
                 oldValue = save.getCelluleValueIndex(i)
@@ -165,12 +166,16 @@ class GrilleWithDataBase(Grille):
             if rowIndex==colIndex: # On est dans des cases qui ne changent pas !
                 return index
             else:
-                return (colIndex*size)+rowIndex
+                nColIndex=rowIndex
+                nRowIndex=colIndex
+                return nRowIndex*(size+1)+nColIndex
         elif sym==3:                                        # Axe de symétrie diagonale droit
             if rowIndex!=colIndex and (rowIndex+colIndex)==size: # On est dans des cases qui ne changent pas !
                 return index
             else:
-                return (size-colIndex)*size+size-rowIndex
+                nColIndex=size-rowIndex
+                nRowIndex=size-colIndex
+                return nRowIndex*(size+1)+nColIndex
         else:
             raise(GrilleError("GrilleWithDataBase : _flipIndexAdvanced -> cas non géré ! sym =",str(sym)))
     

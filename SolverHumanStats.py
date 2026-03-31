@@ -6,7 +6,7 @@ from Technique import Technique
 class SolverHumanStats(SolverHuman):
     # Cette fonction applique les methodes humaines jusqu'a resolution ou blocage; retourne des stats
     @staticmethod
-    def solveWithStats(grille : Grille, raise_on_stuck : bool = False) -> dict:
+    def solveWithStats(grille : Grille, raise_on_stuck : bool = False, max_technique: Technique = None) -> dict:
         stats = {
             "solved": False,
             "stuck": False,
@@ -28,43 +28,54 @@ class SolverHumanStats(SolverHuman):
             stats["counts"][tech] += 1
             if stats["maxTechnique"] is None or tech > stats["maxTechnique"]:
                 stats["maxTechnique"] = tech  # la technique la plus dur devient la technique posee en parametre
+            
+            # Early exit: already harder than the target difficulty
+            if max_technique is not None and stats["maxTechnique"] is not None:
+                if stats["maxTechnique"] > max_technique:
+                    stats["stuck"] = True
+                    stats["solved"] = False
+                    return stats
         
         grille.adjustCandidates()
         while not SolverHuman.isCompleted(grille):
-            # L'ordre ici est tres important car il influence la trace et les stats, alors j'ai choisi de les 
-            # faire de plus simple vers le plus dur
             if SolverHuman.dernierNombre(grille):
                 record(Technique.DERNIER_NOMBRE)
+                if stats["stuck"]: return stats  # vérifier après chaque record
                 continue
 
             if SolverHuman.singletonNu(grille):
                 record(Technique.SINGLETON_NU)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.singletonCache(grille):
                 record(Technique.SINGLETON_CACHE)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.paireNu(grille):
                 record(Technique.PAIR_NU)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.paireCachee(grille):
                 record(Technique.PAIR_CACHEE)
+                if stats["stuck"]: return stats
                 continue
 
             if SolverHuman.candidatEnferme(grille):
                 record(Technique.CANDIDAT_ENFERME)
-            # bloqué
+                if stats["stuck"]: return stats
+                continue
+
             stats["stuck"] = True
             stats["solved"] = False
-            
             if raise_on_stuck:
                 raise SolverError(
                     "SolverHuman: Impossible de résoudre la grille avec des techniques implémentées !",
                     stats
                 )
             return stats
-        
+
         stats["solved"] = True
         return stats
