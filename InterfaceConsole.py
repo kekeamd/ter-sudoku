@@ -133,9 +133,9 @@ class InterfaceConsole(Interface): # extends Interface
                     self.printCandidatesGrid()
 
             elif choix == '3':
-                print("\nLa grille résolue automatiquement (backtrack):")
+                print("\nLa grille résolue automatiquement (backtrack):\n")
                 self.grilleComplete.printGrille()
-                print("\nLE JEU EST TERMINÉ !\n")
+                print("LE JEU EST TERMINÉ !\n")
                 return  # sortir après résolution
             elif choix == '4':
                 print("\nRésolution avec méthode humaine...")
