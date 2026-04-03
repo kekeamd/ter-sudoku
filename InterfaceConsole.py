@@ -147,12 +147,32 @@ class InterfaceConsole(Interface): # extends Interface
                     print("Solved:", res["solved"], "| Steps:", res["steps"], "| MaxTech:", res["maxTechnique"])
                     print("Counts:", {k.name: v for k, v in res["counts"].items()})
                     self.grilleDeJeu.printGrille()
+                    # Afficher tous les étapes de résolution
+                    print("\nVoulez-vous voir les étapes ?")
+                    print("1. Oui")
+                    print("2. Non")
+                    choix_etapes = input("Votre choix: ")
+                    if choix_etapes == '1':
+                        for h in res["history"]:
+                            tech = h["technique"].name
+                            move = h["move"]
+                            if move is not None:
+                                print(f"Etape {h['step']} - {tech} : valeur {move['value']} en ligne {move['row']+1}, colonne {move['col']+1}")
+                            else:
+                                print(f"Etape {h['step']} - {tech} : aucun chiffre posé directement")
 
                 except SolverError as e:
                     print("\n", e)
                     print("\nGrille partiellement résolue :")
                     self.grilleDeJeu.printGrille()
-                print("LE JEU EST TERMINÉ !\n")
+                    for h in res["history"]:
+                        tech = h["technique"].name
+                        move = h["move"]
+                        if move is not None:
+                            print(f"Etape {h['step']} - {tech} : valeur {move['value']} en ligne {move['row']+1}, colonne {move['col']+1}")
+                        else:
+                            print(f"Etape {h['step']} - {tech} : aucun chiffre posé directement")
+                print("\nLE JEU EST TERMINÉ !\n")
                 return  # terminer la boucle après affichage
             elif choix == '5':
                 return
