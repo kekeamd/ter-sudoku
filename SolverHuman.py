@@ -331,6 +331,109 @@ class SolverHuman(Solver):
                     if changed:
                         return True
         return False
+    
+     # Élimine val de toutes les cellules qui voient les deux sommets simultanément.Deux cellules se "voient" si elles partagent la même ligne, colonne ou zone.    
+   
+
+    @staticmethod
+    def gratteCiel(grille : Grille) -> bool:
+        sizeCote = grille.getSize()
+        size = sizeCote**2
+        # ── Version sur les lignes ─────────────────────────────────────────
+        # Pour chaque val, on cherche deux lignes ayant exactement 2 candidats
+        # avec une colonne en commun (la base) → les deux sommets s'éliminent mutuellement
+        # Collecte : pour chaque ligne, les colonnes où val est candidat
+        for val in range(1,size+1):
+            rows_candidates = {}
+            for r in range(size):
+                cols=[c for c in range(size) 
+                      if grille.getCelluleValueCoord(r,c)==0
+                      and val in grille.getCelluleCandidatesCoord(r,c)]
+                if len(cols)==2:
+                    rows_candidates[r]=cols # on garde seulement les lignes avec exactement 2 candidat
+            # Cherche deux lignes avec une colonne en commun
+            rows=list(rows_candidates.keys())
+            for i in range(len(rows)):
+                for j in range(i+1,len(rows)):
+                    r1,r2=rows[i],rows[j]
+                    c1,c2=rows_candidates[r1]  # les deux colonnes de la ligne r1
+                    c3,c4=rows_candidates[r2]  # les deux colonnes de la ligne r2
+
+                    # Cherche la colonne commune (base) et les deux sommets
+                    if c1==c3:
+                        sommet1,sommet2=(r1,c2),(r2,c4)  # les sommets sont c2 et c4
+                    elif c1==c4:
+                        sommet1,sommet2=(r1,c2),(r2,c3)
+                    elif c2==c3:
+                        sommet1,sommet2=(r1,c1),(r2,c4)
+                    elif c2==c4:
+                        sommet1,sommet2=(r1,c1),(r2,c3)
+                    else:
+                        continue  # pas de base commune
+                    
+                     # Élimine val de toutes les cellules qui voient les deux sommets
+                    changed = SolverHuman.eliminationCandidatsGratteCiel(grille, val, sommet1, sommet2, sizeCote)
+                    if changed:
+                        return True
+            # ── Version sur les colonnes(symetrique) ───────────────────────────────────────
+        # Même logique mais en cherchant des colonnes avec 2 candidats et une ligne en commun
+        for val in range(1,size+1):
+            cols_candidates={}
+            for c in range(size):
+                rows=[r for r in range(size)
+                      if grille.getCelluleValueCoord(r,c)==0
+                      and val in grille.getCelluleCandidatesCoord(r,c)]
+                if len(rows)==2:
+                    cols_candidates[c]=rows
+            cols=list(cols_candidates.keys())
+            for i in range(len(cols)):
+                for j in range(i+1,len(cols)):
+                    c1,c2=cols[i],cols[j]
+                    r1,r2=cols_candidates[c1]
+                    r3,r4=cols_candidates[c2]
+
+                    if r1==r3:
+                        sommet1,sommet2=(r2,c1),(r4,c2)
+                    elif r1==r4:
+                        sommet1,sommet2=(r2,c1),(r3,c2)
+                    elif r2==r4:
+                        sommet1,sommet2=(r1,c1),(r3,c2)
+                    elif r2==r3:
+                        sommet1,sommet2=(r1,c1),(r4,c2)
+                    else:
+                        continue #pas de base de gratte-ciel
+
+                    changed = SolverHuman.eliminationCandidatsGratteCiel(grille, val, sommet1, sommet2, sizeCote)
+                    if changed:
+                        return True
+
+        return False
+                    
+    @staticmethod
+    def eliminationCandidatsGratteCiel(grille: Grille, val: int, sommet1: tuple, sommet2: tuple, sizeCote: int) -> bool: 
+        size= sizeCote**2
+        changed=False
+        r1,c1=sommet1
+        r2,c2=sommet2
+        zone1=zoneIndexFromCoord(r1,c1,sizeCote)
+        zone2=zoneIndexFromCoord(r2,c2,sizeCote)
+        for r in range(size):
+            for c in range(size):
+                if (r,c)==sommet1 or (r,c)==sommet2:
+                    continue
+                if grille.getCelluleValueCoord(r,c)!=0:
+                    continue
+                if val not in grille.getCelluleCandidatesCoord(r,c):
+                    continue
+                zone=zoneIndexFromCoord(r,c,sizeCote)
+                voit1=(r==r1 or c==c1 or zone==zone1)
+                voit2=(r==r2 or c==c2 or zone==zone2)
+                if voit1 and voit2:
+                    old=grille.getCelluleCandidatesCoord(r,c)
+                    new=listDifference(old,[val])
+                    grille._getCelluleCoord(r,c).setCandidates(new)
+                    changed=True
+        return changed
 
     # Fonction liée au Sudoku Coach avec le score pour chauqe technique
     @staticmethod
@@ -375,6 +478,7 @@ class SolverHuman(Solver):
         score += min(counts.get(Technique.PAIR_NU, 0), 6) * 0.08
         score += min(counts.get(Technique.PAIR_CACHEE, 0), 6) * 0.10
         score += min(counts.get(Technique.CANDIDAT_ENFERME, 0), 6) * 0.12
+        score += min(counts.get(Technique.GRATTE_CIEL, 0), 6) * 0.15
 
         score = round(score, 2)
 

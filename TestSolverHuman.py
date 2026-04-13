@@ -1,6 +1,6 @@
 from SolverHuman import SolverHuman
 from GrilleBacktrack import GrilleBacktrack
-import pytest as pt
+#import pytest as pt
 
 
 def test_singletonCacheFonctionnePourUneZone():
@@ -135,3 +135,25 @@ def test_candidatEnfermeFonctionnePourUneColonne():
     for i in range(9):
         if i!=1 and i!=7:
             assert 8 not in grille.getCelluleCandidatesZoneIndex(3, i)
+
+
+ 
+def test_gratteCielFonctionneSurLignes_memeZone():
+    grille = GrilleBacktrack()
+    grille.adjustCandidates()
+ 
+    for r in range(9):
+        for c in range(9):
+            cands = grille.getCelluleCandidatesCoord(r, c)
+            grille._getCelluleCoord(r, c).setCandidates([x for x in cands if x != 5])
+ 
+    grille._getCelluleCoord(0, 0).setCandidates([5])
+    grille._getCelluleCoord(0, 5).setCandidates([5])
+ 
+    grille._getCelluleCoord(3, 0).setCandidates([5])
+    grille._getCelluleCoord(3, 8).setCandidates([5])
+    grille._getCelluleCoord(0, 8).setCandidates([5, 3])
+ 
+    assert SolverHuman.gratteCiel(grille)
+    assert 5 not in grille.getCelluleCandidatesCoord(0, 8)
+    assert 3 in grille.getCelluleCandidatesCoord(0, 8)  

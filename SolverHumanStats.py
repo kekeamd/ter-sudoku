@@ -18,6 +18,7 @@ class SolverHumanStats(SolverHuman):
                 Technique.PAIR_NU: 0,
                 Technique.PAIR_CACHEE: 0,
                 Technique.CANDIDAT_ENFERME: 0,
+                Technique.GRATTE_CIEL: 0,
             },
             "maxTechnique": None, # Technique la plus dur
         }
@@ -65,6 +66,10 @@ class SolverHumanStats(SolverHuman):
 
             if SolverHuman.candidatEnferme(grille):
                 record(Technique.CANDIDAT_ENFERME)
+                if stats["stuck"]: return stats
+                continue
+            if SolverHuman.gratteCiel(grille):     
+                record(Technique.GRATTE_CIEL)
                 if stats["stuck"]: return stats
                 continue
 

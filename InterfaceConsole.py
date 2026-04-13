@@ -89,8 +89,8 @@ class InterfaceConsole(Interface): # extends Interface
         print("Steps:", stats["steps"])
         print("Max technique:", stats["maxTechnique"].name if stats["maxTechnique"] else None)
        
-        #sudokuCoachRated = getDifficultyFromGrille(self.grilleDeJeu, headless=True)
-        #print(f"Difficulté estimée (sudoku.coach): {sudokuCoachRated  ['label']} (score: {sudokuCoachRated['score']})")
+        sudokuCoachRated = getDifficultyFromGrille(self.grilleDeJeu, headless=True)
+        print(f"Difficulté estimée (sudoku.coach): {sudokuCoachRated  ['label']} (score: {sudokuCoachRated['score']})")
 
         #self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 

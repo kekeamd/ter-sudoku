@@ -22,7 +22,7 @@ def getDifficultyFromSudokuCoach(puzzle_str: str, headless: bool = True) -> dict
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1280,900")
-    options.add_argument("-- lang=fr")
+    options.add_argument("-- 4lang=fr")
     options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                          "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 

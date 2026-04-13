@@ -7,5 +7,6 @@ class Technique(IntEnum): # IntEnum car chaque methodes humaine doit avoir son p
     PAIR_NU = 4
     PAIR_CACHEE = 5
     CANDIDAT_ENFERME = 6
+    GRATTE_CIEL = 7
     # ...
     # ...
