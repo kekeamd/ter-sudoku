@@ -1,0 +1,385 @@
+\documentclass[a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{float}      % pour [H]
+\usepackage{subcaption} % pour les sous-figures côte à côte
+
+
+\begin{document}
+
+% ===== PAGE DE TITRE =====
+\begin{titlepage}
+  \thispagestyle{empty}
+
+  % Logos en haut gauche / droite
+  \noindent
+  \includegraphics[height=3.0cm]{5d690eb0740000ba01a7340e.jpeg}
+  \hfill
+  \includegraphics[height=3.0cm]{IMG_9024.jpg}
+
+  \vspace{1.7cm}
+
+  \begin{center}
+    {\LARGE\bfseries RAPPORT FINALE \\[0.4em]
+    Générateur de grilles de Sudoku à difficulté contrôlée\\[1cm]}
+
+    {\large \textbf{Groupe X}\\
+    KONCHEV Martin\\
+    DOLO Abdourahamane-Abdoul\\
+    BARRE-GUEROT Ilan\\
+    BRIOT-AMADIUE Kellyan\\[0.8em]
+    \textbf{Encadrant:} Marc Hartley\\
+    \emph{L3 informatique}\\
+    Faculté des Sciences\\
+    Université de Montpellier\\[0.8em]
+    Avril 2026}
+  \end{center}
+\end{titlepage}
+% ===================================
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% ===== 1. Présentation du Sujet =====
+\section{Présentation du Sujet}
+
+\subsection{Contexte et problématique}
+
+Le projet s’inscrit dans le domaine de la conception d’outils algorithmiques appliqués aux jeux logiques, et plus particulièrement au Sudoku. 
+Ce jeu, largement répandu, consiste à remplir une grille $9 \times 9$ en respectant des contraintes strictes : chaque chiffre doit apparaître 
+une seule fois par ligne, par colonne et par sous-grille $3 \times 3$.
+
+La problématique principale étudiée dans ce projet est la \textbf{génération automatique de grilles de Sudoku avec une difficulté contrôlée}, 
+tout en garantissant qu’elles possèdent une solution unique. Ce problème est non trivial, car il implique plusieurs défis combinés : générer des 
+grilles valides, contrôler leur complexité, et être capable de les résoudre efficacement pour en analyser la difficulté.
+
+Dans le contexte du projet, l’objectif est de concevoir un système complet intégrant :
+\begin{itemize}
+    \item un générateur de grilles,
+    \item un solveur automatique,
+    \item un mécanisme d’évaluation de la difficulté,
+    \item ainsi qu’une interface permettant de manipuler les grilles.
+\end{itemize}
+
+Comme mentionné dans le rapport de Sprint 1, le projet vise à créer un outil capable de produire, analyser et manipuler des grilles de Sudoku de manière automatisée.
+
+\subsection{Intérêt du sujet}
+
+Ce projet présente un intérêt à la fois pédagogique et technique.
+
+D’un point de vue académique, il mobilise plusieurs notions fondamentales de l’informatique :
+\begin{itemize}
+    \item les algorithmes de recherche (notamment le backtracking),
+    \item la gestion de structures de données (matrices représentant les grilles),
+    \item l’analyse de complexité,
+    \item et la conception logicielle modulaire.
+\end{itemize}
+
+Il s’inscrit pleinement dans le parcours de Licence Informatique, en permettant d’appliquer concrètement des concepts théoriques étudiés en cours.
+
+D’un point de vue plus large, ce type de problème est représentatif de nombreuses situations en informatique, notamment dans les domaines de :
+\begin{itemize}
+    \item l’intelligence artificielle (résolution de contraintes),
+    \item la génération procédurale (création automatique de contenu),
+    \item et les systèmes d’aide à la décision.
+\end{itemize}
+
+De plus, le contrôle de la difficulté d’un problème algorithmique est un enjeu important dans de nombreux domaines, allant du jeu vidéo à l’apprentissage adaptatif.
+
+\subsection{Approches possibles et choix retenu}
+
+Plusieurs approches peuvent être envisagées pour résoudre le problème de génération et de résolution de Sudoku :
+
+\subsubsection{Approches basées sur des techniques humaines}
+
+Ces méthodes reproduisent les stratégies utilisées par les joueurs humains (singletons, paires, etc.). Elles permettent de qualifier plus finement la difficulté d’une grille, mais sont souvent complexes à implémenter.
+
+\subsubsection{Approches algorithmiques classiques}
+
+Elles reposent sur des techniques comme :
+\begin{itemize}
+    \item le backtracking,
+    \item la recherche exhaustive avec contraintes,
+    \item ou des heuristiques d’optimisation.
+\end{itemize}
+
+Ces méthodes sont robustes et garantissent la résolution complète des grilles.
+
+\subsubsection{Approches hybrides}
+
+Elles combinent les deux précédentes : un solveur automatique avec une analyse basée sur des techniques humaines pour évaluer la difficulté.
+
+\subsubsection*{Choix retenu}
+
+Dans le cadre du Sprint 1, le choix s’est porté sur une approche principalement algorithmique, basée sur un solveur utilisant le backtracking.
+
+Ce choix est justifié par :
+\begin{itemize}
+    \item sa simplicité d’implémentation,
+    \item sa fiabilité pour garantir une solution,
+    \item et sa capacité à fournir des métriques de difficulté via le nombre de backtracks.
+\end{itemize}
+
+Comme précisé dans le rapport, la difficulté d’une grille est estimée à partir du nombre de retours arrière (backtracks) effectués lors de la résolution.
+
+À terme, cette approche pourra être enrichie par des techniques de résolution humaines, prévues dans les sprints suivants.
+
+\subsection{Cahier des charges détaillé}
+
+Le cahier des charges du projet définit les fonctionnalités et contraintes principales du système.
+
+\subsubsection{Fonctionnalités principales}
+
+Le système doit permettre :
+\begin{itemize}
+    \item la génération de grilles complètes valides,
+    \item la création de grilles jouables avec solution unique,
+    \item l’évaluation de la difficulté en fonction du processus de résolution,
+    \item la résolution automatique des grilles,
+    \item la lecture et l’écriture de grilles via un parseur de fichiers,
+    \item ainsi qu’une interface console interactive permettant de jouer.
+\end{itemize}
+
+Le rapport précise que l’interface permet déjà :
+\begin{itemize}
+    \item d’afficher une grille,
+    \item de choisir une difficulté,
+    \item d’insérer des valeurs,
+    \item de voir les candidats possibles,
+    \item et de vérifier leur validité.
+\end{itemize}
+
+\subsubsection{Contraintes techniques}
+
+Le projet doit respecter plusieurs contraintes :
+\begin{itemize}
+    \item développement en \textbf{Python},
+    \item utilisation de bibliothèques standards,
+    \item exécution sur les environnements Linux de l’université,
+    \item temps de calcul raisonnable pour la génération et la résolution,
+    \item organisation du code via un dépôt Git structuré.
+\end{itemize}
+
+
+% ===== 2. Technologies utilisées =====
+\section{Technologies utilisées}
+
+\subsection{Langages et outils utilisés}
+
+Dans le cadre de ce projet, plusieurs technologies et outils ont été mobilisés afin de concevoir, développer et organiser efficacement le système de génération et de résolution de grilles de Sudoku.
+
+\subsubsection{Langage de programmation}
+
+Le projet a été développé principalement en \textbf{Python}, qui constitue le cœur de l’implémentation. Ce langage est utilisé pour l’ensemble des composants du système :
+\begin{itemize}
+    \item génération des grilles,
+    \item résolution (solveur),
+    \item évaluation de la difficulté,
+    \item gestion des fichiers (parseur),
+    \item interface utilisateur en console.
+\end{itemize}
+
+Comme indiqué dans le rapport de Sprint 1, Python a été choisi pour développer l’ensemble des modules du projet, en s’appuyant principalement sur des bibliothèques standards.
+
+\subsubsection{Bibliothèques utilisées}
+
+Le projet utilise essentiellement des bibliothèques natives de Python, notamment :
+\begin{itemize}
+    \item \texttt{random} : pour la génération aléatoire des grilles,
+    \item \texttt{os} : pour la gestion des fichiers et du système,
+    \item \texttt{shutil} : pour certaines opérations sur les fichiers,
+    \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur (comme illustré dans le graphique en page 5 du rapport).
+\end{itemize}
+
+L’utilisation de bibliothèques standards permet de garantir la simplicité, la portabilité et la reproductibilité du projet.
+
+\subsubsection{Outils de développement}
+
+\paragraph{Gestion de version}
+
+Le projet est géré à l’aide de \textbf{Git}, avec un dépôt hébergé sur GitLab. Cela permet :
+\begin{itemize}
+    \item de suivre l’évolution du code,
+    \item de travailler en équipe de manière collaborative,
+    \item de gérer différentes versions via des branches.
+\end{itemize}
+
+Le rapport précise l’adoption d’un workflow simple avec une branche principale et des branches de développement.
+
+\paragraph{Outils de communication}
+
+La communication au sein du groupe est assurée via :
+\begin{itemize}
+    \item Discord, pour les échanges rapides,
+    \item des réunions hebdomadaires, permettant de suivre l’avancement et répartir les tâches.
+\end{itemize}
+
+\paragraph{Environnement d’exécution}
+
+Le projet est conçu pour être exécuté sur :
+\begin{itemize}
+    \item les machines Linux de l’université,
+    \item ainsi que les ordinateurs personnels des membres du groupe.
+\end{itemize}
+
+Cette contrainte impose une attention particulière à la portabilité du code.
+
+\subsection{Justification des choix technologiques}
+
+\subsubsection{Choix du langage Python}
+
+Le choix de Python s’explique par plusieurs raisons majeures.
+
+Tout d’abord, Python est un langage simple et lisible, ce qui facilite la compréhension du code, notamment dans un contexte de travail en groupe. Cette lisibilité est particulièrement importante pour un projet impliquant plusieurs modules (générateur, solveur, interface, parseur).
+
+Ensuite, Python est particulièrement adapté à l’implémentation d’algorithmes complexes, comme le backtracking utilisé pour résoudre les grilles de Sudoku. Sa syntaxe permet de se concentrer sur la logique algorithmique sans être alourdi par des contraintes techniques.
+
+De plus, Python offre une grande flexibilité dans la manipulation des structures de données, comme les matrices utilisées pour représenter les grilles. Cela facilite la mise en place rapide de prototypes fonctionnels, comme celui réalisé lors du Sprint 1.
+
+Enfin, Python est largement utilisé dans le domaine académique, ce qui en fait un choix cohérent avec le cadre du projet.
+
+
+% ===== 3. Développements Logiciel : Conception, Modélisation, Implémentation =====
+\section{Développements Logiciel : Conception, Modélisation, Implémentation}
+
+\subsection{Présentation des développements réalisés}
+
+\subsection{Modules principaux du logiciel}
+
+\subsection{Diagramme de cas d’utilisation (UML)}
+
+\subsection{Diagramme de classes (UML)}
+
+\subsection{Fonctionnalités de l’interface (console)}
+Le projet propose une interface console interactive permettant à l’utilisateur d’interagir avec le système de génération et de résolution de Sudoku. Cette interface joue un rôle central dans le projet, car elle permet de tester les fonctionnalités développées tout en offrant une expérience utilisateur simple et fonctionnelle.
+
+Au lancement du programme, un menu principal est affiché. L’utilisateur peut alors choisir entre générer une grille de Sudoku et jouer, ou quitter l’application. Ce point d’entrée est volontairement simple afin de rendre l’utilisation du programme intuitive.
+
+Une fois le jeu lancé, l’utilisateur est invité à choisir un niveau de difficulté parmi plusieurs options : facile, moyen, difficile, extrême et un mode avancé (« God Mode »). Ce choix influence directement la génération de la grille, notamment le nombre de cases vides et la complexité de résolution.
+
+Après la génération, la grille est affichée dans la console. L’interface fournit également des informations supplémentaires sur la difficulté, telles que :
+\begin{itemize}
+    \item une estimation basée sur des méthodes de résolution humaines,
+    \item le nombre d’étapes nécessaires pour résoudre la grille,
+    \item la technique la plus complexe utilisée.
+\end{itemize}
+
+Ces informations permettent à l’utilisateur de mieux comprendre le niveau réel de la grille.
+
+L’utilisateur peut ensuite interagir avec la grille via plusieurs actions. Il peut notamment entrer une valeur dans une case, en précisant la ligne, la colonne et la valeur souhaitée. Le système vérifie alors que la saisie est valide : les coordonnées doivent être correctes, la case ne doit pas être déjà remplie, et la valeur doit respecter les règles du Sudoku. Si une erreur est détectée, un message explicite est affiché.
+
+Un système de gestion des erreurs est également mis en place. L’utilisateur dispose d’un maximum de trois erreurs ; au-delà de cette limite, la partie se termine automatiquement avec un message de type « Game Over ». Cela ajoute une dimension de contrainte et rend l’interaction plus dynamique.
+
+L’interface propose également d’afficher les candidats possibles pour chaque case vide. Cette fonctionnalité permet de visualiser toutes les valeurs envisageables dans une case donnée, ce qui aide à comprendre le processus de résolution et peut servir d’outil pédagogique.
+
+En complément, l’utilisateur peut choisir de résoudre automatiquement la grille selon deux approches différentes :
+\begin{itemize}
+    \item une résolution complète par backtracking (méthode algorithmique),
+    \item une résolution basée sur des techniques humaines, accompagnée de statistiques (nombre d’étapes, techniques utilisées, etc.).
+\end{itemize}
+
+Ces deux méthodes permettent de comparer les approches et d’analyser la difficulté de la grille générée.
+
+Enfin, la partie se termine lorsque la grille est entièrement complétée correctement, lorsque l’utilisateur choisit de quitter, ou après une résolution automatique.
+
+\textbf{Le chemin d’exécution est celui-ci :}
+InterfaceConsole.startPlaying() → playSudoku() → GrilleHuman.generateValuesHumanRated() → generateValuesDifficile() → création d’un clone test → SolverHumanStats.solveWithStats(test, ...) → appels successifs aux techniques de SolverHuman (dernierNombre, singletonNu, singletonCache, paireNu, paireCachee, candidatEnferme). 
+
+Ainsi, même si elle reste simple, cette interface console offre un ensemble de fonctionnalités complet permettant de générer, manipuler, résoudre et analyser des grilles de Sudoku. Elle constitue une base solide pour une éventuelle évolution vers une interface graphique plus avancée.
+
+
+
+\subsection{Structures de données principales}
+
+\subsection{Format des entrées (grilles Sudoku)}
+
+\subsection{Procédures de lecture et validation}
+
+\subsection{Statistiques}
+
+\subsubsection{Nombre de modules / classes}
+
+\subsubsection{Nombre de lignes de code}
+
+% ===== 4. Algorithmes et Analyse =====
+\section{Algorithmes et Analyse}
+
+\begin{itemize}
+    \item Algorithmes principaux :
+    \begin{itemize}
+        \item backtracking
+        \item génération de grille
+    \end{itemize}
+    \item Illustration du fonctionnement
+    \item Complexité temporelle :
+    \begin{itemize}
+        \item backtracking
+        \item génération
+    \end{itemize}
+\end{itemize}
+
+% ===== 5. Analyse des Résultats =====
+\section{Analyse des Résultats}
+
+\begin{itemize}
+    \item Graphiques de performance
+    \item Analyse des résultats
+    \item Comparaison des méthodes :
+    \begin{itemize}
+        \item backtracking vs méthodes humaines
+    \end{itemize}
+    \item Procédures de test :
+    \begin{itemize}
+        \item génération de grilles
+        \item validation des solutions
+    \end{itemize}
+\end{itemize}
+
+% ===== 6. Gestion du Projet =====
+\section{Gestion du Projet}
+
+\begin{itemize}
+    \item Organisation du projet
+    \item Diagramme de Gantt
+    \item Répartition des tâches
+    \item Changements en cours de projet
+\end{itemize}
+
+% ===== 7. Bilan et Conclusions =====
+\section{Bilan et Conclusions}
+
+\begin{itemize}
+    \item Fonctionnalités réalisées
+    \item Comparaison avec cahier des charges
+    \item Limites du projet
+    \item Perspectives :
+    \begin{itemize}
+        \item amélioration des algorithmes
+        \item interface graphique
+    \end{itemize}
+\end{itemize}
+
+% ===== 8. Bibliographie =====
+\section{Bibliographie}
+
+\begin{itemize}
+    \item Ressources utilisées
+    \item Articles scientifiques
+    \item Documentation
+\end{itemize}
+
+% ===== 9. Annexes =====
+\section{Annexes}
+
+\begin{itemize}
+    \item Fragments de code
+    \item Manuel d’utilisation
+    \item Exemples de grilles
+\end{itemize}
+
+\end{document}
