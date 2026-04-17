@@ -22,7 +22,6 @@ class InterfaceWeb(Interface): # extends Interface
             print("Erreur de démarrage serveur !")
 
     # Devient home page route
-    @app.route()
     def askChoice(self) -> str:
         return render_template("./web_data/log.html") # par exemple
 
