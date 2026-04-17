@@ -24,7 +24,7 @@ if __name__ == "__main__":
         except ValueError:
             clear()
             continue
-        clear()
+        #clear()
 
         if TypeDeJeu == '1':                                          # Jeu dans la console
             print("======================================")
@@ -48,6 +48,11 @@ if __name__ == "__main__":
                 interface.startPlaying()
             else:
                 print("Serveur non lancé.")
+            
+            print("Mode serveur activé !")
+            print("CTRL + C pour sortir")
+            while(True):
+                pass
         
         elif TypeDeJeu == '3':                                        # Tests Haut niveaux
             print("==============================")
@@ -59,7 +64,7 @@ if __name__ == "__main__":
 
         else:                                                       # Tout autre entrée en quitte !
             break
-        clear()
+        #clear()
 
     # Fermeture
     print("==============================")

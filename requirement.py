@@ -15,6 +15,27 @@ def verifyRequire(test : bool = True):
         import shutil
     except:
         notInstall.append("shutil")
+    # Vérification de selenium
+    try:
+        import selenium
+    except:
+        notInstall.append("selenium")
+    # Vérification de webdriver_manager
+    try:
+        import webdriver_manager
+    except:
+        notInstall.append("webdriver_manager")
+    # Vérification de flask
+    try:
+        import flask
+    except:
+        notInstall.append("flask")
+    # Vérification de flask_socketio
+    try:
+        import flask_socketio
+    except:
+        notInstall.append("flask_socketio")
+    
     if test:
         # Vérification de pytest
         try:
@@ -25,6 +46,7 @@ def verifyRequire(test : bool = True):
         print("Le module :",e,"n'est pas installer !!")
         print("Essaie d'installation automatique")
     if len(notInstall)>0 :
+        
         raise(Exception("Dépendance manquantes !"))
 
 verifyRequire(True)
