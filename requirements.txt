@@ -3,6 +3,10 @@ matplotlib
 random
 os
 shutil
+selenium
+webdriver_manager
+flask
+flask_socketio
 
 # Pour le bon fonctionnement des tests
 pytest
