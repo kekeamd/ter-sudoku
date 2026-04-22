@@ -9,3 +9,8 @@
 ## Encadrants :
 - Hartley Marc
 
+
+
+### commandes importantes :
+- 'python ./main.py' pour démarrer le jeu sudoku
+- './tests.bat' pour exécuter les tests
