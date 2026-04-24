@@ -10,7 +10,7 @@ DIFFICULTY_MAX_TECHNIQUE = {
     Difficulte.FACILE:    Technique.DERNIER_NOMBRE,   # arrêter si on dépasse "dernier nombre"
     Difficulte.MOYEN:     Technique.SINGLETON_CACHE,  # arrêter si on dépasse "singleton caché"
     Difficulte.DIFFICILE: Technique.CANDIDAT_ENFERME, # DIFFICILE tolère au maximum 1 candidat enfermé
-    Difficulte.EXTREME:   Technique.GRATTE_CIEL, # arrêter si on dépasse "candidat enfermé"
+    Difficulte.EXTREME:   Technique.GRATTE_CIEL,      # arrêter si on dépasse "gratte ciel"
     Difficulte.GODMODE:   None,                       # pas de plafond, grille insolvable par nos techniques
 }
 
@@ -228,3 +228,89 @@ class GrilleHuman(GrilleBacktrack):
         final_test = self.clone()
         return SolverHumanStats.solveWithStats(final_test, raise_on_stuck=False)
     
+
+    def generateValuesExtreme(self, solution: Grille) -> dict:
+        N = self.getSize() * self.getSize()
+
+        min_holes = 49
+        max_holes = 57
+        max_attempts = 90
+        max_restarts = 12
+
+        best_snapshot = None
+        best_stats = None
+
+        for restart in range(max_restarts):
+            # repartir d'une grille complète neuve à chaque restart
+            for i in range(N):
+                for j in range(N):
+                    self.setCelluleValueCoord(i, j, solution.getCelluleValueCoord(i, j))
+
+            holes = 0
+            attempts = 0
+
+            print(f"\n------- Restart {restart + 1}/{max_restarts} -----")
+
+            while attempts < max_attempts and holes < max_holes:
+                attempts += 1
+
+                val, r, c = self._removeValue()
+                if val == -1:
+                    break
+
+                holes += 1
+
+                if holes < min_holes:
+                    continue
+
+                test = self.clone()
+                stats = SolverHumanStats.solveWithStats(
+                    test,
+                    raise_on_stuck=False,
+                    max_technique=Technique.GRATTE_CIEL
+                )
+
+                counts = stats["counts"]
+                max_tech = stats["maxTechnique"]
+
+                # cible atteinte pour DIFFICILE (au moins une paire et maximum 3 candidats enfermés)
+                if (
+                    stats["solved"]
+                    and not stats["stuck"]
+                    and max_tech in (Technique.CANDIDAT_ENFERME, Technique.GRATTE_CIEL)
+                    and (
+                            counts[Technique.CANDIDAT_ENFERME] > 0
+                            or counts[Technique.GRATTE_CIEL] > 0
+                        )
+                ):
+                    return stats
+
+                # trop dur -> revert et continuer
+                if stats["stuck"]:
+                    print(
+                        f"  TROP DUR à holes={holes}, "
+                        f"maxTech={max_tech}, "
+                    )
+                    self.setCelluleValueCoord(r, c, val)
+                    holes -= 1
+                    continue
+
+                # encore trop facile mais valide -> garder le meilleur snapshot global
+                if stats["solved"] and not stats["stuck"]:
+                    if counts[Technique.CANDIDAT_ENFERME] > 0 or counts[Technique.GRATTE_CIEL] > 0:
+                        best_snapshot = [
+                            [self.getCelluleValueCoord(i, j) for j in range(N)]
+                            for i in range(N)
+                        ]
+                        best_stats = stats
+
+        # après TOUS les restarts seulement
+        if best_stats is not None and best_snapshot is not None:
+            for i in range(N):
+                for j in range(N):
+                    self.setCelluleValueCoord(i, j, best_snapshot[i][j])
+            return best_stats
+
+        # sinon, on analyse la grille actuelle une seule fois à la fin
+        final_test = self.clone()
+        return SolverHumanStats.solveWithStats(final_test, raise_on_stuck=False)
