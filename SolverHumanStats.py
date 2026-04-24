@@ -105,9 +105,10 @@ class SolverHumanStats(SolverHuman):
                 if stats["stuck"]:
                     return stats
                 continue
-            if SolverHuman.gratteCiel(grille):     
-                record(Technique.GRATTE_CIEL)
-                if stats["stuck"]: return stats
+            
+            if try_and_record(Technique.GRATTE_CIEL, SolverHuman.gratteCiel):
+                if stats["stuck"]: 
+                    return stats
                 continue
 
             stats["stuck"] = True

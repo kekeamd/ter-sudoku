@@ -9,8 +9,8 @@ from Technique import Technique
 DIFFICULTY_MAX_TECHNIQUE = {
     Difficulte.FACILE:    Technique.DERNIER_NOMBRE,   # arrêter si on dépasse "dernier nombre"
     Difficulte.MOYEN:     Technique.SINGLETON_CACHE,  # arrêter si on dépasse "singleton caché"
-    Difficulte.DIFFICILE: Technique.PAIR_CACHEE,      # arrêter si on dépasse "paire cachée"
-    Difficulte.EXTREME:   Technique.CANDIDAT_ENFERME, # arrêter si on dépasse "candidat enfermé"
+    Difficulte.DIFFICILE: Technique.CANDIDAT_ENFERME, # DIFFICILE tolère au maximum 1 candidat enfermé
+    Difficulte.EXTREME:   Technique.GRATTE_CIEL, # arrêter si on dépasse "candidat enfermé"
     Difficulte.GODMODE:   None,                       # pas de plafond, grille insolvable par nos techniques
 }
 
@@ -31,17 +31,21 @@ class GrilleHuman(GrilleBacktrack):
 
         if target == Difficulte.DIFFICILE:
             return (
-                max_tech in (Technique.PAIR_NU, Technique.PAIR_CACHEE)
+                max_tech in (Technique.PAIR_NU, Technique.PAIR_CACHEE, Technique.CANDIDAT_ENFERME)
                 and (
                     counts[Technique.PAIR_NU] > 0
                     or counts[Technique.PAIR_CACHEE] > 0
                 )
+                and counts[Technique.CANDIDAT_ENFERME] <= 3
             )
 
         if target == Difficulte.EXTREME:
             return (
-                max_tech == Technique.CANDIDAT_ENFERME
-                and counts[Technique.CANDIDAT_ENFERME] > 0
+                max_tech in (Technique.CANDIDAT_ENFERME, Technique.GRATTE_CIEL)
+                and (
+                    counts[Technique.CANDIDAT_ENFERME] > 0
+                    or counts[Technique.GRATTE_CIEL] > 0
+                )
             )
 
         if target == Difficulte.GODMODE:
@@ -59,6 +63,10 @@ class GrilleHuman(GrilleBacktrack):
         # Le cas speciale pour Difficile
         if target == Difficulte.DIFFICILE:
             return self.generateValuesDifficile(solution)
+        
+        # Le cas speciale pour EXTREME
+        if target == Difficulte.EXTREME:
+            return self.generateValuesExtreme(solution)
         
         # 1) copier la solution dans self, self = grille entierement remplie
         N = self.getSize() * self.getSize()
@@ -136,10 +144,10 @@ class GrilleHuman(GrilleBacktrack):
     def generateValuesDifficile(self, solution: Grille) -> dict:
         N = self.getSize() * self.getSize()
 
-        min_holes = 46
-        max_holes = 53
-        max_attempts = 120
-        max_restarts = 20
+        min_holes = 47
+        max_holes = 55
+        max_attempts = 90
+        max_restarts = 12
 
         best_snapshot = None
         best_stats = None
@@ -171,25 +179,25 @@ class GrilleHuman(GrilleBacktrack):
                 stats = SolverHumanStats.solveWithStats(
                     test,
                     raise_on_stuck=False,
-                    max_technique=Technique.PAIR_CACHEE
+                    max_technique=Technique.CANDIDAT_ENFERME
                 )
 
                 counts = stats["counts"]
                 pair_count = counts[Technique.PAIR_NU] + counts[Technique.PAIR_CACHEE]
                 max_tech = stats["maxTechnique"]
 
-                # cible atteinte pour DIFFICILE
+                # cible atteinte pour DIFFICILE (au moins une paire et maximum 3 candidats enfermés)
                 if (
                     stats["solved"]
                     and not stats["stuck"]
-                    and max_tech in (Technique.PAIR_NU, Technique.PAIR_CACHEE)
+                    and max_tech in (Technique.PAIR_NU, Technique.PAIR_CACHEE, Technique.CANDIDAT_ENFERME)
                     and pair_count >= 1
-                    and counts[Technique.CANDIDAT_ENFERME] == 0
+                    and counts[Technique.CANDIDAT_ENFERME] <= 1 
                 ):
                     return stats
 
                 # trop dur -> revert et continuer
-                if stats["stuck"] or counts[Technique.CANDIDAT_ENFERME] > 0:
+                if stats["stuck"] or counts[Technique.CANDIDAT_ENFERME] > 1:
                     print(
                         f"  TROP DUR à holes={holes}, "
                         f"maxTech={max_tech}, "
@@ -201,13 +209,13 @@ class GrilleHuman(GrilleBacktrack):
 
                 # encore trop facile mais valide -> garder le meilleur snapshot global
                 if stats["solved"] and not stats["stuck"]:
-                    print(f"  holes={holes}, maxTech={max_tech}, pairs={pair_count}")
+                    if pair_count >= 1 and counts[Technique.CANDIDAT_ENFERME] <= 1:
 
-                    best_snapshot = [
-                        [self.getCelluleValueCoord(i, j) for j in range(N)]
-                        for i in range(N)
-                    ]
-                    best_stats = stats
+                        best_snapshot = [
+                            [self.getCelluleValueCoord(i, j) for j in range(N)]
+                            for i in range(N)
+                        ]
+                        best_stats = stats
 
         # après TOUS les restarts seulement
         if best_stats is not None and best_snapshot is not None:
@@ -219,3 +227,4 @@ class GrilleHuman(GrilleBacktrack):
         # sinon, on analyse la grille actuelle une seule fois à la fin
         final_test = self.clone()
         return SolverHumanStats.solveWithStats(final_test, raise_on_stuck=False)
+    

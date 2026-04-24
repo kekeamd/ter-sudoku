@@ -488,7 +488,7 @@ class SolverHuman(Solver):
             label = "Medium"
         elif score <= 4.2:
             label = "Hard"
-        elif score <= 5.5:
+        elif score <= 6.0:
             label = "Vicious"
         else:
             label = "Fiendish+"
@@ -518,6 +518,6 @@ class SolverHuman(Solver):
             return Difficulte.MOYEN
         if score <= 4.2:
             return Difficulte.DIFFICILE
-        if score <= 5.5:
+        if score <= 6.0:
             return Difficulte.EXTREME
         return Difficulte.GODMODE
