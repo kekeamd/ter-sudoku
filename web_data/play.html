@@ -6,17 +6,18 @@
         <title>Sudoku Jeu</title>
         <meta name="description" content="Page de jeu pour Sudoku">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="styleOutput.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
     </head>
     <body>
+        <button type="button" name="login-button" id="login-button"><</button>
         <div name="infos" id="infos">
         <h1>Sudoku</h1>
         <p name="player_status">Vous n'êtes pas connectez, <strong>PAS DE SAUVEGARDES</strong></p>
         <br><br><br>
         </div>
         <div name="game">
-        <table name="game_table" border="" style="width:50%; border: 1px solid black;" disabled>
+        <table name="game_table" style="width:50%; border: 1px solid black;" disabled>
         </table>
         </div>
     </body>

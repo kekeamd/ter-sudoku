@@ -94,9 +94,16 @@ class InterfaceConsole(Interface): # extends Interface
 
         #self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 
-       
-        
         self.grilleDeJeu.printGrille()
+        
+        # Message pour GODMODE
+        if rated == Difficulte.GODMODE:
+            print(
+                "\nCette grille ne peut pas être résolue uniquement avec les techniques humaines "
+                "actuellement implémentées dans ce projet "
+                "(dernier nombre, singleton nu, singleton caché, paire nue, paire cachée, "
+                "candidat enfermé, gratte-ciel).\n"
+            )
     
         self.gameLoop()
 
