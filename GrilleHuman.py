@@ -40,9 +40,19 @@ class GrilleHuman(GrilleBacktrack):
 
         if target == Difficulte.EXTREME:
             return (
-                max_tech == Technique.CANDIDAT_ENFERME
-                and counts[Technique.CANDIDAT_ENFERME] > 0
+            max_tech in (
+                Technique.CANDIDAT_ENFERME,
+                Technique.GRATTE_CIEL,
+                Technique.X_WINGL,
+                Technique.X_WINGC
             )
+            and (
+                counts[Technique.CANDIDAT_ENFERME] > 0
+                or counts[Technique.GRATTE_CIEL] > 0
+                or counts[Technique.X_WINGL] > 0
+                or counts[Technique.X_WINGC] > 0
+            )
+        )
 
         if target == Difficulte.GODMODE:
             return stats["stuck"]

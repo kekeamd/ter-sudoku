@@ -203,6 +203,11 @@ class Grille(ABC):
         cellule = self._getCelluleIndex(index)
         return cellule.getCandidates()
 
+    #purpose: retire la valeur dans la liste des candidats
+    def removeCandidateCoord(self, row: int, col: int, val: int) -> None:
+        cellule = self._getCelluleCoord(row, col)
+        if val in cellule.getCandidates():
+            self._adjustCandidatesCellule(cellule, [val])
 
     #purpose: rectifie les listes de candidats de la cellule en fonction des candidats impossibles 'imp'
     def _adjustCandidatesCellule(self, cellule : Cellule, imp : list[int]) -> None:

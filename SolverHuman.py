@@ -331,9 +331,6 @@ class SolverHuman(Solver):
                     if changed:
                         return True
         return False
-    
-     # Élimine val de toutes les cellules qui voient les deux sommets simultanément.Deux cellules se "voient" si elles partagent la même ligne, colonne ou zone.    
-   
 
     @staticmethod
     def gratteCiel(grille : Grille) -> bool:
@@ -350,7 +347,7 @@ class SolverHuman(Solver):
                       if grille.getCelluleValueCoord(r,c)==0
                       and val in grille.getCelluleCandidatesCoord(r,c)]
                 if len(cols)==2:
-                    rows_candidates[r]=cols # on garde seulement les lignes avec exactement 2 candidat
+                    rows_candidates[r]=cols # on garde seulement les lignes avec exactement 2 colonnes candidates
             # Cherche deux lignes avec une colonne en commun
             rows=list(rows_candidates.keys())
             for i in range(len(rows)):
@@ -408,7 +405,7 @@ class SolverHuman(Solver):
                         return True
 
         return False
-                    
+    # Élimine val de toutes les cellules qui voient les deux sommets simultanément.Deux cellules se "voient" si elles partagent la même ligne, colonne ou zone.
     @staticmethod
     def eliminationCandidatsGratteCiel(grille: Grille, val: int, sommet1: tuple, sommet2: tuple, sizeCote: int) -> bool: 
         size= sizeCote**2
@@ -435,6 +432,91 @@ class SolverHuman(Solver):
                     changed=True
         return changed
 
+
+    @staticmethod
+    def x_WingLignes(grille:Grille) -> bool:
+        sizeCote=grille.getSize()
+        size=sizeCote**2
+        changed=False
+        for val in range(1,size+1):
+            row_candidates={}
+            for r in range(size):
+                cols=[c for c in range(size) 
+                      if grille.getCelluleValueCoord(r,c)==0
+                      and val in grille.getCelluleCandidatesCoord(r,c)]
+                if len(cols)==2:
+                    row_candidates[r]=cols
+            
+            # On compare les lignes deux à deux pour trouver un X-Wing
+            rows= list(row_candidates.keys())
+            for i in range(len(rows)):
+                r1=rows[i]
+                cols1=row_candidates[r1]
+
+                for j in range(i+1,len(rows)):
+                    r2=rows[j]
+                    cols2=row_candidates[r2]
+
+                    # Condition du X-Wing : mêmes colonnes
+                    if cols1==cols2: 
+                        c1,c2=cols1 # les deux colonnes du X-Wing
+                        
+                        #Élimination dans les autres lignes
+                        for r in range(size):
+                            if r!= r1 and r!=r2:
+                                #colonne 1
+                                if grille.getCelluleValueCoord(r,c1)==0 and val in grille.getCelluleCandidatesCoord(r,c1):
+                                    grille.removeCandidateCoord(r,c1,val)
+                                    changed=True
+                                #colonne 2
+                                if grille.getCelluleValueCoord(r,c2)==0 and val in grille.getCelluleCandidatesCoord(r,c2):
+                                    grille.removeCandidateCoord(r,c2,val)
+                                    changed=True
+        return changed
+    # --------------- X-Wing version colonnes -> lignes ----------------
+    @staticmethod
+    def x_WingColonne(grille:Grille):
+        changed= False
+        sizeCote=grille.getSize()
+        size=sizeCote**2
+        for val in range(1,size+1):
+            cols_candidates={}
+            #Trouve les colonnes avec exactement 2 candidats pour val
+            for c in range(size):
+                rows=[r for r in range(size) 
+                      if grille.getCelluleValueCoord(r,c)==0
+                      and val in grille.getCelluleCandidatesCoord(r,c)]
+                if len(rows)==2:
+                    cols_candidates[c]=rows
+            
+            #Compare les colonnes deux à deux    
+            cols=list(cols_candidates.keys())
+            for i in range(len(cols)):
+                c1=cols[i]
+                rows1=cols_candidates[c1]
+                for j in range(i+1,len(cols)):
+                    c2=cols[j]
+                    rows2=cols_candidates[c2]
+
+                    # Condition du X-Wing horizontal : mêmes lignes
+                    if rows1==rows2:
+                        r1,r2=rows1
+                        #Élimination dans les autres colonnes
+                        for c in range(size):
+                            if c != c1 and c != c2:
+                                 # ligne r1
+                                if grille.getCelluleValueCoord(r1, c) == 0 and val in grille.getCelluleCandidatesCoord(r1, c):
+                                    grille.removeCandidateCoord(r1, c, val)
+                                    changed = True
+
+                                # ligne r2
+                                if grille.getCelluleValueCoord(r2, c) == 0 and val in grille.getCelluleCandidatesCoord(r2, c):
+                                    grille.removeCandidateCoord(r2, c, val)
+                                    changed = True
+        return changed
+
+
+        
     # Fonction liée au Sudoku Coach avec le score pour chauqe technique
     @staticmethod
     def scoreFromStats(stats: dict) -> dict:
@@ -467,9 +549,12 @@ class SolverHuman(Solver):
             Technique.PAIR_NU: 2.6,
             Technique.PAIR_CACHEE: 3.2,
             Technique.CANDIDAT_ENFERME: 4.2,
+            Technique.X_WINGC: 4.5,
+            Technique.X_WINGL: 4.5,
+            Technique.GRATTE_CIEL: 4.8,
         }
 
-        score = base_scores.get(maxTech, 4.5)
+        score = base_scores.get(maxTech, 4.8)
 
         # petit raffinement par quantité de travail, sans changer radicalement la classe
         score += min(counts.get(Technique.DERNIER_NOMBRE, 0), 12) * 0.01
@@ -478,7 +563,9 @@ class SolverHuman(Solver):
         score += min(counts.get(Technique.PAIR_NU, 0), 6) * 0.08
         score += min(counts.get(Technique.PAIR_CACHEE, 0), 6) * 0.10
         score += min(counts.get(Technique.CANDIDAT_ENFERME, 0), 6) * 0.12
-        score += min(counts.get(Technique.GRATTE_CIEL, 0), 6) * 0.15
+        score += min(counts.get(Technique.X_WINGL, 0), 6) * 0.15
+        score += min(counts.get(Technique.X_WINGC, 0), 6) * 0.15
+        score += min(counts.get(Technique.GRATTE_CIEL, 0), 6) * 0.18
 
         score = round(score, 2)
 
