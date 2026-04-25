@@ -9,14 +9,21 @@
         <link rel="stylesheet" href="styleOutput.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
     </head>
-    <body>
-        <button type="button" name="login-button" id="login-button"><</button>
-        <div name="infos" id="infos">
-        <h1>Sudoku</h1>
-        <p name="player_status">Vous n'êtes pas connectez, <strong>PAS DE SAUVEGARDES</strong></p>
-        <br><br><br>
+    <body class="grid grid-rows-7 gap-y-2">
+        <div class="row-start-1 row-span-1" id="top">
+            <button type="button" name="login-button" id="login-button"><</button>
+            <h1>Sudoku</h1>
         </div>
-        <div name="sudoku-frame"></div>
+        <div class="row-start-2 row-span-5 grid grid-col-5 gap-x-8" id="middle">
+            <div class="col-start-1 col-span-1" id="left-col"></div>
+            <div class="col-start-2 col-span-3" id="middle-col">
+                <div name="infos" id="infos">
+                    <p name="player_status">Vous n'êtes pas connectez, <strong>PAS DE SAUVEGARDES</strong></p>
+                </div>
+                <div name="sudoku-frame"></div>
+            </div>
+            <div class="col-start-5 col-span-1" id="right-col"></div>
+        </div>
     </body>
     <script src="" async defer>
         print("Javascript started")
@@ -29,7 +36,7 @@
         //-------FORMAT ZONES:---------------
         //<div class="zone grid grid-rows-3 row-start-rowNumber"></div>
         // en remplaçant rowNumber par le numéro de la ligne à laquelle la zone appartient (de 1 à 3)
-        //-------FORMAt CELLULE:-------------
+        //-------FORMAT CELLULES:-------------
         //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100"></button>
         // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
     </script>
