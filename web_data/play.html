@@ -16,9 +16,7 @@
         <p name="player_status">Vous n'êtes pas connectez, <strong>PAS DE SAUVEGARDES</strong></p>
         <br><br><br>
         </div>
-        <div name="sudoku-frame">
-            <div class="grid grid-rows-3" name="sudoku-grid"></div>
-        </div>
+        <div name="sudoku-frame"></div>
     </body>
     <script src="" async defer>
         print("Javascript started")
@@ -26,7 +24,8 @@
         const socket = io.connect('http://'+document.domain+':'+location.port);
         print(location.pathname)
 
-
+        //-------FORMAT GRILLE:--------------
+        //<div class="grid grid-rows-3" name="sudoku-grid"></div>
         //-------FORMAT ZONES:---------------
         //<div class="zone grid grid-rows-3 row-start-rowNumber"></div>
         // en remplaçant rowNumber par le numéro de la ligne à laquelle la zone appartient (de 1 à 3)
