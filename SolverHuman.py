@@ -27,6 +27,8 @@ class SolverHuman(Solver):
                 continue
             if SolverHuman.candidatEnferme(grille):
                 continue
+            if SolverHuman.gratteCiel(grille):
+                continue
             raise(SolverError("SolverHuman: Impossible de résoudre la grille à partir des techniques actuellement implémentées."))      #si on a testé toutes les techniques et aucune fonctionne alors il nous manque des techniques
 
 
@@ -402,6 +404,7 @@ class SolverHuman(Solver):
 
                     changed = SolverHuman.eliminationCandidatsGratteCiel(grille, val, sommet1, sommet2, sizeCote)
                     if changed:
+                        print("gratte ciel appliqué\n")
                         return True
 
         return False
@@ -460,6 +463,10 @@ class SolverHuman(Solver):
                     # Condition du X-Wing : mêmes colonnes
                     if cols1==cols2: 
                         c1,c2=cols1 # les deux colonnes du X-Wing
+                        changed = False
+                        print(
+                            f"X-WING LIGNES DETECTE "
+                        )
                         
                         #Élimination dans les autres lignes
                         for r in range(size):
@@ -472,7 +479,13 @@ class SolverHuman(Solver):
                                 if grille.getCelluleValueCoord(r,c2)==0 and val in grille.getCelluleCandidatesCoord(r,c2):
                                     grille.removeCandidateCoord(r,c2,val)
                                     changed=True
-        return changed
+                        if changed:
+                            print(
+                                    f"X-WING LIGNES APPLIQUE : "
+                                    f"val={val}, lignes=({r1},{r2}), colonnes=({c1},{c2})"
+                                )
+                            return True
+        return False
     # --------------- X-Wing version colonnes -> lignes ----------------
     @staticmethod
     def x_WingColonne(grille:Grille):
@@ -501,6 +514,11 @@ class SolverHuman(Solver):
                     # Condition du X-Wing horizontal : mêmes lignes
                     if rows1==rows2:
                         r1,r2=rows1
+                        changed = False
+                        print(
+                            f"X-WING COLONNES DETECTE "
+                            )
+                        
                         #Élimination dans les autres colonnes
                         for c in range(size):
                             if c != c1 and c != c2:
@@ -513,7 +531,13 @@ class SolverHuman(Solver):
                                 if grille.getCelluleValueCoord(r2, c) == 0 and val in grille.getCelluleCandidatesCoord(r2, c):
                                     grille.removeCandidateCoord(r2, c, val)
                                     changed = True
-        return changed
+                        if changed:
+                            print(
+                                    f"X-WING COLONNES APPLIQUE : "
+                                    f"val={val}, colonnes=({c1},{c2}), lignes=({r1},{r2})"
+                                )
+                            return True
+        return False
 
 
         
@@ -546,11 +570,11 @@ class SolverHuman(Solver):
             Technique.DERNIER_NOMBRE: 1.0,
             Technique.SINGLETON_NU: 1.2,
             Technique.SINGLETON_CACHE: 1.8,
-            Technique.PAIR_NU: 2.6,
+            Technique.PAIR_NU: 2.8,
             Technique.PAIR_CACHEE: 3.2,
-            Technique.CANDIDAT_ENFERME: 4.2,
-            Technique.X_WINGC: 4.5,
-            Technique.X_WINGL: 4.5,
+            Technique.CANDIDAT_ENFERME: 4.0,
+            #Technique.X_WINGC: 4.5,
+            #Technique.X_WINGL: 4.5,
             Technique.GRATTE_CIEL: 4.8,
         }
 
@@ -563,8 +587,8 @@ class SolverHuman(Solver):
         score += min(counts.get(Technique.PAIR_NU, 0), 6) * 0.08
         score += min(counts.get(Technique.PAIR_CACHEE, 0), 6) * 0.10
         score += min(counts.get(Technique.CANDIDAT_ENFERME, 0), 6) * 0.12
-        score += min(counts.get(Technique.X_WINGL, 0), 6) * 0.15
-        score += min(counts.get(Technique.X_WINGC, 0), 6) * 0.15
+        #score += min(counts.get(Technique.X_WINGL, 0), 6) * 0.15
+        #score += min(counts.get(Technique.X_WINGC, 0), 6) * 0.15
         score += min(counts.get(Technique.GRATTE_CIEL, 0), 6) * 0.18
 
         score = round(score, 2)
@@ -575,7 +599,7 @@ class SolverHuman(Solver):
             label = "Medium"
         elif score <= 4.2:
             label = "Hard"
-        elif score <= 6.0:
+        elif score <= 6.4:
             label = "Vicious"
         else:
             label = "Fiendish+"
@@ -603,8 +627,8 @@ class SolverHuman(Solver):
             return Difficulte.FACILE
         if score <= 2.6:
             return Difficulte.MOYEN
-        if score <= 4.2:
+        if score <= 4.9:
             return Difficulte.DIFFICILE
-        if score <= 6.0:
+        if score <= 6.4:
             return Difficulte.EXTREME
         return Difficulte.GODMODE

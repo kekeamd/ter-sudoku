@@ -58,57 +58,57 @@ class SolverHumanStats(SolverHuman):
             })
 
             # Early exit: already harder than the target difficulty
-            if max_technique is not None and stats["maxTechnique"] is not None:
-                if stats["maxTechnique"] > max_technique:
-                    stats["stuck"] = True
-                    stats["solved"] = False
-                    return stats
+            if max_technique is not None and tech > max_technique:
+                stats["stuck"] = True
+                stats["solved"] = False
+                return True  # signaler "on doit stopper"
+            return False
 
         def try_and_record(tech: Technique, func):
             before = snapshot_values()
             if func(grille):
                 after = snapshot_values()
                 move = find_inserted_value(before, after)
-                record(tech, move)
-                return True
-            return False
+                should_stop = record(tech, move)
+                return True, should_stop  # propager le signal
+            return False, False
 
         grille.adjustCandidates()
 
         while not SolverHuman.isCompleted(grille):
-            if try_and_record(Technique.DERNIER_NOMBRE, SolverHuman.dernierNombre):
-                if stats["stuck"]: 
-                    return stats  # vérifier après chaque record
+            applied, should_stop = try_and_record(Technique.DERNIER_NOMBRE, SolverHuman.dernierNombre)
+            if applied:
+                if should_stop: return stats
                 continue
 
-            if try_and_record(Technique.SINGLETON_NU, SolverHuman.singletonNu):
-                if stats["stuck"]:
-                    return stats
+            applied, should_stop = try_and_record(Technique.SINGLETON_NU, SolverHuman.singletonNu)
+            if applied:
+                if should_stop: return stats
                 continue
 
-            if try_and_record(Technique.SINGLETON_CACHE, SolverHuman.singletonCache):
-                if stats["stuck"]:
-                    return stats
+            applied, should_stop = try_and_record(Technique.SINGLETON_CACHE, SolverHuman.singletonCache)
+            if applied:
+                if should_stop: return stats
                 continue
 
-            if try_and_record(Technique.PAIR_NU, SolverHuman.paireNu):
-                if stats["stuck"]:
-                    return stats
+            applied, should_stop = try_and_record(Technique.PAIR_NU, SolverHuman.paireNu)
+            if applied:
+                if should_stop: return stats
                 continue
 
-            if try_and_record(Technique.PAIR_CACHEE, SolverHuman.paireCachee):
-                if stats["stuck"]:
-                    return stats
+            applied, should_stop = try_and_record(Technique.PAIR_CACHEE, SolverHuman.paireCachee)
+            if applied:
+                if should_stop: return stats
                 continue
 
-            if try_and_record(Technique.CANDIDAT_ENFERME, SolverHuman.candidatEnferme):
-                if stats["stuck"]:
-                    return stats
+            applied, should_stop = try_and_record(Technique.CANDIDAT_ENFERME, SolverHuman.candidatEnferme)
+            if applied:
+                if should_stop: return stats
                 continue
             
-            if try_and_record(Technique.GRATTE_CIEL, SolverHuman.gratteCiel):
-                if stats["stuck"]: 
-                    return stats
+            applied, should_stop = try_and_record(Technique.GRATTE_CIEL, SolverHuman.gratteCiel)
+            if applied:
+                if should_stop: return stats
                 continue
 
             stats["stuck"] = True

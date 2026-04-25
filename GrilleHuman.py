@@ -8,10 +8,8 @@ from Technique import Technique
 # Utilisé pendant le solve pour l'interrompre aussitôt qu'on sait que la grille est trop dure, sans finir de la résoudre
 DIFFICULTY_MAX_TECHNIQUE = {
     Difficulte.FACILE:    Technique.DERNIER_NOMBRE,   # arrêter si on dépasse "dernier nombre"
-    Difficulte.FACILE:    Technique.DERNIER_NOMBRE,   # arrêter si on dépasse "dernier nombre"
     Difficulte.MOYEN:     Technique.SINGLETON_CACHE,  # arrêter si on dépasse "singleton caché"
     Difficulte.DIFFICILE: Technique.CANDIDAT_ENFERME, # DIFFICILE tolère au maximum 1 candidat enfermé
-    Difficulte.EXTREME:   Technique.GRATTE_CIEL, # arrêter si on dépasse "candidat enfermé"
     Difficulte.EXTREME:   Technique.GRATTE_CIEL,      # arrêter si on dépasse "gratte ciel"
     Difficulte.GODMODE:   None,                       # pas de plafond, grille insolvable par nos techniques
 }
@@ -29,6 +27,7 @@ class GrilleHuman(GrilleBacktrack):
             return (
                 max_tech in (Technique.SINGLETON_NU, Technique.SINGLETON_CACHE)
                 and counts[Technique.SINGLETON_CACHE] > 0
+                and counts[Technique.PAIR_NU] == 0           # aucune paire sinon c'est DIFFICILE
             )
 
         if target == Difficulte.DIFFICILE:
@@ -38,16 +37,13 @@ class GrilleHuman(GrilleBacktrack):
                     counts[Technique.PAIR_NU] > 0
                     or counts[Technique.PAIR_CACHEE] > 0
                 )
-                and counts[Technique.CANDIDAT_ENFERME] <= 3
+                and counts[Technique.CANDIDAT_ENFERME] <= 1
             )
 
         if target == Difficulte.EXTREME:
             return (
-                max_tech in (Technique.CANDIDAT_ENFERME, Technique.GRATTE_CIEL)
-                and (
-                    counts[Technique.CANDIDAT_ENFERME] > 0
-                    or counts[Technique.GRATTE_CIEL] > 0
-                )
+                max_tech == Technique.GRATTE_CIEL
+                and counts[Technique.GRATTE_CIEL] > 0
             )
 
         if target == Difficulte.GODMODE:
@@ -147,7 +143,7 @@ class GrilleHuman(GrilleBacktrack):
         N = self.getSize() * self.getSize()
 
         min_holes = 47
-        max_holes = 55
+        max_holes = 54
         max_attempts = 90
         max_restarts = 12
 
@@ -188,7 +184,7 @@ class GrilleHuman(GrilleBacktrack):
                 pair_count = counts[Technique.PAIR_NU] + counts[Technique.PAIR_CACHEE]
                 max_tech = stats["maxTechnique"]
 
-                # cible atteinte pour DIFFICILE (au moins une paire et maximum 3 candidats enfermés)
+                # cible atteinte pour DIFFICILE (au moins une paire et maximum 1 candidat enfermé)
                 if (
                     stats["solved"]
                     and not stats["stuck"]
@@ -228,7 +224,6 @@ class GrilleHuman(GrilleBacktrack):
 
         # sinon, on analyse la grille actuelle une seule fois à la fin
         final_test = self.clone()
-        final_test = self.clone()
         return SolverHumanStats.solveWithStats(final_test, raise_on_stuck=False)
     
 
@@ -236,9 +231,9 @@ class GrilleHuman(GrilleBacktrack):
         N = self.getSize() * self.getSize()
 
         min_holes = 49
-        max_holes = 57
-        max_attempts = 90
-        max_restarts = 12
+        max_holes = 54
+        max_attempts = 75
+        max_restarts = 15
 
         best_snapshot = None
         best_stats = None
@@ -276,15 +271,12 @@ class GrilleHuman(GrilleBacktrack):
                 counts = stats["counts"]
                 max_tech = stats["maxTechnique"]
 
-                # cible atteinte pour DIFFICILE (au moins une paire et maximum 3 candidats enfermés)
+                # cible atteinte pour EXTREME (soit candidat enferme, soit des X wing , soit gratte ciel)
                 if (
                     stats["solved"]
                     and not stats["stuck"]
-                    and max_tech in (Technique.CANDIDAT_ENFERME, Technique.GRATTE_CIEL)
-                    and (
-                            counts[Technique.CANDIDAT_ENFERME] > 0
-                            or counts[Technique.GRATTE_CIEL] > 0
-                        )
+                    and max_tech == Technique.GRATTE_CIEL
+                    and counts[Technique.GRATTE_CIEL] > 0
                 ):
                     return stats
 
@@ -300,7 +292,7 @@ class GrilleHuman(GrilleBacktrack):
 
                 # encore trop facile mais valide -> garder le meilleur snapshot global
                 if stats["solved"] and not stats["stuck"]:
-                    if counts[Technique.CANDIDAT_ENFERME] > 0 or counts[Technique.GRATTE_CIEL] > 0:
+                    if counts[Technique.GRATTE_CIEL] > 0:
                         best_snapshot = [
                             [self.getCelluleValueCoord(i, j) for j in range(N)]
                             for i in range(N)
