@@ -554,27 +554,60 @@ video {
   display: none;
 }
 
-.table {
-  display: table;
+.row-start-1 {
+  grid-row-start: 1;
+}
+
+.row-start-2 {
+  grid-row-start: 2;
+}
+
+.row-start-3 {
+  grid-row-start: 3;
+}
+
+.grid {
+  display: grid;
 }
 
 .hidden {
   display: none;
 }
 
-.border {
-  border-width: 1px;
+.grid-rows-3 {
+  grid-template-rows: repeat(3, minmax(0, 1fr));
 }
 
-.text-3xl {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
+.grid-rows-subgrid {
+  grid-template-rows: subgrid;
+}
+
+.border-stone-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(120 113 108 / var(--tw-border-opacity, 1));
+}
+
+.border-stone-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(168 162 158 / var(--tw-border-opacity, 1));
+}
+
+.border-stone-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(231 229 228 / var(--tw-border-opacity, 1));
+}
+
+.border-stone-300 {
+  --tw-border-opacity: 1;
+  border-color: rgb(214 211 209 / var(--tw-border-opacity, 1));
 }
 
 body{
   height: 100vh;
   margin: 0%;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 div{
@@ -598,4 +631,42 @@ div{
   height: 3vh;
   width: 3vw;
   font-weight: bolder;
+}
+
+[name=sudoku-frame]{
+  width: 60%;
+  height: 80%;
+}
+
+[name=sudoku-grid]{
+  width:400px;
+  height:400px;
+  border: 2px solid gray;
+}
+
+.zone{
+  border: 1px solid black;
+}
+
+.cellule{
+  border-width: 0.7px;
+  border-style: solid;
+}
+
+.hover\:bg-neutral-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 229 229 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-neutral-100:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 245 245 / var(--tw-bg-opacity, 1));
+}
+
+.focus\:outline-2:focus {
+  outline-width: 2px;
+}
+
+.focus\:outline-sky-400:focus {
+  outline-color: #38bdf8;
 }

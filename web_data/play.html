@@ -16,9 +16,8 @@
         <p name="player_status">Vous n'êtes pas connectez, <strong>PAS DE SAUVEGARDES</strong></p>
         <br><br><br>
         </div>
-        <div name="game">
-        <table name="game_table" style="width:50%; border: 1px solid black;" disabled>
-        </table>
+        <div name="sudoku-frame">
+            <div class="grid grid-rows-3" name="sudoku-grid"></div>
         </div>
     </body>
     <script src="" async defer>
@@ -27,5 +26,12 @@
         const socket = io.connect('http://'+document.domain+':'+location.port);
         print(location.pathname)
 
+
+        //-------FORMAT ZONES:---------------
+        //<div class="zone grid grid-rows-3 row-start-rowNumber"></div>
+        // en remplaçant rowNumber par le numéro de la ligne à laquelle la zone appartient (de 1 à 3)
+        //-------FORMAt CELLULE:-------------
+        //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100"></button>
+        // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
     </script>
 </html>
