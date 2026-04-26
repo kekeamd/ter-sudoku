@@ -288,6 +288,32 @@ Ces deux méthodes permettent de comparer les approches et d’analyser la diffi
 
 Enfin, la partie se termine lorsque la grille est entièrement complétée correctement, lorsque l’utilisateur choisit de quitter, ou après une résolution automatique.
 
+\subsubsection{Exemples d'affichage de l'interface console}
+
+Les figures suivantes montrent l'affichage de l'interface console après le choix d'une difficulté. 
+La grille est chargée depuis la banque de grilles pré-générées, puis le programme affiche la difficulté estimée, le nombre d'étapes nécessaires et la technique maximale utilisée.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{grilleFacile.png}
+    \caption{Exemple d'une grille facile affichée dans l'interface console}
+    \label{fig:grille-facile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{grilleDifficile.png}
+    \caption{Exemple d'une grille difficile affichée dans l'interface console}
+    \label{fig:grille-difficile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{grilleExtremeResolu.png}
+    \caption{Exemple d'une grille extrême resolue avec des techniques humaines dans l'interface console}
+    \label{fig:grille-difficile}
+\end{figure}
+
 \textbf{Le chemin d’exécution est celui-ci :}
 Le chemin d'exécution a été modifié afin d'éviter la génération directe des grilles pendant l'utilisation normale du programme. 
 Désormais, lorsqu'une partie est lancée, le programme ne génère plus une nouvelle grille en temps réel. 
@@ -325,6 +351,14 @@ $\rightarrow$ \texttt{pickle.dump()}
 
 Cette étape permet de générer plusieurs grilles pour chaque difficulté, puis de les sauvegarder dans le fichier \texttt{banque\_grilles.pkl}.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\textwidth]{grilleGodmodeBanque.png}
+    \caption{Chargement d'une grille GodMode depuis la banque de grilles pré-générées}
+    \label{fig:grille-godmode}
+\end{figure}
+
+Ainsi, même si elle reste simple, cette interface console offre un ensemble de fonctionnalités complet permettant de générer, manipuler, résoudre et analyser des grilles de Sudoku. Elle constitue une base solide pour une éventuelle évolution vers une interface graphique plus avancée.
 
 \subsection{Structures de données principales}
 
