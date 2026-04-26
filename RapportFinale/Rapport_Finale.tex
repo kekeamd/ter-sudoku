@@ -289,10 +289,41 @@ Ces deux méthodes permettent de comparer les approches et d’analyser la diffi
 Enfin, la partie se termine lorsque la grille est entièrement complétée correctement, lorsque l’utilisateur choisit de quitter, ou après une résolution automatique.
 
 \textbf{Le chemin d’exécution est celui-ci :}
-InterfaceConsole.startPlaying() → playSudoku() → GrilleHuman.generateValuesHumanRated() → generateValuesDifficile() → création d’un clone test → SolverHumanStats.solveWithStats(test, ...) → appels successifs aux techniques de SolverHuman (dernierNombre, singletonNu, singletonCache, paireNu, paireCachee, candidatEnferme). 
+Le chemin d'exécution a été modifié afin d'éviter la génération directe des grilles pendant l'utilisation normale du programme. 
+Désormais, lorsqu'une partie est lancée, le programme ne génère plus une nouvelle grille en temps réel. 
+Il charge une grille déjà préparée depuis la banque de grilles.
 
-Ainsi, même si elle reste simple, cette interface console offre un ensemble de fonctionnalités complet permettant de générer, manipuler, résoudre et analyser des grilles de Sudoku. Elle constitue une base solide pour une éventuelle évolution vers une interface graphique plus avancée.
+Le nouveau chemin d'exécution est le suivant :
 
+\begin{center}
+\texttt{InterfaceConsole.startPlaying()} 
+$\rightarrow$ \texttt{playSudoku()} 
+$\rightarrow$ \texttt{askDifficulty()} 
+$\rightarrow$ \texttt{BanqueGrilles.charger\_grille\_aleatoire(difficulty)}
+$\rightarrow$ \texttt{BanqueGrilles.charger\_banque()}
+$\rightarrow$ \texttt{pickle.load()}
+$\rightarrow$ \texttt{random.choice()}
+$\rightarrow$ \texttt{gameLoop()}
+\end{center}
+
+La méthode \texttt{charger\_banque()} lit le fichier \texttt{banque\_grilles.pkl}, qui contient les grilles pré-générées. 
+Ensuite, \texttt{charger\_grille\_aleatoire()} sélectionne au hasard une grille correspondant à la difficulté choisie par l'utilisateur. 
+Cette grille contient déjà la grille de jeu, la solution complète et les statistiques de résolution calculées auparavant avec \texttt{SolverHumanStats}.
+
+La génération complète existe encore, mais elle est maintenant utilisée uniquement avant la démonstration, dans le script de préparation :
+
+\begin{center}
+\texttt{PreparerBanque.py}
+$\rightarrow$ \texttt{GrilleBacktrack.generateEntireGrille()}
+$\rightarrow$ \texttt{GrilleHuman.generateValuesHumanRated()}
+$\rightarrow$ \texttt{SolverHumanStats.solveWithStats()}
+$\rightarrow$ \texttt{SolverHuman}
+$\rightarrow$ \texttt{BanqueGrilles.ajouter\_grille()}
+$\rightarrow$ \texttt{BanqueGrilles.sauvegarder\_banque()}
+$\rightarrow$ \texttt{pickle.dump()}
+\end{center}
+
+Cette étape permet de générer plusieurs grilles pour chaque difficulté, puis de les sauvegarder dans le fichier \texttt{banque\_grilles.pkl}.
 
 
 \subsection{Structures de données principales}
@@ -303,9 +334,79 @@ Ainsi, même si elle reste simple, cette interface console offre un ensemble de 
 
 \subsection{Statistiques}
 
+Cette section présente quelques statistiques générales sur la taille du projet. Ces chiffres permettent d'avoir une vue d'ensemble de l'organisation du code et de la répartition des fichiers.
+
 \subsubsection{Nombre de modules / classes}
 
+Le projet contient environ \textbf{35 fichiers Python}. Chaque fichier Python peut être considéré comme un module, car il regroupe une partie précise du programme : gestion des grilles, génération, résolution, interface, historique, difficultés, techniques de résolution ou encore sauvegarde des grilles pré-générées.
+
+Les fichiers Python n'ont pas tous la même taille. Certains sont assez courts, avec environ une vingtaine de lignes, tandis que d'autres sont beaucoup plus importants et peuvent dépasser les 300 lignes. En moyenne, les fichiers Python contiennent environ \textbf{150 à 200 lignes}.
+
+Le projet contient aussi plusieurs fichiers liés à l'interface web et aux données :
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|l|}
+        \hline
+        \textbf{Type de fichier} & \textbf{Nombre de fichiers} & \textbf{Taille approximative} \\
+        \hline
+        Python \texttt{.py} & 35 & 150 à 200 lignes en moyenne \\
+        \hline
+        HTML & 2 & environ 30 lignes en moyenne \\
+        \hline
+        CSS & 2 & environ 70 lignes pour un fichier, environ 700 pour l'autre \\
+        \hline
+        JavaScript & 1 & environ 8 lignes \\
+        \hline
+        JSON & 2 & environ 1050 lignes au total \\
+        \hline
+    \end{tabular}
+    \caption{Répartition approximative des fichiers du projet}
+    \label{tab:stats-fichiers}
+\end{table}
+
+Cette organisation montre que le projet est principalement développé en Python, avec quelques fichiers supplémentaires pour l'interface web et la configuration.
+
 \subsubsection{Nombre de lignes de code}
+
+En estimant le nombre de lignes à partir des fichiers du projet, on obtient environ :
+
+\begin{itemize}
+    \item \textbf{Python} : 35 fichiers avec environ 150 à 200 lignes en moyenne, soit environ 5250 à 7000 lignes ;
+    \item \textbf{HTML} : 2 fichiers avec environ 30 lignes chacun, soit environ 60 lignes ;
+    \item \textbf{CSS} : 2 fichiers, avec environ 70 lignes pour l'un et 700 lignes pour l'autre, soit environ 770 lignes ;
+    \item \textbf{JavaScript} : 1 fichier d'environ 8 lignes ;
+    \item \textbf{JSON} : 2 fichiers contenant environ 1050 lignes au total.
+\end{itemize}
+
+On peut résumer cette estimation dans le tableau suivant :
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|c|}
+        \hline
+        \textbf{Type de fichier} & \textbf{Nombre approximatif de lignes} \\
+        \hline
+        Python & 5250 à 7000 \\
+        \hline
+        HTML & 60 \\
+        \hline
+        CSS & 770 \\
+        \hline
+        JavaScript & 8 \\
+        \hline
+        JSON & 1050 \\
+        \hline
+        \textbf{Total} & \textbf{7138 à 8888} \\
+        \hline
+    \end{tabular}
+    \caption{Estimation du nombre de lignes de code du projet}
+    \label{tab:stats-lignes}
+\end{table}
+
+Le projet contient donc environ \textbf{7000 à 9000 lignes} au total. Cette estimation inclut le code, les commentaires, les lignes vides ainsi que les fichiers de données ou de configuration. Le nombre exact peut varier légèrement selon la méthode de comptage utilisée.
+
+La majorité du code se trouve dans les fichiers Python, car ils contiennent toute la logique principale du projet : génération des grilles, résolution, classification par difficulté, gestion de l'historique, banque de grilles pré-générées et interaction avec l'utilisateur.
 
 % ===== 4. Algorithmes et Analyse =====
 \section{Algorithmes et Analyse}
