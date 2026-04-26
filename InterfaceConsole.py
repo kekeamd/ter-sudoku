@@ -2,6 +2,7 @@
 # __init__ = constructeur
 
 from random import randint
+from BanqueGrilles import BanqueGrilles
 from Except.SolverError import SolverError
 from Grille import Grille
 from GrilleHuman import GrilleHuman
@@ -68,26 +69,34 @@ class InterfaceConsole(Interface): # extends Interface
         self.errorCount = 0  # Réinitialiser le compteur d'erreurs
         difficulty = self.askDifficulty()
 
-        grilleVide = GrilleBacktrack()
-        self.grilleComplete = grilleVide.generateEntireGrille()
+        #grilleVide = GrilleBacktrack()
+        #self.grilleComplete = grilleVide.generateEntireGrille()
 
-        if self.grilleComplete is None:
-            print("Erreur lors de la génération de la grille complète.")
-            return
+        #if self.grilleComplete is None:
+         #   print("Erreur lors de la génération de la grille complète.")
+         #   return
 
-        self.grilleDeJeu = GrilleHuman()
-        stats = self.grilleDeJeu.generateValuesHumanRated(difficulty, self.grilleComplete.clone())
+        #self.grilleDeJeu = GrilleHuman()
+        #stats = self.grilleDeJeu.generateValuesHumanRated(difficulty, self.grilleComplete.clone())
 
-        if stats is None:
+        entree = BanqueGrilles.charger_grille_aleatoire(difficulty)
+
+        self.grilleDeJeu = entree["grille"]
+        self.grilleComplete = entree["solution"]
+        self.stats = entree["stats"]
+
+        if self.stats is None:
             print("Erreur: la génération n'a retourné aucune statistique.")
             return
 
         self.grilleDeJeu.adjustCandidates()  # Initialiser les candidats après génération
 
-        rated = SolverHuman.rateFromStats(stats)
-        print("\nDifficulté estimée (méthodes humaines):", rated)
-        print("Steps:", stats["steps"])
-        print("Max technique:", stats["maxTechnique"].name if stats["maxTechnique"] else None)
+        rated = SolverHuman.rateFromStats(self.stats)
+
+        print("\nGrille chargée depuis la banque.")
+        print("Difficulté demandée :", difficulty.name)
+        print("Difficulté estimée (méthodes humaines) :", rated.name)
+        print("Steps :", self.stats["steps"])
        
         sudokuCoachRated = getDifficultyFromGrille(self.grilleDeJeu, headless=True)
         print(f"Difficulté estimée (sudoku.coach): {sudokuCoachRated  ['label']} (score: {sudokuCoachRated['score']})")
