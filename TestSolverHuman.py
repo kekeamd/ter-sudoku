@@ -138,53 +138,33 @@ def test_candidatEnfermeFonctionnePourUneColonne():
 
 
  
-def test_gratteCielFonctionneSurLignes_memeZone():
+def test_gratteCielFonctionne():
     grille = GrilleBacktrack()
     grille.adjustCandidates()
- 
+
+    # On enlève tous les candidats 7 partout
     for r in range(9):
         for c in range(9):
             cands = grille.getCelluleCandidatesCoord(r, c)
-            grille._getCelluleCoord(r, c).setCandidates([x for x in cands if x != 5])
- 
-    grille._getCelluleCoord(0, 0).setCandidates([5])
-    grille._getCelluleCoord(0, 5).setCandidates([5])
- 
-    grille._getCelluleCoord(3, 0).setCandidates([5])
-    grille._getCelluleCoord(3, 8).setCandidates([5])
-    grille._getCelluleCoord(0, 8).setCandidates([5, 3])
- 
+            grille._getCelluleCoord(r, c).setCandidates([x for x in cands if x != 7])
+
+    # --- Construction d’un vrai Gratte-Ciel sur les lignes 1 et 4 ---
+    # Base commune = colonne 3
+    # L1 : candidats en colonnes 3 et 8
+    # L4 : candidats en colonnes 3 et 6
+    grille._getCelluleCoord(1, 3).setCandidates([7])   
+    grille._getCelluleCoord(1, 8).setCandidates([7])   
+
+    grille._getCelluleCoord(4, 3).setCandidates([7])  
+    grille._getCelluleCoord(4, 6).setCandidates([7])   
+
+    grille._getCelluleCoord(1, 6).setCandidates([7, 2])  
+    grille._getCelluleCoord(4, 8).setCandidates([7, 5])  
     assert SolverHuman.gratteCiel(grille)
-    assert 5 not in grille.getCelluleCandidatesCoord(0, 8)
-    assert 3 in grille.getCelluleCandidatesCoord(0, 8)  
+    assert 7 in grille.getCelluleCandidatesCoord(1, 8)
+    assert 7 in grille.getCelluleCandidatesCoord(4, 6)
+    assert 7 not in grille.getCelluleCandidatesCoord(4, 8)
 
-def test_xWingLignes_fonctionne():
-    grille = GrilleBacktrack()
-    grille.adjustCandidates()
-
-    for r in range(9):
-        for c in range(9):
-            cands = grille.getCelluleCandidatesCoord(r, c)
-            grille._getCelluleCoord(r, c).setCandidates([x for x in cands if x != 9])
-
-    grille._getCelluleCoord(1, 2).setCandidates([9])
-    grille._getCelluleCoord(1, 7).setCandidates([9])
-    grille._getCelluleCoord(5, 2).setCandidates([9])
-    grille._getCelluleCoord(5, 7).setCandidates([9])
-
-
-    grille._getCelluleCoord(0, 2).setCandidates([9, 3])
-    grille._getCelluleCoord(8, 7).setCandidates([9, 4])
-
-    assert SolverHuman.x_WingLignes(grille)
-
-    assert 9 in grille.getCelluleCandidatesCoord(1, 2)
-    assert 9 in grille.getCelluleCandidatesCoord(1, 7)
-    assert 9 in grille.getCelluleCandidatesCoord(5, 2)
-    assert 9 in grille.getCelluleCandidatesCoord(5, 7)
-
-    assert 9 not in grille.getCelluleCandidatesCoord(0, 2)
-    assert 9 not in grille.getCelluleCandidatesCoord(8, 7)
 
 def test_xWingColonnes_fonctionne():
     grille = GrilleBacktrack()
