@@ -514,7 +514,6 @@ class SolverHuman(Solver):
                     # Condition du X-Wing horizontal : mêmes lignes
                     if rows1==rows2:
                         r1,r2=rows1
-                        changed = False
                         print(
                             f"X-WING COLONNES DETECTE "
                             )
