@@ -93,10 +93,14 @@ class InterfaceConsole(Interface): # extends Interface
 
         rated = SolverHuman.rateFromStats(self.stats)
 
-        print("\nGrille chargée depuis la banque.")
+        print("\nGrille chargée depuis la banque :")
         print("Difficulté demandée :", difficulty.name)
         print("Difficulté estimée (méthodes humaines) :", rated.name)
         print("Steps :", self.stats["steps"])
+        
+        max_tech = self.stats["maxTechnique"]
+        print("Max technique :", max_tech.name if max_tech else None)
+
        
         sudokuCoachRated = getDifficultyFromGrille(self.grilleDeJeu, headless=True)
         print(f"Difficulté estimée (sudoku.coach): {sudokuCoachRated  ['label']} (score: {sudokuCoachRated['score']})")
