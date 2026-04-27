@@ -8,15 +8,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="styleOutput.css">
     </head>
-    <body>
-        <div name="infos" id="infos">
-            <h1>Veuillez vous identifier</h1>
-            <p>Si vous vous connectez sans vous identifier, vous n'aurez pas accès aux sauvegardes</p>
-            <br>
-            <input placeholder="Veuillez insérer un pseudo" name="pseudo" id="pseudo">
-            <input placeholder="Veuillez entrer un mot de passe" name="password" id="password" disabled hidden >
-            <br>
-            <button type="submit" id="submit-infos">Appuyer pour continuer</button>
+    <body class="grid grid-rows-7 gap-y-2">
+        <div class="row-start-1 row-span-1" id="top">
+            <div id="login-infos">
+                <h1>Veuillez vous identifier</h1>
+                <p>Si vous vous connectez sans vous identifier, vous n'aurez pas accès aux sauvegardes</p>
+            </div>
+        </div>
+        <div class="row-start-2 row-span-5 grid grid-col-5" id="middle">
+            <div class="col-start-1 col-span-1" id="left-col"></div>
+            <div class="col-start-2 col-span-3" id="middle-col">
+                <div id="logins">
+                    <input placeholder="Veuillez insérer un pseudo" name="pseudo" id="pseudo">
+                    <input placeholder="Veuillez entrer un mot de passe" name="password" id="password" disabled hidden >
+                    <br>
+                    <button type="submit" id="submit-infos">Appuyer pour continuer</button>
+                </div>
+            </div>
+            <div class="col-start-5 col-span-1" id="right-col"></div>
         </div>
     </body>
         <script src="log.js" async defer></script>

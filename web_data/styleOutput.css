@@ -632,8 +632,9 @@ div{
   display: flex;
 }
 
-#infos{
+#login-infos{
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 2.5vh;
   height: 100%;
@@ -646,9 +647,15 @@ div{
 #login-button{
   margin-top: 1.5vh;
   margin-left: 1.5vh;
+  margin-right: auto;
   height: 3vh;
   width: 3vw;
   font-weight: bolder;
+}
+
+#title{
+  margin-top: 1.5vh;
+  margin-right: auto;
 }
 
 [name=sudoku-frame]{
@@ -669,6 +676,41 @@ div{
 .cellule{
   border-width: 0.7px;
   border-style: solid;
+}
+
+#top{
+  justify-content: center;
+}
+
+#middle-col{
+  justify-content: center;
+  align-items: center;
+}
+
+#logins{
+  height: 50%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#anonymous-infos{
+  align-items: center;
+  position: fixed;
+  top: 10vh;
+  height: 7.5vh;
+  width: 100vw;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+#anonymous-infos-text{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#anonymous-infos-close{
+  margin-right: 1vw;
 }
 
 .hover\:bg-neutral-100:hover {

@@ -12,14 +12,15 @@
     <body class="grid grid-rows-7 gap-y-2">
         <div class="row-start-1 row-span-1" id="top">
             <button type="button" name="login-button" id="login-button"><</button>
-            <h1>Sudoku</h1>
+            <h1 id="title">Sudoku</h1>
+            <div id="anonymous-infos">
+                <p id="anonymous-infos-text"><strong>Warning:</strong> Il n'y a pas de sauvegardes en étant anonyme!</p>
+                <button type="button" id="anonymous-infos-close"><strong>X</strong></button>
+            </div>
         </div>
         <div class="row-start-2 row-span-5 grid grid-col-5 gap-x-8" id="middle">
             <div class="col-start-1 col-span-1" id="left-col"></div>
             <div class="col-start-2 col-span-3" id="middle-col">
-                <div name="infos" id="infos">
-                    <p name="player_status">Vous n'êtes pas connectez, <strong>PAS DE SAUVEGARDES</strong></p>
-                </div>
                 <div name="sudoku-frame"></div>
             </div>
             <div class="col-start-5 col-span-1" id="right-col"></div>
