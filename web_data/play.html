@@ -9,17 +9,36 @@
         <link rel="stylesheet" href="styleOutput.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
     </head>
-    <body class="grid grid-rows-7 gap-y-2">
+    <body class="grid grid-rows-7 gap-y-2 font-mono text-xs sm:text-xs md:text-sm lg:text-base xl:text-base bg-stone-50">
         <div class="row-start-1 row-span-1" id="top">
-            <button type="button" name="login-button" id="login-button"><</button>
-            <h1 id="title">Sudoku</h1>
-            <div id="anonymous-infos">
-                <p id="anonymous-infos-text"><strong>Warning:</strong> Il n'y a pas de sauvegardes en étant anonyme!</p>
-                <button type="button" id="anonymous-infos-close"><strong>X</strong></button>
+            <button type="button" class="text-neutral-600 text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="menu-button">></button>
+            <h1 class="text-blue-950 font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="title">Sudoku</h1>
+            <div class="bg-stone-100 shadow-md" id="anonymous-infos" hidden>
+                <p id="anonymous-infos-text"><span class="text-red-700 font-bold">Attention:</span> Il n'y a pas de sauvegarde en étant anonyme!</p>
+                <button type="button" id="anonymous-infos-close"><span class="font-black text-sm sm:text-sm md:text-base lg:text-lg xl:text-lg">X</span></button>
             </div>
         </div>
         <div class="row-start-2 row-span-5 grid grid-col-5 gap-x-8" id="middle">
-            <div class="col-start-1 col-span-1" id="left-col"></div>
+            <div class="col-start-1 col-span-1" id="left-col">
+                <div class="p-3 shadow-lg" id="menu">
+                    <button type="button">Nouvelle Partie</button>
+                    <div class="text-slate-600 opacity-0" id="menu-difficulte">
+                        <button class="difficulty-button" type="button" id="difficulty-facile">facile</button>
+                        <button class="difficulty-button" type="button" id="difficulty-moyen">moyen</button>
+                        <button class="difficulty-button" type="button" id="difficulty-difficile">difficile</button>
+                        <button class="difficulty-button" type="button" id="difficulty-extreme">extrême</button>
+                        <button class="difficulty-button" type="button" id="difficulty-godmode">godmode</button>
+                    </div>
+                    <div class="border-sky-950 border-2 rounded-xl shadow-2xl" id="login-menu" hidden>
+                        <input placeholder="Veuillez insérer un pseudo" id="login-pseudo">
+                        <input placeholder="Veuillez entrer un mot de passe" id="login-password" hidden >
+                        <br>
+                        <button type="submit" id="login-submit">Appuyer pour continuer</button>
+                    </div>
+                    <button type="button" id="login-button">Connexion</button>
+                    <button type="button" id="logout-button" hidden>Déconnexion</button>
+                </div>
+            </div>
             <div class="col-start-2 col-span-3" id="middle-col">
                 <div name="sudoku-frame"></div>
             </div>
