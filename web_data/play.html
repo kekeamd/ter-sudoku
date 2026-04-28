@@ -20,14 +20,14 @@
         </div>
         <div class="row-start-2 row-span-5 grid grid-col-5 gap-x-8" id="middle">
             <div class="col-start-1 col-span-1" id="left-col">
-                <div class="p-3 shadow-lg" id="menu">
-                    <button type="button">Nouvelle Partie</button>
-                    <div class="text-slate-600 opacity-0" id="menu-difficulte">
-                        <button class="difficulty-button" type="button" id="difficulty-facile">facile</button>
-                        <button class="difficulty-button" type="button" id="difficulty-moyen">moyen</button>
-                        <button class="difficulty-button" type="button" id="difficulty-difficile">difficile</button>
-                        <button class="difficulty-button" type="button" id="difficulty-extreme">extrême</button>
-                        <button class="difficulty-button" type="button" id="difficulty-godmode">godmode</button>
+                <div class="p-3 shadow-lg" id="menu" hidden>
+                    <button type="button" id="play-button">Nouvelle Partie</button>
+                    <div class="text-slate-600" id="menu-difficulte" hidden>
+                        <button type="button" id="difficulte-facile">facile</button>
+                        <button type="button" id="difficulte-moyen">moyen</button>
+                        <button type="button" id="difficulte-difficile">difficile</button>
+                        <button type="button" id="difficulte-extreme">extrême</button>
+                        <button type="button" id="difficulte-godmode">godmode</button>
                     </div>
                     <div class="border-sky-950 border-2 rounded-xl shadow-2xl" id="login-menu" hidden>
                         <input placeholder="Veuillez insérer un pseudo" id="login-pseudo">
@@ -45,11 +45,77 @@
             <div class="col-start-5 col-span-1" id="right-col"></div>
         </div>
     </body>
-    <script src="" async defer>
-        print("Javascript started")
+    <script defer>
+        console.log("Javascript started")
         // Connexion au serveur
-        const socket = io.connect('http://'+document.domain+':'+location.port);
-        print(location.pathname)
+        //const socket = io.connect('http://'+document.domain+':'+location.port);
+        console.log(location.pathname)
+
+        var menuButton
+        var menu
+        var playButton
+        var menuDifficulte
+        var difficulteFacile
+        var difficulteMoyen
+        var difficulteDifficile
+        var difficulteExtreme
+        var difficulteGodmode
+        var loginButton
+        var logoutButton
+        var loginMenu
+        var loginPseudo
+        var loginPassword
+        var loginSubmit
+        var menuButton= document.getElementById("menu-button")
+        var menu= document.getElementById("menu")
+        var playButton= document.getElementById("play-button")
+        var menuDifficulte= document.getElementById("menu-difficulte")
+        var difficulteFacile= document.getElementById("difficulte-facile")
+        var difficulteMoyen= document.getElementById("difficulte-moyen")
+        var difficulteDifficile= document.getElementById("difficulte-difficile")
+        var difficulteExtreme= document.getElementById("difficulte-extreme")
+        var difficulteGodmode= document.getElementById("difficulte-godmode")
+        var loginButton= document.getElementById("login-button")
+        var logoutButton= document.getElementById("logout-button")
+        var loginMenu= document.getElementById("login-menu")
+        var loginPseudo= document.getElementById("login-pseudo")
+        var loginPassword= document.getElementById("login-password")
+        var loginSubmit= document.getElementById("login-submit")
+
+
+        function OpenMenu(){
+            if (menu.hasAttribute("hidden")){
+                menu.removeAttribute("hidden")
+                menuButton.innerText= "<"
+            } else{
+                menu.setAttribute("hidden", "")
+                menuButton.innerText= ">"
+            }
+        }
+
+        function ChooseDifficulte(){
+            if (menuDifficulte.hasAttribute("hidden")){
+                menuDifficulte.removeAttribute("hidden")
+                playButton.innerText="Annuler"
+            } else{
+                menuDifficulte.setAttribute("hidden", "")
+                playButton.innerText="Nouvelle Partie"
+            }
+        }
+
+        function OpenLogin(){
+            if (loginMenu.hasAttribute("hidden")){
+                loginMenu.removeAttribute("hidden")
+                loginButton.innerText="Annuler"
+            } else{
+                loginMenu.setAttribute("hidden", "")
+                loginButton.innerText="Connexion"
+            }
+        }
+
+        menuButton.addEventListener("click", OpenMenu)
+        playButton.addEventListener("click", ChooseDifficulte)
+        loginButton.addEventListener("click", OpenLogin)
 
         //-------FORMAT GRILLE:--------------
         //<div class="grid grid-rows-3" name="sudoku-grid"></div>
