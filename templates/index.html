@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Sudoku Jeu</title>
+        <meta name="description" content="Page de jeu pour Sudoku">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../static/styleOutput.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
+    </head>
+    <body class="grid grid-rows-7 gap-y-2 font-mono text-xs sm:text-xs md:text-sm lg:text-base xl:text-base bg-stone-50">
+        <div class="row-start-1 row-span-1" id="top">
+            <button type="button" class="text-neutral-600 text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="menu-button">></button>
+            <h1 class="text-blue-950 font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="title">Sudoku</h1>
+            <div class="bg-stone-100 shadow-md" id="anonymous-infos" hidden>
+                <p id="anonymous-infos-text"><span class="text-red-700 font-bold">Attention:</span> Il n'y a pas de sauvegarde en étant anonyme!</p>
+                <button type="button" id="anonymous-infos-close"><span class="font-black text-sm sm:text-sm md:text-base lg:text-lg xl:text-lg">X</span></button>
+            </div>
+        </div>
+        <div class="row-start-2 row-span-5 grid grid-col-5 gap-x-8" id="middle">
+            <div class="col-start-1 col-span-1" id="left-col">
+                <div class="p-3 shadow-lg" id="menu">
+                    <button type="button" id="play-button">Nouvelle Partie</button>
+                    <div class="text-slate-600" id="menu-difficulte" hidden>
+                        <button type="button" id="difficulte-facile">facile</button>
+                        <button type="button" id="difficulte-moyen">moyen</button>
+                        <button type="button" id="difficulte-difficile">difficile</button>
+                        <button type="button" id="difficulte-extreme">extrême</button>
+                        <button type="button" id="difficulte-godmode">godmode</button>
+                    </div>
+                    <div class="border-sky-950 border-2 rounded-xl shadow-2xl" id="login-menu" hidden>
+                        <input placeholder="Veuillez insérer un pseudo" id="login-pseudo">
+                        <input type="password" placeholder="Veuillez entrer un mot de passe" id="login-password" hidden >
+                        <br>
+                        <button type="button" id="login-submit">Appuyer pour continuer</button>
+                    </div>
+                    <button type="button" id="login-button">Connexion</button>
+                    <button type="button" id="logout-button" hidden>Déconnexion</button>
+                </div>
+            </div>
+            <div class="col-start-2 col-span-3" id="middle-col">
+                <div id="sudoku-frame"></div>
+            </div>
+            <div class="col-start-5 col-span-1" id="right-col"></div>
+        </div>
+    </body>
+    <script defer>
+        console.log("Javascript started")
+        // Connexion au serveur
+        const socket = io.connect('http://'+document.domain+':'+location.port);
+        console.log(location.pathname)
+
+        var Pseudo=""
+        var Focused= false
+        var FocusTarget= null
+
+        var anonymousInfos= document.getElementById("anonymous-infos")
+        var anonymousInfosButton= document.getElementById("anonymous-infos-close")
+        var menuButton= document.getElementById("menu-button")
+        var menu= document.getElementById("menu")
+        var playButton= document.getElementById("play-button")
+        var menuDifficulte= document.getElementById("menu-difficulte")
+        var difficulteFacile= document.getElementById("difficulte-facile")
+        var difficulteMoyen= document.getElementById("difficulte-moyen")
+        var difficulteDifficile= document.getElementById("difficulte-difficile")
+        var difficulteExtreme= document.getElementById("difficulte-extreme")
+        var difficulteGodmode= document.getElementById("difficulte-godmode")
+        var loginButton= document.getElementById("login-button")
+        var logoutButton= document.getElementById("logout-button")
+        var loginMenu= document.getElementById("login-menu")
+        var loginPseudo= document.getElementById("login-pseudo")
+        var loginPassword= document.getElementById("login-password")
+        var loginSubmit= document.getElementById("login-submit")
+        var sudokuFrame= document.getElementById("sudoku-frame")
+
+        function removeBlur(target){
+            if (target.classList.contains("blured")){target.classList.remove("blured")}
+            if (target.classList.contains("focusedElement")){target.classList.remove("focusedElement")}
+            if (target.classList.contains("focusedParent")){target.classList.remove("focusedParent")}
+            for (let i=0; i<target.children.length;i++){
+                removeBlur(target.children[i])
+            }
+        }
+
+        function FocusOn(target, buttonList){
+            Focused=true
+            FocusTarget=target
+            targets= [target]
+            targets= targets.concat(buttonList)
+            targets.forEach(t =>{t.classList.add("focusedElement")})
+            targets.forEach(t => {
+                t.classList.add("focusedElement")
+                let parent= t.parentElement
+                
+                while (parent!=document.body.parentElement){
+                    parent.classList.add("focusedParent")
+                    parent.classList.remove("blured")
+                    for (let i=0; i<parent.children.length; i++) {
+                        if (!(parent.children[i].classList.contains("focusedParent") || parent.children[i].classList.contains("focusedElement"))){
+                            parent.children[i].classList.add("blured")
+                        }
+                    }
+                    parent= parent.parentElement
+                }
+            });
+        }
+
+        function FocusOff(){
+            Focused=false
+            FocusTarget=null
+            removeBlur(document.body)
+        }
+
+        function CloseInfos(){
+            anonymousInfos.setAttribute("hidden", "")
+        }
+
+        function OpenMenu(){
+            if (!Focused){
+                if (menu.hasAttribute("hidden")){
+                    menu.removeAttribute("hidden")
+                    menuButton.innerText= ">"
+                } else{
+                    menu.setAttribute("hidden", "")
+                    menuButton.innerText= "<"
+                }
+            }
+        }
+
+        function ChooseDifficulte(){
+            if (!Focused){
+                if (menuDifficulte.hasAttribute("hidden")){
+                    menuDifficulte.removeAttribute("hidden")
+                    playButton.innerText="Annuler"
+                    if (Pseudo==""){
+                        if (anonymousInfos.hasAttribute("hidden")){anonymousInfos.removeAttribute("hidden")}
+                    }
+                } else{
+                    menuDifficulte.setAttribute("hidden", "")
+                    playButton.innerText="Nouvelle Partie"
+                }
+            }
+        }
+
+        function OpenLogin(){
+            if (!Focused || FocusTarget==loginMenu){
+                if (loginMenu.hasAttribute("hidden")){
+                    FocusOn(loginMenu, [loginButton])
+                    loginMenu.removeAttribute("hidden")
+                    loginButton.innerText="Annuler"
+                } else{
+                    FocusOff()
+                    loginMenu.setAttribute("hidden", "")
+                    loginButton.innerText="Connexion"
+                }
+            }
+        }
+
+        function Login(){
+            if (!Focused || FocusTarget==loginMenu){
+                if (loginPseudo.value!=""){
+                    FocusOff()
+                    Pseudo=loginPseudo.value
+                    loginPseudo.value=""
+                    loginMenu.setAttribute("hidden", "")
+                    loginButton.setAttribute("hidden", "")
+                    logoutButton.removeAttribute("hidden")
+                    loginButton.innerText="Connexion"
+                }
+            }
+        }
+
+        function Logout(){
+            if (!Focused){
+                Pseudo=""
+                logoutButton.setAttribute("hidden", "")
+                loginButton.removeAttribute("hidden")
+            }
+        }
+
+        function Play(difficulte){
+            socket.emit('play', difficulte)
+            ChooseDifficulte()
+        }
+
+        anonymousInfosButton.addEventListener("click", CloseInfos)
+        menuButton.addEventListener("click", OpenMenu)
+        playButton.addEventListener("click", ChooseDifficulte)
+        loginButton.addEventListener("click", OpenLogin)
+        loginSubmit.addEventListener("click", Login)
+        logoutButton.addEventListener("click", Logout)
+
+        difficulteFacile.addEventListener("click", () => {Play("facile")})
+        difficulteMoyen.addEventListener("click", () => {Play("moyen")})
+        difficulteDifficile.addEventListener("click", () => {Play("difficile")})
+        difficulteExtreme.addEventListener("click", () => {Play("extreme")})
+        difficulteGodmode.addEventListener("click", () => {Play("godmode")})
+
+        socket.on('play', data => {
+            //format data: {'grille': Grille,
+            //'solution': Grille,
+            //'taille': int,
+            //'stats': {'solved', 'stuck', 'steps', 'counts', 'maxTechnique', 'history'},
+            //'difficulteEstimee': [Humanrated, sudokuCoachRated]}
+            console.log("grille: ", data.grille)
+            if (sudokuFrame.children.length==0){
+                let grille= document.createElement("div")
+                grille.classList.add("grid")
+                grille.classList.add("grid-rows-3")
+                grille.id= "sudoku-grid"
+                sudokuFrame.appendChild(grille)
+                for (let i=0; i<data.taille**2;i++){
+                    let zoneRow= Math.floor(i/data.taille)
+                    let zoneRowIndex= i%data.taille
+                    let zone= document.createElement("div")
+                    zone.classList.add("zone")
+                    zone.classList.add("grid")
+                    zone.classList.add("grid-rows-3")
+                    zone.classList.add("row-start-"+(zoneRow+1))
+                    zone.id="zone-"+i
+                    grille.appendChild(zone)
+                    for (let j=0; j<data.taille**2;j++){
+                        let celluleZoneRow= Math.floor(j/data.taille)
+                        let celluleRowIndex= j%data.taille + data.taille*zoneRowIndex
+                        let celluleRow= zoneRow*data.taille + celluleZoneRow
+                        let celluleIndex= celluleRowIndex + (data.taille**2)*celluleRow
+                        let cellule= document.createElement("button")
+                        cellule.type="button"
+                        cellule.classList.add("cellule")
+                        cellule.classList.add("row-start-"+(celluleZoneRow+1))
+                        cellule.classList.add("border-stone-300")
+                        cellule.classList.add("hover:bg-neutral-100")
+                        cellule.id="cellule-"+celluleIndex
+                        zone.appendChild(cellule)
+                    }
+                }
+            }
+            for (let i=0; i<data.taille**4;i++){
+                let cellule=document.getElementById("cellule-"+i)
+                if (data.grille[i]==0){
+                    cellule.innerText= ""
+                }else{
+                    cellule.innerText= data.grille[i]
+                }
+            }
+        })
+
+        socket.on('info', data => {
+            console.log(data.data)
+        })
+
+        //-------FORMAT GRILLE:--------------
+        //<div class="grid grid-rows-3" id="sudoku-grid"></div>
+        //-------FORMAT ZONES:---------------
+        //<div class="zone grid grid-rows-3 row-start-rowNumber"></div>
+        // en remplaçant rowNumber par le numéro de la ligne à laquelle la zone appartient (de 1 à 3)
+        //-------FORMAT CELLULES:-------------
+        //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100"></button>
+        // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
+    </script>
+</html>
