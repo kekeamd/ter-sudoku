@@ -118,7 +118,7 @@ class Parser:
         numberOfCellule = size**2
         s = "[ "
         for i in range(numberOfCellule):
-            s += g.getCelluleValueIndex(i)              # On mets la valeur de la cellule
+            s += str(g.getCelluleValueIndex(i))              # On mets la valeur de la cellule
             s += str(g.getCelluleCandidatesIndex(i))    # Suivi de ses candidats
             if (i!=size-1):
                 s+= ", "

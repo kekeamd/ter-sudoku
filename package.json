@@ -4,6 +4,6 @@
   },
 
   "scripts": {
-    "tailwind": "npx tailwindcss -i ./web_data/styleInput.css -o ./web_data/styleOutput.css --watch"
+    "tailwind": "npx tailwindcss -i ./static/styleInput.css -o ./static/styleOutput.css --watch"
   }
 }

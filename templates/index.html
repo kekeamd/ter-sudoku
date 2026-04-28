@@ -6,7 +6,7 @@
         <title>Sudoku Jeu</title>
         <meta name="description" content="Page de jeu pour Sudoku">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="styleOutput.css">
+        <link rel="stylesheet" href="../static/styleOutput.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
     </head>
     <body class="grid grid-rows-7 gap-y-2 font-mono text-xs sm:text-xs md:text-sm lg:text-base xl:text-base bg-stone-50">
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="col-start-2 col-span-3" id="middle-col">
-                <div name="sudoku-frame"></div>
+                <div id="sudoku-frame"></div>
             </div>
             <div class="col-start-5 col-span-1" id="right-col"></div>
         </div>
@@ -48,7 +48,7 @@
     <script defer>
         console.log("Javascript started")
         // Connexion au serveur
-        //const socket = io.connect('http://'+document.domain+':'+location.port);
+        const socket = io.connect('http://'+document.domain+':'+location.port);
         console.log(location.pathname)
 
         var Pseudo=""
@@ -72,6 +72,7 @@
         var loginPseudo= document.getElementById("login-pseudo")
         var loginPassword= document.getElementById("login-password")
         var loginSubmit= document.getElementById("login-submit")
+        var sudokuFrame= document.getElementById("sudoku-frame")
 
         function removeBlur(target){
             if (target.classList.contains("blured")){target.classList.remove("blured")}
@@ -178,6 +179,11 @@
             }
         }
 
+        function Play(difficulte){
+            socket.emit('play', difficulte)
+            ChooseDifficulte()
+        }
+
         anonymousInfosButton.addEventListener("click", CloseInfos)
         menuButton.addEventListener("click", OpenMenu)
         playButton.addEventListener("click", ChooseDifficulte)
@@ -185,8 +191,67 @@
         loginSubmit.addEventListener("click", Login)
         logoutButton.addEventListener("click", Logout)
 
+        difficulteFacile.addEventListener("click", () => {Play("facile")})
+        difficulteMoyen.addEventListener("click", () => {Play("moyen")})
+        difficulteDifficile.addEventListener("click", () => {Play("difficile")})
+        difficulteExtreme.addEventListener("click", () => {Play("extreme")})
+        difficulteGodmode.addEventListener("click", () => {Play("godmode")})
+
+        socket.on('play', data => {
+            //format data: {'grille': Grille,
+            //'solution': Grille,
+            //'taille': int,
+            //'stats': {'solved', 'stuck', 'steps', 'counts', 'maxTechnique', 'history'},
+            //'difficulteEstimee': [Humanrated, sudokuCoachRated]}
+            console.log("grille: ", data.grille)
+            if (sudokuFrame.children.length==0){
+                let grille= document.createElement("div")
+                grille.classList.add("grid")
+                grille.classList.add("grid-rows-3")
+                grille.id= "sudoku-grid"
+                sudokuFrame.appendChild(grille)
+                for (let i=0; i<data.taille**2;i++){
+                    let zoneRow= Math.floor(i/data.taille)
+                    let zoneRowIndex= i%data.taille
+                    let zone= document.createElement("div")
+                    zone.classList.add("zone")
+                    zone.classList.add("grid")
+                    zone.classList.add("grid-rows-3")
+                    zone.classList.add("row-start-"+(zoneRow+1))
+                    zone.id="zone-"+i
+                    grille.appendChild(zone)
+                    for (let j=0; j<data.taille**2;j++){
+                        let celluleZoneRow= Math.floor(j/data.taille)
+                        let celluleRowIndex= j%data.taille + data.taille*zoneRowIndex
+                        let celluleRow= zoneRow*data.taille + celluleZoneRow
+                        let celluleIndex= celluleRowIndex + (data.taille**2)*celluleRow
+                        let cellule= document.createElement("button")
+                        cellule.type="button"
+                        cellule.classList.add("cellule")
+                        cellule.classList.add("row-start-"+(celluleZoneRow+1))
+                        cellule.classList.add("border-stone-300")
+                        cellule.classList.add("hover:bg-neutral-100")
+                        cellule.id="cellule-"+celluleIndex
+                        zone.appendChild(cellule)
+                    }
+                }
+            }
+            for (let i=0; i<data.taille**4;i++){
+                let cellule=document.getElementById("cellule-"+i)
+                if (data.grille[i]==0){
+                    cellule.innerText= ""
+                }else{
+                    cellule.innerText= data.grille[i]
+                }
+            }
+        })
+
+        socket.on('info', data => {
+            console.log(data.data)
+        })
+
         //-------FORMAT GRILLE:--------------
-        //<div class="grid grid-rows-3" name="sudoku-grid"></div>
+        //<div class="grid grid-rows-3" id="sudoku-grid"></div>
         //-------FORMAT ZONES:---------------
         //<div class="zone grid grid-rows-3 row-start-rowNumber"></div>
         // en remplaçant rowNumber par le numéro de la ligne à laquelle la zone appartient (de 1 à 3)
