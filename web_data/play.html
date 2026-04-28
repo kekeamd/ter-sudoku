@@ -20,7 +20,7 @@
         </div>
         <div class="row-start-2 row-span-5 grid grid-col-5 gap-x-8" id="middle">
             <div class="col-start-1 col-span-1" id="left-col">
-                <div class="p-3 shadow-lg" id="menu" hidden>
+                <div class="p-3 shadow-lg" id="menu">
                     <button type="button" id="play-button">Nouvelle Partie</button>
                     <div class="text-slate-600" id="menu-difficulte" hidden>
                         <button type="button" id="difficulte-facile">facile</button>
@@ -31,9 +31,9 @@
                     </div>
                     <div class="border-sky-950 border-2 rounded-xl shadow-2xl" id="login-menu" hidden>
                         <input placeholder="Veuillez insérer un pseudo" id="login-pseudo">
-                        <input placeholder="Veuillez entrer un mot de passe" id="login-password" hidden >
+                        <input type="password" placeholder="Veuillez entrer un mot de passe" id="login-password" hidden >
                         <br>
-                        <button type="submit" id="login-submit">Appuyer pour continuer</button>
+                        <button type="button" id="login-submit">Appuyer pour continuer</button>
                     </div>
                     <button type="button" id="login-button">Connexion</button>
                     <button type="button" id="logout-button" hidden>Déconnexion</button>
@@ -51,21 +51,12 @@
         //const socket = io.connect('http://'+document.domain+':'+location.port);
         console.log(location.pathname)
 
-        var menuButton
-        var menu
-        var playButton
-        var menuDifficulte
-        var difficulteFacile
-        var difficulteMoyen
-        var difficulteDifficile
-        var difficulteExtreme
-        var difficulteGodmode
-        var loginButton
-        var logoutButton
-        var loginMenu
-        var loginPseudo
-        var loginPassword
-        var loginSubmit
+        var Pseudo=""
+        var Focused= false
+        var FocusTarget= null
+
+        var anonymousInfos= document.getElementById("anonymous-infos")
+        var anonymousInfosButton= document.getElementById("anonymous-infos-close")
         var menuButton= document.getElementById("menu-button")
         var menu= document.getElementById("menu")
         var playButton= document.getElementById("play-button")
@@ -82,40 +73,117 @@
         var loginPassword= document.getElementById("login-password")
         var loginSubmit= document.getElementById("login-submit")
 
+        function removeBlur(target){
+            if (target.classList.contains("blured")){target.classList.remove("blured")}
+            if (target.classList.contains("focusedElement")){target.classList.remove("focusedElement")}
+            if (target.classList.contains("focusedParent")){target.classList.remove("focusedParent")}
+            for (let i=0; i<target.children.length;i++){
+                removeBlur(target.children[i])
+            }
+        }
+
+        function FocusOn(target, buttonList){
+            Focused=true
+            FocusTarget=target
+            targets= [target]
+            targets= targets.concat(buttonList)
+            targets.forEach(t =>{t.classList.add("focusedElement")})
+            targets.forEach(t => {
+                t.classList.add("focusedElement")
+                let parent= t.parentElement
+                
+                while (parent!=document.body.parentElement){
+                    parent.classList.add("focusedParent")
+                    parent.classList.remove("blured")
+                    for (let i=0; i<parent.children.length; i++) {
+                        if (!(parent.children[i].classList.contains("focusedParent") || parent.children[i].classList.contains("focusedElement"))){
+                            parent.children[i].classList.add("blured")
+                        }
+                    }
+                    parent= parent.parentElement
+                }
+            });
+        }
+
+        function FocusOff(){
+            Focused=false
+            FocusTarget=null
+            removeBlur(document.body)
+        }
+
+        function CloseInfos(){
+            anonymousInfos.setAttribute("hidden", "")
+        }
 
         function OpenMenu(){
-            if (menu.hasAttribute("hidden")){
-                menu.removeAttribute("hidden")
-                menuButton.innerText= "<"
-            } else{
-                menu.setAttribute("hidden", "")
-                menuButton.innerText= ">"
+            if (!Focused){
+                if (menu.hasAttribute("hidden")){
+                    menu.removeAttribute("hidden")
+                    menuButton.innerText= ">"
+                } else{
+                    menu.setAttribute("hidden", "")
+                    menuButton.innerText= "<"
+                }
             }
         }
 
         function ChooseDifficulte(){
-            if (menuDifficulte.hasAttribute("hidden")){
-                menuDifficulte.removeAttribute("hidden")
-                playButton.innerText="Annuler"
-            } else{
-                menuDifficulte.setAttribute("hidden", "")
-                playButton.innerText="Nouvelle Partie"
+            if (!Focused){
+                if (menuDifficulte.hasAttribute("hidden")){
+                    menuDifficulte.removeAttribute("hidden")
+                    playButton.innerText="Annuler"
+                    if (Pseudo==""){
+                        if (anonymousInfos.hasAttribute("hidden")){anonymousInfos.removeAttribute("hidden")}
+                    }
+                } else{
+                    menuDifficulte.setAttribute("hidden", "")
+                    playButton.innerText="Nouvelle Partie"
+                }
             }
         }
 
         function OpenLogin(){
-            if (loginMenu.hasAttribute("hidden")){
-                loginMenu.removeAttribute("hidden")
-                loginButton.innerText="Annuler"
-            } else{
-                loginMenu.setAttribute("hidden", "")
-                loginButton.innerText="Connexion"
+            if (!Focused || FocusTarget==loginMenu){
+                if (loginMenu.hasAttribute("hidden")){
+                    FocusOn(loginMenu, [loginButton])
+                    loginMenu.removeAttribute("hidden")
+                    loginButton.innerText="Annuler"
+                } else{
+                    FocusOff()
+                    loginMenu.setAttribute("hidden", "")
+                    loginButton.innerText="Connexion"
+                }
             }
         }
 
+        function Login(){
+            if (!Focused || FocusTarget==loginMenu){
+                if (loginPseudo.value!=""){
+                    FocusOff()
+                    Pseudo=loginPseudo.value
+                    loginPseudo.value=""
+                    loginMenu.setAttribute("hidden", "")
+                    loginButton.setAttribute("hidden", "")
+                    logoutButton.removeAttribute("hidden")
+                    loginButton.innerText="Connexion"
+                }
+            }
+        }
+
+        function Logout(){
+            if (!Focused){
+                Pseudo=""
+                logoutButton.setAttribute("hidden", "")
+                loginButton.removeAttribute("hidden")
+            }
+        }
+
+        anonymousInfosButton.addEventListener("click", CloseInfos)
         menuButton.addEventListener("click", OpenMenu)
         playButton.addEventListener("click", ChooseDifficulte)
         loginButton.addEventListener("click", OpenLogin)
+        loginSubmit.addEventListener("click", Login)
+        logoutButton.addEventListener("click", Logout)
 
         //-------FORMAT GRILLE:--------------
         //<div class="grid grid-rows-3" name="sudoku-grid"></div>
