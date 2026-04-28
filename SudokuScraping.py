@@ -1,13 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
+from Parser import Parser
 import time
 import re
-import Parser
-from Parser import Parser
+
 
 
 def getDifficultyFromSudokuCoach(puzzle_str: str, headless: bool = True) -> dict:
@@ -15,18 +16,17 @@ def getDifficultyFromSudokuCoach(puzzle_str: str, headless: bool = True) -> dict
 
     #configuration du driver pour eviter les crashes et les blocages car il peut y avoir la detection de bot.
 
-    options = webdriver.ChromeOptions()
+    options = Options()
     if headless:
-        options.add_argument("--headless=new")
+        options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--window-size=1280,900")
-    options.add_argument("-- 4lang=fr")
-    options.add_argument("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+    options.add_argument("--width=1280")
+    options.add_argument("--height=900")
+    options.set_preference("intl.accept_languages", "fr")
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=options)
+
 
     score, label = None, None
     try:
