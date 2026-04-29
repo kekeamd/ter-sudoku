@@ -1,8 +1,11 @@
 sudoku_parser_out/
 __pycache__
-rapport/Rapport_Sprint1.*
-!rapport/Rapport_Sprint1.tex
-!rapport/Rapport_Sprint1.pdf
+Rapport_Sprint/Rapport_Sprint1.*
+!Rapport_Sprint/Rapport_Sprint1.tex
+!Rapport_Sprint/Rapport_Sprint1.pdf
+Rapport_Final/Rapport_Finale.*
+!Rapport_Final/Rapport_Finale.tex
+!Rapport_Final/Rapport_Finale.pdf
 .DS_*
 DS_*
 $*

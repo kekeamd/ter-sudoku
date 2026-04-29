@@ -12,5 +12,6 @@
 
 
 ### commandes importantes :
-- 'python ./main.py' pour démarrer le jeu sudoku
+- 'python ./main.py' pour démarrer le jeu sudoku (console)
+- 'flask --app mainWeb run' pour démarrer le jeu sudoku (web)
 - './tests.bat' pour exécuter les tests

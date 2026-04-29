@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{float}      % pour [H]
 \usepackage{subcaption} % pour les sous-figures côte à côte
+\usepackage{hyperref}   % pour le limk des photos
 
 
 \begin{document}
@@ -194,7 +195,7 @@ Le projet utilise essentiellement des bibliothèques natives de Python, notammen
     \item \texttt{os} : pour la gestion des fichiers et du système,
     \item \texttt{shutil} : pour certaines opérations sur les fichiers,
     \item \texttt{pickle} : permet de sauvegarder directement des objets Python dans un fichier,
-    \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur (comme illustré dans le graphique en page 5 du rapport).
+    \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur.
 \end{itemize}
 
 L’utilisation de bibliothèques standards permet de garantir la simplicité, la portabilité et la reproductibilité du projet.
@@ -284,40 +285,28 @@ En complément, l’utilisateur peut choisir de résoudre automatiquement la gri
     \item une résolution basée sur des techniques humaines, accompagnée de statistiques (nombre d’étapes, techniques utilisées, etc.).
 \end{itemize}
 
-Ces deux méthodes permettent de comparer les approches et d’analyser la difficulté de la grille générée.
+Ces deux méthodes permettent de comparer les approches et d’analyser la difficulté de la grille générée. 
 
-Enfin, la partie se termine lorsque la grille est entièrement complétée correctement, lorsque l’utilisateur choisit de quitter, ou après une résolution automatique.
+\subsubsection{Exemples d'affichage dans l'interface console avec la résolution humaine}
 
-\subsubsection{Exemples d'affichage de l'interface console}
+Comme illustré en \textbf{FIGURE~\ref{fig:grille-facile}}, l'interface console affiche la grille chargée ainsi que les informations liées à sa difficulté (FACILE).
 
-Les figures suivantes montrent l'affichage de l'interface console après le choix d'une difficulté. 
-La grille est chargée depuis la banque de grilles pré-générées, puis le programme affiche la difficulté estimée, le nombre d'étapes nécessaires et la technique maximale utilisée.
+Un exemple d'une génération de grille difficile est présenté en \textbf{FIGURE~\ref{fig:grille-difficile}}.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{grilleFacile.png}
-    \caption{Exemple d'une grille facile affichée dans l'interface console}
-    \label{fig:grille-facile}
-\end{figure}
+Après la génération ou le chargement d'une grille, l'utilisateur peut choisir d'afficher la résolution par méthodes humaines afin de terminer la partie sans saisir manuellement les valeurs. 
+Le programme montre alors les différentes étapes appliquées par le solveur humain. 
+La \textbf{FIGURE~\ref{fig:grille-extreme-resolu}} présente un exemple de résolution d'une grille extrême.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{grilleDifficile.png}
-    \caption{Exemple d'une grille difficile affichée dans l'interface console}
-    \label{fig:grille-difficile}
-\end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.75\textwidth]{grilleExtremeResolu.png}
-    \caption{Exemple d'une grille extrême resolue avec des techniques humaines dans l'interface console}
-    \label{fig:grille-difficile}
-\end{figure}
+Dans le cas de la résolution par méthode humaine, le programme peut également afficher les étapes détaillées de résolution avant la fin de la partie. 
+Chaque étape indique la technique utilisée, la valeur placée, ainsi que sa position dans la grille \textbf{FIGURE~\ref{fig:etapes-moyen}}. 
+Cela permet de suivre le raisonnement du solveur humain et de mieux comprendre pourquoi une grille est classée dans une certaine difficulté avant le retour au menu principal.
+
 
 \textbf{Le chemin d’exécution est celui-ci :}
 Le chemin d'exécution a été modifié afin d'éviter la génération directe des grilles pendant l'utilisation normale du programme. 
 Désormais, lorsqu'une partie est lancée, le programme ne génère plus une nouvelle grille en temps réel. 
-Il charge une grille déjà préparée depuis la banque de grilles.
+Il charge une grille déjà préparée depuis la banque de grilles \textbf{FIGURE~\ref{fig:grille-godmode}}.
 
 Le nouveau chemin d'exécution est le suivant :
 
@@ -351,13 +340,6 @@ $\rightarrow$ \texttt{pickle.dump()}
 
 Cette étape permet de générer plusieurs grilles pour chaque difficulté, puis de les sauvegarder dans le fichier \texttt{banque\_grilles.pkl}.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.78\textwidth]{grilleGodmodeBanque.png}
-    \caption{Chargement d'une grille GodMode depuis la banque de grilles pré-générées}
-    \label{fig:grille-godmode}
-\end{figure}
-
 Ainsi, même si elle reste simple, cette interface console offre un ensemble de fonctionnalités complet permettant de générer, manipuler, résoudre et analyser des grilles de Sudoku. Elle constitue une base solide pour une éventuelle évolution vers une interface graphique plus avancée.
 
 \subsection{Structures de données principales}
@@ -369,6 +351,39 @@ Ainsi, même si elle reste simple, cette interface console offre un ensemble de 
 \subsection{Statistiques}
 
 Cette section présente quelques statistiques générales sur la taille du projet. Ces chiffres permettent d'avoir une vue d'ensemble de l'organisation du code et de la répartition des fichiers.
+
+\subsubsection{Complexité des fichiers principaux de l'interface console}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{6cm}|p{4cm}|}
+        \hline
+        \textbf{Fichier} & \textbf{Rôle principal} & \textbf{Complexité estimée} \\
+        \hline
+        \texttt{InterfaceConsole.py} 
+        & Gestion du menu, choix de difficulté, actions utilisateur, affichage de la grille, saisie des valeurs et lancement des résolutions automatiques(backtrack et humaine). 
+        & Moyenne à élevée \\
+        \hline
+        \texttt{BanqueGrilles.py} 
+        & Chargement et sauvegarde des grilles pré-générées avec \texttt{pickle}, choix aléatoire d'une grille selon la difficulté. 
+        & Faible à moyenne \\
+        \hline
+        \texttt{GrilleHuman.py} 
+        & Génération de grilles selon les techniques humaines, vérification de la difficulté cible et gestion des redémarrages pendant la génération. 
+        & Élevée \\
+        \hline
+        \texttt{SolverHuman.py} 
+        & Implémentation des techniques humaines de résolution : dernier nombre, singleton nu, singleton caché, paire nue, paire cachée, candidat enfermé, x-wing et gratte-ciel. 
+        & Élevée \\
+        \hline
+        \texttt{SolverHumanStats.py} 
+        & Résolution avec statistiques : nombre d'étapes, techniques utilisées, technique maximale et historique des coups. 
+        & Moyenne à élevée \\
+        \hline
+    \end{tabular}
+    \caption{Complexité des fichiers principaux utilisés par l'interface console}
+    \label{tab:complexite-interface-console}
+\end{table}
 
 \subsubsection{Nombre de modules / classes}
 
@@ -382,17 +397,17 @@ Le projet contient aussi plusieurs fichiers liés à l'interface web et aux donn
     \centering
     \begin{tabular}{|l|c|l|}
         \hline
-        \textbf{Type de fichier} & \textbf{Nombre de fichiers} & \textbf{Taille approximative} \\
+        \textbf{Type de fichier} & \textbf{Nombre de fichiers} \\
         \hline
-        Python \texttt{.py} & 35 & 150 à 200 lignes en moyenne \\
+        Python \texttt{.py} & 35  \\
         \hline
-        HTML & 2 & environ 30 lignes en moyenne \\
+        HTML & 1  \\
         \hline
-        CSS & 2 & environ 70 lignes pour un fichier, environ 700 pour l'autre \\
+        CSS & 2  \\
         \hline
-        JavaScript & 1 & environ 8 lignes \\
+        JavaScript & 1  \\
         \hline
-        JSON & 2 & environ 1050 lignes au total \\
+        JSON & 2  \\
         \hline
     \end{tabular}
     \caption{Répartition approximative des fichiers du projet}
@@ -407,7 +422,7 @@ En estimant le nombre de lignes à partir des fichiers du projet, on obtient env
 
 \begin{itemize}
     \item \textbf{Python} : 35 fichiers avec environ 150 à 200 lignes en moyenne, soit environ 5250 à 7000 lignes ;
-    \item \textbf{HTML} : 2 fichiers avec environ 30 lignes chacun, soit environ 60 lignes ;
+    \item \textbf{HTML} : 1 fichier avec environ 440  ;
     \item \textbf{CSS} : 2 fichiers, avec environ 70 lignes pour l'un et 700 lignes pour l'autre, soit environ 770 lignes ;
     \item \textbf{JavaScript} : 1 fichier d'environ 8 lignes ;
     \item \textbf{JSON} : 2 fichiers contenant environ 1050 lignes au total.
@@ -423,7 +438,7 @@ On peut résumer cette estimation dans le tableau suivant :
         \hline
         Python & 5250 à 7000 \\
         \hline
-        HTML & 60 \\
+        HTML & 440 \\
         \hline
         CSS & 770 \\
         \hline
@@ -503,19 +518,75 @@ La majorité du code se trouve dans les fichiers Python, car ils contiennent tou
 % ===== 8. Bibliographie =====
 \section{Bibliographie}
 
-\begin{itemize}
-    \item Ressources utilisées
-    \item Articles scientifiques
-    \item Documentation
-\end{itemize}
+Les ressources utilisées pendant le projet concernent principalement les techniques de résolution de Sudoku, la comparaison des difficultés et la documentation des outils Python.
+
+\begin{thebibliography}{5}
+
+\bibitem{sudokucoach}
+\textbf{Sudoku Coach}. 
+Ressource la plus utilisée dans le projet. 
+Elle a servi à comparer nos grilles avec une estimation externe de difficulté et à vérifier les niveaux obtenus par notre solveur humain.\\
+\texttt{https://sudoku.coach/}
+
+\bibitem{python}
+\textbf{Documentation officielle de Python}. 
+Utilisée pour les bibliothèques standards comme \texttt{random}, \texttt{os} et \texttt{pickle}.\\
+\texttt{https://docs.python.org/3/}
+
+\bibitem{flask}
+\textbf{Documentation Flask}. 
+Utilisée pour la partie interface web du projet.\\
+\texttt{https://flask.palletsprojects.com/}
+
+\bibitem{git}
+\textbf{Documentation Git}. 
+Utilisée pour la gestion de version et le travail collaboratif.\\
+\texttt{https://gitlab.etu.umontpellier.fr/}
+
+\end{thebibliography}
 
 % ===== 9. Annexes =====
 \section{Annexes}
 
-\begin{itemize}
-    \item Fragments de code
-    \item Manuel d’utilisation
-    \item Exemples de grilles
-\end{itemize}
+Cette section regroupe plusieurs captures d'écran obtenues lors des tests du programme et les fonctionnalités de notre projet. 
+Elles illustrent l'affichage des grilles dans l'interface console, les différents niveaux de difficulté, ainsi que la résolution par méthodes humaines.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.60\textwidth]{grilleFacile.png}
+    \caption{Exemple d'une grille facile affichée dans l'interface console}
+    \label{fig:grille-facile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{grilleDifficile.png}
+    \caption{Exemple d'une grille difficile affichée dans l'interface console}
+    \label{fig:grille-difficile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.80\textwidth]{grilleExtremeResolu.png}
+    \caption{Exemple d'une grille extrême résolue avec des techniques humaines dans l'interface console}
+    \label{fig:grille-extreme-resolu}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{etapesMoyen.png}
+    \caption{Exemple des étapes d'une grille moyen resolue avec des techniques humaines dans l'interface console}
+    \label{fig:etapes-moyen}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\textwidth]{grilleGodmodeBanque.png}
+    \caption{Chargement d'une grille GodMode depuis la banque de grilles pré-générées}
+    \label{fig:grille-godmode}
+\end{figure}
+
+
 
 \end{document}
