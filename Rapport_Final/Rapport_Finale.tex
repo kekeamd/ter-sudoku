@@ -249,9 +249,30 @@ Enfin, Python est largement utilisé dans le domaine académique, ce qui en fait
 % ===== 3. Développements Logiciel : Conception, Modélisation, Implémentation =====
 \section{Développements Logiciel : Conception, Modélisation, Implémentation}
 
-\subsection{Présentation des développements réalisés}
+%\subsection{Présentation des développements réalisés}
 
-\subsection{Modules principaux du logiciel}
+\subsection{Présentation des développements réalisés et modules principaux du logiciel}
+
+\subsubsection{Grille}
+Nous avons décidé de découper et représenter la grille en 3 parties, ces parties étant les cellules contenant les valeurs, les blocs qui correspondent aux carrés regroupant les cellules et que nous verrons par la suite sous le nom de 'zone', et enfin la grille en elle-même qui est le carré regroupant les zones. Grâce à cette représentation, nous avons ensuite aisément pu implémenter le concept de grille avec une classe pour chacune des parties énumérées ci-dessus.
+
+Tout d’abord, la classe cellule contient évidemment un attribut pour sa valeur, mais aussi un attribut pour les candidats de la cellule sous forme d’une liste d’entiers, sachant qu’un candidat est une valeur qui peut être attribuée à la cellule sans rompre les règles fondamentales du sudoku, mais qui n’est pas forcément la bonne. Par "la bonne" il est entendu que cette valeur est la seule valeur possible pour cette cellule permettant au sudoku d’être résolu, qui nous le rappelons a pour principe de n’avoir qu’une seule solution possible. 
+
+Pour ce qui est des méthodes de cette classe, il y a bien évidemment des accesseurs et des mutateurs pour les attributs cités précédemment mais aussi pour un troisième attribut nommé position qui fut rajouté par la suite pour faciliter et alléger la résolution de grilles.
+
+Ensuite nous avons la classe correspondant aux zones et qui, étant donné qu’une zone est un regroupement de cellule, a un attribut contenant ces dites cellules à l’aide d’une liste de cellules ainsi que l’attribut représentant la taille d’un côté de tel manière à ce que la taille au carré correspond au nombre de cellules dans la zone. 
+
+Cependant, contrairement aux cellules, il n’a été établi qu’un accesseur pour la taille pour limiter ainsi que sécuriser les accès. Pour ce qui est du reste, nous avons principalement des méthodes renvoyant les valeurs des cellules sous différentes formes ainsi que des accesseurs a une cellule identifiée soit par sa position ou ses coordonnées (ligne et colonne) dans la zone. Cette manière d’indexer les cellules , comme vous pourrez le constater, sera très redondante tout au long de la manipulation des cellules, avec des avantages et des inconvénients pour chacune.
+	
+Enfin, la grille est la classe la plus importante et la plus grande, elle donne un accès rapide et pratique aux cellules contenu dans ces zones par le biais des méthodes de la classe zone et avec l’aide des fonctions principalement arithmétiques contenues dans le fichier GrilleUtils.py dont le but est de faire des calculs d’index. De ce fait, ses méthodes ne seront pas présentées en détail. Similairement à la classe des zones, la grille contient une liste de zones , une taille avec laquelle on peut obtenir le nombre de zones lorsqu’on la met au carré mais aussi sa difficulté sous la forme d’une énumération.
+
+Quand aux méthodes, nous avons premièrement un accesseur et mutateur pour la difficulté, un accesseur pour la taille et des accesseurs et mutateurs pour les cellules. Cependant, pour encore une fois garder une certaine confidentialité et sécurité, les méthodes concernant les cellules sont privés et servent de fondations aux multiples méthodes permettant d’accéder et manipuler les valeurs et candidats des cellules. 
+
+Une méthode renvoyant les régions fût ensuite rajoutée, avec une région correspondant soit à une zone, ligne ou colonne. En effet nous avons choisi de regrouper les cellules en zone parce qu’elles sont plus intuitives et visuelles, mais il est aussi possible de les remplacer par les lignes ou colonnes de cellules, nous avons donc décidé de renvoyer ces différents formats afin d’éviter les calculs d’index interminables dans la classe de résolution de grilles (Solver) et centraliser ces mêmes calculs au sein de la classe Grille.
+
+Dernièrement, la grille contient une génération de valeurs sous forme de méthode abstraite étant donné qu’elle dépendra des différentes approches utilisés.
+
+Pour finir et comme énoncé précédemment, la génération des valeurs n’est pas définie dans la classe Grille, qui devient donc un classe abstraite, et la génération est relayée à ses classes filles, chacune correspondant à une différente manière de générer les valeurs de la grille de sudoku.
 
 \subsection{Diagramme de cas d’utilisation (UML)}
 
