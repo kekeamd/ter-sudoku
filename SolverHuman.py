@@ -346,8 +346,8 @@ class SolverHuman(Solver):
             rows_candidates = {}
             for r in range(size):
                 cols=[c for c in range(size) 
-                      if grille.getCelluleValueCoord(r,c)==0
-                      and val in grille.getCelluleCandidatesCoord(r,c)]
+                    if grille.getCelluleValueCoord(r,c)==0
+                    and val in grille.getCelluleCandidatesCoord(r,c)]
                 if len(cols)==2:
                     rows_candidates[r]=cols # on garde seulement les lignes avec exactement 2 colonnes candidates
             # Cherche deux lignes avec une colonne en commun
@@ -445,8 +445,8 @@ class SolverHuman(Solver):
             row_candidates={}
             for r in range(size):
                 cols=[c for c in range(size) 
-                      if grille.getCelluleValueCoord(r,c)==0
-                      and val in grille.getCelluleCandidatesCoord(r,c)]
+                    if grille.getCelluleValueCoord(r,c)==0
+                    and val in grille.getCelluleCandidatesCoord(r,c)]
                 if len(cols)==2:
                     row_candidates[r]=cols
             
@@ -488,7 +488,7 @@ class SolverHuman(Solver):
         return False
     # --------------- X-Wing version colonnes -> lignes ----------------
     @staticmethod
-    def x_WingColonne(grille:Grille):
+    def x_WingColonne(grille:Grille) -> bool:
         changed= False
         sizeCote=grille.getSize()
         size=sizeCote**2
@@ -497,8 +497,8 @@ class SolverHuman(Solver):
             #Trouve les colonnes avec exactement 2 candidats pour val
             for c in range(size):
                 rows=[r for r in range(size) 
-                      if grille.getCelluleValueCoord(r,c)==0
-                      and val in grille.getCelluleCandidatesCoord(r,c)]
+                    if grille.getCelluleValueCoord(r,c)==0
+                    and val in grille.getCelluleCandidatesCoord(r,c)]
                 if len(rows)==2:
                     cols_candidates[c]=rows
             
@@ -521,7 +521,7 @@ class SolverHuman(Solver):
                         #Élimination dans les autres colonnes
                         for c in range(size):
                             if c != c1 and c != c2:
-                                 # ligne r1
+                                # ligne r1
                                 if grille.getCelluleValueCoord(r1, c) == 0 and val in grille.getCelluleCandidatesCoord(r1, c):
                                     grille.removeCandidateCoord(r1, c, val)
                                     changed = True

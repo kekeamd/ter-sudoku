@@ -25,7 +25,8 @@ class SolverHumanStats(SolverHuman):
         }
 
         # Fonction pour avoir une matrice 2D de la grille actuel
-        def snapshot_values():
+        # Tâche réalisé par Parser.GrilleToTab() !!
+        def snapshot_values() -> list[list[int]]:
             size = grille.getSize() ** 2
             return [[grille.getCelluleValueCoord(r, c) for c in range(size)] for r in range(size)]
         

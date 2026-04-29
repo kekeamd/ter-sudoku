@@ -150,7 +150,7 @@ class InterfaceConsole(Interface): # extends Interface
                 if self.errorCount >= 3:
                     print("\nGame Over! Vous ne pouvez plus jouer.")
                 else:
-                    self.printCandidatesGrid()
+                    self._printCandidatesGrid()
 
             elif choix == '3':
                 print("\nLa grille résolue automatiquement (backtrack):\n")
@@ -251,7 +251,7 @@ class InterfaceConsole(Interface): # extends Interface
             print(f"Erreur ! \n")
 
     # affiche la grille avec tous le candidats
-    def printCandidatesGrid(self):
+    def _printCandidatesGrid(self):
         print("\n=== Grille des candidats ===\n")
         for row in range(9):
             for col in range(9):
