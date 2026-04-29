@@ -626,7 +626,7 @@ class SolverHuman(Solver):
             return Difficulte.FACILE
         if score <= 2.6:
             return Difficulte.MOYEN
-        if score <= 4.9:
+        if score <= 5.2:
             return Difficulte.DIFFICILE
         if score <= 6.4:
             return Difficulte.EXTREME
