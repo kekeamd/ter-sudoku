@@ -1,7 +1,8 @@
-from Interface import Interface
-from InterfaceConsole import InterfaceConsole
-from InterfaceWeb import InterfaceWeb
+import Interface
+import InterfaceConsole
+import InterfaceWeb
 import os
+from mainWeb_tmp import main as WebMain
 from requirement import verifyRequire
 
 def clear():
@@ -24,7 +25,7 @@ if __name__ == "__main__":
         except ValueError:
             clear()
             continue
-        #clear()
+        clear()
 
         if TypeDeJeu == '1':                                          # Jeu dans la console
             print("======================================")
@@ -32,7 +33,7 @@ if __name__ == "__main__":
             print("====== Sudoku Interface Console ======")
             print("======================================")
             
-            interface : Interface = InterfaceConsole()
+            interface : Interface = InterfaceConsole.InterfaceConsole()
             interface.startPlaying()
 
         elif TypeDeJeu == '2':                                        # Jeu sur serveur Web
@@ -41,11 +42,11 @@ if __name__ == "__main__":
             print("==== Sudoku : Serveur Web ====")
             print("==============================")
 
-            interface : Interface = InterfaceWeb()
+            interface : Interface = InterfaceWeb.InterfaceWeb()
             answer : str = input("Voulez-vous lancer le serveur ? (O/N) ").upper() # pour o et O, n et N
             if answer == 'O':
                 print("Lancement du serveur Web...")
-                interface.startPlaying()
+                WebMain()
             else:
                 print("Serveur non lancé.")
             
@@ -64,7 +65,7 @@ if __name__ == "__main__":
 
         else:                                                       # Tout autre entrée en quitte !
             break
-        #clear()
+        clear()
 
     # Fermeture
     print("==============================")
