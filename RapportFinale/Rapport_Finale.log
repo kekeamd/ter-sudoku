@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.12.15)  29 APR 2026 16:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.12.15)  29 APR 2026 18:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -290,12 +290,12 @@ Package hyperref Info: Link coloring OFF on input line 13.
 \@outlinefile=\write3
 \openout3 = `Rapport_Finale.out'.
 
-<5d690eb0740000ba01a7340e.jpeg, id=148, 401.5pt x 401.5pt>
+<5d690eb0740000ba01a7340e.jpeg, id=152, 401.5pt x 401.5pt>
 File: 5d690eb0740000ba01a7340e.jpeg Graphic file (type jpg)
 <use 5d690eb0740000ba01a7340e.jpeg>
 Package pdftex.def Info: 5d690eb0740000ba01a7340e.jpeg  used on input line 21.
 (pdftex.def)             Requested size: 85.35896pt x 85.35826pt.
-<IMG_9024.jpg, id=149, 209.78375pt x 254.9525pt>
+<IMG_9024.jpg, id=153, 209.78375pt x 254.9525pt>
 File: IMG_9024.jpg Graphic file (type jpg)
 <use IMG_9024.jpg>
 Package pdftex.def Info: IMG_9024.jpg  used on input line 23.
@@ -330,77 +330,74 @@ Overfull \hbox (1.11932pt too wide) in paragraph at lines 324--327
  []
 
 
-Overfull \hbox (7.07582pt too wide) in paragraph at lines 365--380
- [][] 
+Underfull \hbox (badness 4765) in paragraph at lines 376--377
+[]\T1/cmr/m/n/10 Implémentation des tech-niques hu-
  []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
 [5]
 
 [6]
-<grilleFacile.png, id=207, 438.63875pt x 625.33624pt>
-File: grilleFacile.png Graphic file (type png)
-<use grilleFacile.png>
-Package pdftex.def Info: grilleFacile.png  used on input line 524.
-(pdftex.def)             Requested size: 339.72592pt x 484.33478pt.
-
 
 [7]
-<grilleDifficile.png, id=218, 488.82625pt x 594.22pt>
+<grilleFacile.png, id=216, 438.63875pt x 625.33624pt>
+File: grilleFacile.png Graphic file (type png)
+<use grilleFacile.png>
+Package pdftex.def Info: grilleFacile.png  used on input line 557.
+(pdftex.def)             Requested size: 271.7835pt x 387.46591pt.
+
+
+[8]
+<grilleDifficile.png, id=227, 488.82625pt x 594.22pt>
 File: grilleDifficile.png Graphic file (type png)
 <use grilleDifficile.png>
-Package pdftex.def Info: grilleDifficile.png  used on input line 531.
-(pdftex.def)             Requested size: 339.72592pt x 412.97717pt.
+Package pdftex.def Info: grilleDifficile.png  used on input line 564.
+(pdftex.def)             Requested size: 317.07614pt x 385.44052pt.
 
 
-[8 <./grilleFacile.png>]
-<grilleExtremeResolu.png, id=224, 1038.88126pt x 388.45125pt>
+[9 <./grilleFacile.png>]
+<grilleExtremeResolu.png, id=233, 1038.88126pt x 388.45125pt>
 File: grilleExtremeResolu.png Graphic file (type png)
 <use grilleExtremeResolu.png>
-Package pdftex.def Info: grilleExtremeResolu.png  used on input line 538.
-(pdftex.def)             Requested size: 339.72592pt x 127.02756pt.
-<etapesMoyen.png, id=225, 460.72125pt x 645.41125pt>
+Package pdftex.def Info: grilleExtremeResolu.png  used on input line 571.
+(pdftex.def)             Requested size: 362.37569pt x 135.49171pt.
+<etapesMoyen.png, id=234, 460.72125pt x 645.41125pt>
 File: etapesMoyen.png Graphic file (type png)
 <use etapesMoyen.png>
-Package pdftex.def Info: etapesMoyen.png  used on input line 545.
-(pdftex.def)             Requested size: 339.72592pt x 475.91281pt.
+Package pdftex.def Info: etapesMoyen.png  used on input line 578.
+(pdftex.def)             Requested size: 271.7835pt x 380.73026pt.
 
 
-[9 <./grilleDifficile.png> <./grilleExtremeResolu.png>]
-<grilleGodmodeBanque.png, id=232, 1067.99pt x 567.11874pt>
+[10 <./grilleDifficile.png> <./grilleExtremeResolu.png>]
+<grilleGodmodeBanque.png, id=241, 1067.99pt x 567.11874pt>
 File: grilleGodmodeBanque.png Graphic file (type png)
 <use grilleGodmodeBanque.png>
-Package pdftex.def Info: grilleGodmodeBanque.png  used on input line 552.
+Package pdftex.def Info: grilleGodmodeBanque.png  used on input line 585.
 (pdftex.def)             Requested size: 353.31439pt x 187.61705pt.
 
 
-[10 <./etapesMoyen.png>]
-
-[11 <./grilleGodmodeBanque.png>] (./Rapport_Finale.aux)
+[11 <./etapesMoyen.png> <./grilleGodmodeBanque.png>] (./Rapport_Finale.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `Rapport_Finale.out' has not changed.
-(rerunfilecheck)             Checksum: 3F9F492339CF12C53F66125FAA5A29AE;7593.
+(rerunfilecheck)             Checksum: C57A33A454C7D73C2B8DF52D6D250A25;7967.
  ) 
 Here is how much of TeX's memory you used:
- 12257 strings out of 473190
- 202936 string characters out of 5715799
- 614897 words of memory out of 5000000
- 35333 multiletter control sequences out of 15000+600000
+ 12262 strings out of 473190
+ 203035 string characters out of 5715799
+ 616998 words of memory out of 5000000
+ 35336 multiletter control sequences out of 15000+600000
  566674 words of font info for 47 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,8n,79p,587b,603s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,587b,526s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on Rapport_Finale.pdf (12 pages, 797483 bytes).
+Output written on Rapport_Finale.pdf (12 pages, 799025 bytes).
 PDF statistics:
- 308 PDF objects out of 1000 (max. 8388607)
- 257 compressed objects within 3 object streams
- 64 named destinations out of 1000 (max. 500000)
- 324 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 313 PDF objects out of 1000 (max. 8388607)
+ 262 compressed objects within 3 object streams
+ 66 named destinations out of 1000 (max. 500000)
+ 332 words of extra memory for PDF output out of 10000 (max. 10000000)
 

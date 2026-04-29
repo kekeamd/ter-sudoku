@@ -195,7 +195,7 @@ Le projet utilise essentiellement des bibliothèques natives de Python, notammen
     \item \texttt{os} : pour la gestion des fichiers et du système,
     \item \texttt{shutil} : pour certaines opérations sur les fichiers,
     \item \texttt{pickle} : permet de sauvegarder directement des objets Python dans un fichier,
-    \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur (comme illustré dans le graphique en page 5 du rapport).
+    \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur.
 \end{itemize}
 
 L’utilisation de bibliothèques standards permet de garantir la simplicité, la portabilité et la reproductibilité du projet.
@@ -352,6 +352,39 @@ Ainsi, même si elle reste simple, cette interface console offre un ensemble de 
 
 Cette section présente quelques statistiques générales sur la taille du projet. Ces chiffres permettent d'avoir une vue d'ensemble de l'organisation du code et de la répartition des fichiers.
 
+\subsubsection{Complexité des fichiers principaux de l'interface console}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|p{6cm}|p{4cm}|}
+        \hline
+        \textbf{Fichier} & \textbf{Rôle principal} & \textbf{Complexité estimée} \\
+        \hline
+        \texttt{InterfaceConsole.py} 
+        & Gestion du menu, choix de difficulté, actions utilisateur, affichage de la grille, saisie des valeurs et lancement des résolutions automatiques(backtrack et humaine). 
+        & Moyenne à élevée \\
+        \hline
+        \texttt{BanqueGrilles.py} 
+        & Chargement et sauvegarde des grilles pré-générées avec \texttt{pickle}, choix aléatoire d'une grille selon la difficulté. 
+        & Faible à moyenne \\
+        \hline
+        \texttt{GrilleHuman.py} 
+        & Génération de grilles selon les techniques humaines, vérification de la difficulté cible et gestion des redémarrages pendant la génération. 
+        & Élevée \\
+        \hline
+        \texttt{SolverHuman.py} 
+        & Implémentation des techniques humaines de résolution : dernier nombre, singleton nu, singleton caché, paire nue, paire cachée, candidat enfermé, x-wing et gratte-ciel. 
+        & Élevée \\
+        \hline
+        \texttt{SolverHumanStats.py} 
+        & Résolution avec statistiques : nombre d'étapes, techniques utilisées, technique maximale et historique des coups. 
+        & Moyenne à élevée \\
+        \hline
+    \end{tabular}
+    \caption{Complexité des fichiers principaux utilisés par l'interface console}
+    \label{tab:complexite-interface-console}
+\end{table}
+
 \subsubsection{Nombre de modules / classes}
 
 Le projet contient environ \textbf{35 fichiers Python}. Chaque fichier Python peut être considéré comme un module, car il regroupe une partie précise du programme : gestion des grilles, génération, résolution, interface, historique, difficultés, techniques de résolution ou encore sauvegarde des grilles pré-générées.
@@ -364,17 +397,17 @@ Le projet contient aussi plusieurs fichiers liés à l'interface web et aux donn
     \centering
     \begin{tabular}{|l|c|l|}
         \hline
-        \textbf{Type de fichier} & \textbf{Nombre de fichiers} & \textbf{Taille approximative} \\
+        \textbf{Type de fichier} & \textbf{Nombre de fichiers} \\
         \hline
-        Python \texttt{.py} & 35 & 150 à 200 lignes en moyenne \\
+        Python \texttt{.py} & 35  \\
         \hline
-        HTML & 2 & environ 30 lignes en moyenne \\
+        HTML & 1  \\
         \hline
-        CSS & 2 & environ 70 lignes pour un fichier, environ 700 pour l'autre \\
+        CSS & 2  \\
         \hline
-        JavaScript & 1 & environ 8 lignes \\
+        JavaScript & 1  \\
         \hline
-        JSON & 2 & environ 1050 lignes au total \\
+        JSON & 2  \\
         \hline
     \end{tabular}
     \caption{Répartition approximative des fichiers du projet}
@@ -389,7 +422,7 @@ En estimant le nombre de lignes à partir des fichiers du projet, on obtient env
 
 \begin{itemize}
     \item \textbf{Python} : 35 fichiers avec environ 150 à 200 lignes en moyenne, soit environ 5250 à 7000 lignes ;
-    \item \textbf{HTML} : 2 fichiers avec environ 30 lignes chacun, soit environ 60 lignes ;
+    \item \textbf{HTML} : 1 fichier avec environ 440  ;
     \item \textbf{CSS} : 2 fichiers, avec environ 70 lignes pour l'un et 700 lignes pour l'autre, soit environ 770 lignes ;
     \item \textbf{JavaScript} : 1 fichier d'environ 8 lignes ;
     \item \textbf{JSON} : 2 fichiers contenant environ 1050 lignes au total.
@@ -405,7 +438,7 @@ On peut résumer cette estimation dans le tableau suivant :
         \hline
         Python & 5250 à 7000 \\
         \hline
-        HTML & 60 \\
+        HTML & 440 \\
         \hline
         CSS & 770 \\
         \hline
@@ -521,28 +554,28 @@ Elles illustrent l'affichage des grilles dans l'interface console, les différen
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{grilleFacile.png}
+    \includegraphics[width=0.60\textwidth]{grilleFacile.png}
     \caption{Exemple d'une grille facile affichée dans l'interface console}
     \label{fig:grille-facile}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{grilleDifficile.png}
+    \includegraphics[width=0.70\textwidth]{grilleDifficile.png}
     \caption{Exemple d'une grille difficile affichée dans l'interface console}
     \label{fig:grille-difficile}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{grilleExtremeResolu.png}
+    \includegraphics[width=0.80\textwidth]{grilleExtremeResolu.png}
     \caption{Exemple d'une grille extrême résolue avec des techniques humaines dans l'interface console}
     \label{fig:grille-extreme-resolu}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{etapesMoyen.png}
+    \includegraphics[width=0.6\textwidth]{etapesMoyen.png}
     \caption{Exemple des étapes d'une grille moyen resolue avec des techniques humaines dans l'interface console}
     \label{fig:etapes-moyen}
 \end{figure}
