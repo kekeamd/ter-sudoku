@@ -504,16 +504,29 @@ La majorité du code se trouve dans les fichiers Python, car ils contiennent tou
 % ===== 7. Bilan et Conclusions =====
 \section{Bilan et Conclusions}
 
-\begin{itemize}
-    \item Fonctionnalités réalisées
-    \item Comparaison avec cahier des charges
-    \item Limites du projet
-    \item Perspectives :
-    \begin{itemize}
-        \item amélioration des algorithmes
-        \item interface graphique
-    \end{itemize}
-\end{itemize}
+\subsection{Fonctionnalités réalisées}
+
+\subsubsection{Banque de grilles pré-générées}
+
+Pour éviter les problèmes de génération lente pendant la soutenance, nous avons décidé d’utiliser un système de banque de grilles pré-générées. L’idée est de ne pas générer les Sudokus en direct devant le jury, car certaines difficultés comme DIFFICILE, EXTREME ou GODMODE peuvent demander plusieurs redémarrages (restarts) et beaucoup de temps avant de trouver une grille valide.
+Le principe consiste à générer plusieurs grilles à l’avance pour chaque niveau de difficulté, puis à les stocker dans un fichier de banque. Chaque grille sauvegardée contient la grille de jeu, la grille solution complète, la difficulté correspondante, ainsi que les statistiques de résolution obtenues avec SolverHumanStats: comme le nombre d’étapes, les techniques utilisées, la technique maximale atteinte et si la grille est bloquée ou non.
+
+Par exemple, nous pouvons préparer plusieurs grilles pour chaque difficulté : FACILE, MOYEN, DIFFICILE, EXTREME et GODMODE. Ainsi, lorsque l’utilisateur choisit une difficulté dans l’interface console, le programme ne lance plus la génération complète. Il charge directement une grille déjà validée depuis la banque.
+
+Cette méthode présente plusieurs avantages. Elle rend l’exécution beaucoup plus rapide, évite les longues attentes liées aux restarts, supprime le risque qu’une mauvaise grille soit générée pendant la démonstration, et garantit que chaque grille affichée correspond bien à la difficulté demandée. Cela rend la soutenance plus fluide, plus stable et plus professionnelle.
+
+Le générateur de grilles reste bien sûr conservé dans le projet afin de montrer le fonctionnement complet du système. Cependant, pour la démonstration finale, l’utilisation d’une banque de grilles validées permet d’assurer une meilleure fiabilité.
+
+\subsection{Comparaison avec cahier des charges}
+
+\subsection{Limites du projet}
+
+\subsection{Perspectives}
+
+\subsubsection{Amélioration des algorithmes...}
+\subsubsection{Interface graphique...}
+
+\vspace{0.5cm}
 
 % ===== 8. Bibliographie =====
 \section{Bibliographie}
@@ -544,6 +557,8 @@ Utilisée pour la gestion de version et le travail collaboratif.\\
 \texttt{https://gitlab.etu.umontpellier.fr/}
 
 \end{thebibliography}
+
+\vspace{0.5cm}
 
 % ===== 9. Annexes =====
 \section{Annexes}

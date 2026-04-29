@@ -1,0 +1,286 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.12.15)  19 DEC 2025 17:13
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**/Users/martinkonchev/Marti/L3/S2/Projet2/ter-sudoku-groupX/rapport/Rapport_Sprint1.tex
+(/Users/martinkonchev/Marti/L3/S2/Projet2/ter-sudoku-groupX/rapport/Rapport_Sprint1.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2024/06/29 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2024/06/29 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count196
+\c@section=\count197
+\c@subsection=\count198
+\c@subsubsection=\count199
+\c@paragraph=\count266
+\c@subparagraph=\count267
+\c@figure=\count268
+\c@table=\count269
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen141
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2024/02/08 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/babel.sty
+Package: babel 2025/02/14 v25.4 The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX
+\babel@savecnt=\count270
+\U@D=\dimen142
+\l@unhyphenated=\language90
+ (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/txtbabel.def)
+\bbl@readstream=\read2
+\bbl@dirlevel=\count271
+ (/usr/local/texlive/2025/texmf-dist/tex/generic/babel-french/francais.ldf
+Language: francais 2024-07-25 v3.6c French support from the babel system
+
+
+Package francais.ldf Warning: Option `francais' for Babel is *deprecated*,
+(francais.ldf)                it might be removed sooner or later. Please
+(francais.ldf)                use `french' instead; reported on input line 31.
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/babel-french/french.ldf
+Language: french 2024-07-25 v3.6c French support from the babel system
+Package babel Info: Hyphen rules for 'acadian' set to \l@french
+(babel)             (\language30). Reported on input line 91.
+Package babel Info: Hyphen rules for 'canadien' set to \l@french
+(babel)             (\language30). Reported on input line 92.
+\FB@stdchar=\count272
+Package babel Info: Making : an active character on input line 421.
+Package babel Info: Making ; an active character on input line 422.
+Package babel Info: Making ! an active character on input line 423.
+Package babel Info: Making ? an active character on input line 424.
+\FBguill@level=\count273
+\FBold@everypar=\toks19
+\FB@Mht=\dimen143
+\mc@charclass=\count274
+\mc@charfam=\count275
+\mc@charslot=\count276
+\std@mcc=\count277
+\dec@mcc=\count278
+\FB@parskip=\dimen144
+\listindentFB=\dimen145
+\descindentFB=\dimen146
+\labelindentFB=\dimen147
+\labelwidthFB=\dimen148
+\leftmarginFB=\dimen149
+\parindentFFN=\dimen150
+\FBfnindent=\dimen151
+))) (/usr/local/texlive/2025/texmf-dist/tex/latex/carlisle/scalefnt.sty) (/usr/local/texlive/2025/texmf-dist/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip51
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks20
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen152
+\Gin@req@width=\dimen153
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count279
+\float@exts=\toks21
+\float@box=\box52
+\@float@everytoks=\toks22
+\@floatcapt=\box53
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen154
+\captionmargin=\dimen155
+\caption@leftmargin=\dimen156
+\caption@rightmargin=\dimen157
+\caption@width=\dimen158
+\caption@indent=\dimen159
+\caption@parindent=\dimen160
+\caption@hangindent=\dimen161
+Package caption Info: Standard document class detected.
+Package caption Info: french babel package is loaded.
+)
+\c@caption@flags=\count280
+\c@continuedfloat=\count281
+Package caption Info: float package is loaded.
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count282
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count283
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count284
+\l__pdf_internal_box=\box54
+) (./Rapport_Sprint1.aux (/usr/local/texlive/2025/texmf-dist/tex/generic/babel/locale/fr/babel-french.tex
+Package babel Info: Importing font and identification data for french
+(babel)             from babel-fr.ini. Reported on input line 11.
+))
+\openout1 = `Rapport_Sprint1.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Info: Redefining \degres on input line 12.
+LaTeX Info: Redefining \up on input line 12.
+ (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count285
+\scratchdimen=\dimen162
+\scratchbox=\box55
+\nofMPsegments=\count286
+\nofMParguments=\count287
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count288
+\MPscratchDim=\dimen163
+\MPnumerator=\count289
+\makeMPintoPDFobject=\count290
+\everyMPtoPDFconversion=\toks24
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+<5d690eb0740000ba01a7340e.jpeg, id=1, 401.5pt x 401.5pt>
+File: 5d690eb0740000ba01a7340e.jpeg Graphic file (type jpg)
+<use 5d690eb0740000ba01a7340e.jpeg>
+Package pdftex.def Info: 5d690eb0740000ba01a7340e.jpeg  used on input line 20.
+(pdftex.def)             Requested size: 85.35896pt x 85.35826pt.
+<IMG_9024.jpg, id=2, 209.78375pt x 254.9525pt>
+File: IMG_9024.jpg Graphic file (type jpg)
+<use IMG_9024.jpg>
+Package pdftex.def Info: IMG_9024.jpg  used on input line 22.
+(pdftex.def)             Requested size: 70.23717pt x 85.35826pt.
+
+
+[1
+
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc} <./5d690eb0740000ba01a7340e.jpeg> <./IMG_9024.jpg>]
+
+[1
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
+
+ []
+
+<debut.jpeg, id=18, 660.4675pt x 1324.95pt>
+File: debut.jpeg Graphic file (type jpg)
+<use debut.jpeg>
+Package pdftex.def Info: debut.jpeg  used on input line 124.
+(pdftex.def)             Requested size: 135.89174pt x 272.60715pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+
+ []
+
+
+
+[2 <./debut.jpeg>]
+<sudokuConsole.jpeg, id=23, 447.6725pt x 728.7225pt>
+File: sudokuConsole.jpeg Graphic file (type jpg)
+<use sudokuConsole.jpeg>
+Package pdftex.def Info: sudokuConsole.jpeg  used on input line 135.
+(pdftex.def)             Requested size: 226.48395pt x 368.67468pt.
+<valeurInvalide.jpeg, id=24, 562.1pt x 307.1475pt>
+File: valeurInvalide.jpeg Graphic file (type jpg)
+<use valeurInvalide.jpeg>
+Package pdftex.def Info: valeurInvalide.jpeg  used on input line 144.
+(pdftex.def)             Requested size: 217.42265pt x 118.80283pt.
+<caseRempli.jpeg, id=25, 560.0925pt x 295.1025pt>
+File: caseRempli.jpeg Graphic file (type jpg)
+<use caseRempli.jpeg>
+Package pdftex.def Info: caseRempli.jpeg  used on input line 150.
+(pdftex.def)             Requested size: 217.42265pt x 114.55815pt.
+<valInserer.jpeg, id=26, 540.0175pt x 616.3025pt>
+File: valInserer.jpeg Graphic file (type jpg)
+<use valInserer.jpeg>
+Package pdftex.def Info: valInserer.jpeg  used on input line 160.
+(pdftex.def)             Requested size: 217.42265pt x 248.13412pt.
+<grilleResolue.jpeg, id=27, 648.4225pt x 656.4525pt>
+File: grilleResolue.jpeg Graphic file (type jpg)
+<use grilleResolue.jpeg>
+Package pdftex.def Info: grilleResolue.jpeg  used on input line 166.
+(pdftex.def)             Requested size: 217.42265pt x 220.11578pt.
+
+
+[3 <./sudokuConsole.jpeg> <./valeurInvalide.jpeg> <./caseRempli.jpeg>]
+<figure1.jpeg, id=32, 1274.7625pt x 953.5625pt>
+File: figure1.jpeg Graphic file (type jpg)
+<use figure1.jpeg>
+Package pdftex.def Info: figure1.jpeg  used on input line 173.
+(pdftex.def)             Requested size: 226.48395pt x 169.40767pt.
+
+
+[4 <./valInserer.jpeg> <./grilleResolue.jpeg> <./figure1.jpeg>]
+Underfull \hbox (badness 10000) in paragraph at lines 223--224
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 231--232
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 238--239
+
+ []
+
+
+
+[5]
+
+[6] (./Rapport_Sprint1.aux)
+ ***********
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+ ***********
+ ) 
+Here is how much of TeX's memory you used:
+ 5098 strings out of 473190
+ 91997 string characters out of 5715799
+ 495016 words of memory out of 5000000
+ 28340 multiletter control sequences out of 15000+600000
+ 567126 words of font info for 47 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 67i,8n,77p,462b,484s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb>
+Output written on Rapport_Sprint1.pdf (7 pages, 825170 bytes).
+PDF statistics:
+ 83 PDF objects out of 1000 (max. 8388607)
+ 46 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+
