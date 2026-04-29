@@ -40,9 +40,34 @@
                 </div>
             </div>
             <div class="col-start-2 col-span-3" id="middle-col">
-                <div id="sudoku-frame"></div>
+                <div class="font-medium text-base sm:text-base md:text-lg lg:text-xl xl:text-xl" id="sudoku-frame"></div>
             </div>
-            <div class="col-start-5 col-span-1" id="right-col"></div>
+            <div class="col-start-5 col-span-1" id="right-col">
+                <div class="rounded-md shadow-lg" id="utilities-frame">
+                    <div class="zone grid grid-rows-3 rounded-lg font-medium text-base sm:text-base md:text-lg lg:text-xl xl:text-xl" id="values">
+                        <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="values-1">1</button>
+                        <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="values-2">2</button>
+                        <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="values-3">3</button>
+                        <button class="cellule row-start-2 border-stone-300 hover:bg-neutral-100" id="values-4">4</button>
+                        <button class="cellule row-start-2 border-stone-300 hover:bg-neutral-100" id="values-5">5</button>
+                        <button class="cellule row-start-2 border-stone-300 hover:bg-neutral-100" id="values-6">6</button>
+                        <button class="cellule row-start-3 border-stone-300 hover:bg-neutral-100" id="values-7">7</button>
+                        <button class="cellule row-start-3 border-stone-300 hover:bg-neutral-100" id="values-8">8</button>
+                        <button class="cellule row-start-3 border-stone-300 hover:bg-neutral-100" id="values-9">9</button>
+                    </div>
+                    <div class="zone grid grid-rows-3 rounded-lg font-thin text-xs sm:text-xs md:text-xs lg:text-sm xl:text-sm" id="candidates">
+                        <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="candidates-1">1</button>
+                        <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="candidates-2">2</button>
+                        <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="candidates-3">3</button>
+                        <button class="cellule row-start-2 border-stone-300 hover:bg-neutral-100" id="candidates-4">4</button>
+                        <button class="cellule row-start-2 border-stone-300 hover:bg-neutral-100" id="candidates-5">5</button>
+                        <button class="cellule row-start-2 border-stone-300 hover:bg-neutral-100" id="candidates-6">6</button>
+                        <button class="cellule row-start-3 border-stone-300 hover:bg-neutral-100" id="candidates-7">7</button>
+                        <button class="cellule row-start-3 border-stone-300 hover:bg-neutral-100" id="candidates-8">8</button>
+                        <button class="cellule row-start-3 border-stone-300 hover:bg-neutral-100" id="candidates-9">9</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
     <script defer>
@@ -54,6 +79,8 @@
         var Pseudo=""
         var Focused= false
         var FocusTarget= null
+        var SelectedCellule= null
+        var SelectedUtility= null
 
         var anonymousInfos= document.getElementById("anonymous-infos")
         var anonymousInfosButton= document.getElementById("anonymous-infos-close")
@@ -73,6 +100,24 @@
         var loginPassword= document.getElementById("login-password")
         var loginSubmit= document.getElementById("login-submit")
         var sudokuFrame= document.getElementById("sudoku-frame")
+        var values1= document.getElementById("values-1")
+        var values2= document.getElementById("values-2")
+        var values3= document.getElementById("values-3")
+        var values4= document.getElementById("values-4")
+        var values5= document.getElementById("values-5")
+        var values6= document.getElementById("values-6")
+        var values7= document.getElementById("values-7")
+        var values8= document.getElementById("values-8")
+        var values9= document.getElementById("values-9")
+        var candidates1= document.getElementById("candidates-1")
+        var candidates2= document.getElementById("candidates-2")
+        var candidates3= document.getElementById("candidates-3")
+        var candidates4= document.getElementById("candidates-4")
+        var candidates5= document.getElementById("candidates-5")
+        var candidates6= document.getElementById("candidates-6")
+        var candidates7= document.getElementById("candidates-7")
+        var candidates8= document.getElementById("candidates-8")
+        var candidates9= document.getElementById("candidates-9")
 
         function removeBlur(target){
             if (target.classList.contains("blured")){target.classList.remove("blured")}
@@ -180,8 +225,117 @@
         }
 
         function Play(difficulte){
-            socket.emit('play', difficulte)
-            ChooseDifficulte()
+            if (!Focused){
+                socket.emit('play', difficulte)
+                ChooseDifficulte()
+            }
+        }
+
+        function ColorRegions(cellule, type="color"){
+            let index= parseInt(cellule.id.slice(8))
+            grille= document.getElementById("sudoku-grid")
+            zone= cellule.parentElement
+            for (let i=0; i<zone.children.length; i++){
+                let rowFirstIndex= index - (index%zone.children.length)
+                let colFirstIndex= index%zone.children.length
+                let zoneChild= zone.children[i]
+                let rowChild= document.getElementById("cellule-"+(rowFirstIndex+i))
+                let colChild= document.getElementById("cellule-"+(colFirstIndex+i*zone.children.length))
+                if (type=="color"){
+                    if (zoneChild!=cellule){
+                        zoneChild.classList.add("bg-blue-100/50")
+                        zoneChild.classList.add("hover:bg-blue-200/50")
+                    }
+
+                    if (!rowChild.classList.contains("bg-blue-100/50") && rowChild!=cellule){
+                        rowChild.classList.add("bg-blue-100/50")
+                        rowChild.classList.add("hover:bg-blue-200/50")
+                    }
+                    if (!colChild.classList.contains("bg-blue-100/50") && colChild!=cellule){
+                        colChild.classList.add("bg-blue-100/50")
+                        colChild.classList.add("hover:bg-blue-200/50")
+                    }
+                } else{
+                    zoneChild.classList.remove("bg-blue-100/50")
+                    zoneChild.classList.remove("hover:bg-blue-200/50")
+                    rowChild.classList.remove("bg-blue-100/50")
+                    rowChild.classList.remove("hover:bg-blue-200/50")
+                    colChild.classList.remove("bg-blue-100/50")
+                    colChild.classList.remove("hover:bg-blue-200/50")
+                }
+            }
+
+        }
+
+        function CelluleUnselect(){
+            if (!Focused){
+                if (SelectedCellule!=null){
+                    SelectedCellule.classList.remove("cellule-selected")
+                    SelectedCellule.classList.remove("bg-blue-300/50")
+                    SelectedCellule.classList.remove("hover:bg-blue-400/50")
+                    ColorRegions(SelectedCellule, "uncolor")
+                    SelectedCellule=null
+                    //more.......
+                }
+            }
+        }
+
+        function CelluleSelect(cellule){
+            if (!Focused){
+                if (cellule==SelectedCellule){
+                    //il faut rajouter la valeur
+                } else{
+                    CelluleUnselect()
+                    SelectedCellule= cellule
+                    SelectedCellule.classList.add("cellule-selected")
+                    SelectedCellule.classList.add("bg-blue-300/50")
+                    SelectedCellule.classList.add("hover:bg-blue-400/50")
+                    ColorRegions(cellule)
+                }
+            }
+        }
+        
+        //-----FORMAT CELLULE SELECTED:-----
+        //on ajoute aux voisins "bg-blue-100/50 hover:bg-blue-200/50" à class
+        //on ajoute au selectionné "cellule-selected bg-blue-300/50 hover:bg-blue-400/50" à class
+
+        function UtilitiesUnselect(){
+            if (!Focused){
+                if (SelectedUtility!=null){
+                    SelectedUtility.classList.remove("utilities-selected")
+                    SelectedUtility.classList.remove("bg-blue-300/50")
+                    SelectedUtility.classList.remove("hover:bg-blue-400/50")
+                }
+            }
+        }
+
+        function UtilitiesSelect(button){
+            if (!Focused){
+                UtilitiesUnselect()
+                SelectedUtility=button
+                SelectedUtility.classList.add("utilities-selected")
+                SelectedUtility.classList.add("bg-blue-300/50")
+                SelectedUtility.classList.add("hover:bg-blue-400/50")
+                //il faut rajouter la partie si une cellule est déjà selectionnée (ajouter la valeur)
+                //ColorValues()
+            }
+        }
+        //-----FORMAT UTILITIES SELECTED:-----
+        //on ajoute "utilities-selected bg-blue-300/50 hover:bg-blue-400/50" à class
+
+        function UnselectCellule(event){
+            if (!Focused){
+                if (!event.target.classList.contains("cellule")){
+                    CelluleUnselect()
+                }
+            }
+        }
+
+        function UnSelectUtilities(event){
+            event.preventDefault()
+            if (!Focused){
+                UtilitiesUnselect()
+            }
         }
 
         anonymousInfosButton.addEventListener("click", CloseInfos)
@@ -196,6 +350,29 @@
         difficulteDifficile.addEventListener("click", () => {Play("difficile")})
         difficulteExtreme.addEventListener("click", () => {Play("extreme")})
         difficulteGodmode.addEventListener("click", () => {Play("godmode")})
+
+        values1.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values2.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values3.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values4.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values5.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values6.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values7.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values8.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values9.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+
+        candidates1.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates2.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates3.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates4.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates5.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates6.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates7.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates8.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        candidates9.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        document.addEventListener("click", UnselectCellule)
+        document.addEventListener("contextmenu", UnSelectUtilities)
+
 
         socket.on('play', data => {
             //format data: {'grille': Grille,
@@ -232,6 +409,7 @@
                         cellule.classList.add("border-stone-300")
                         cellule.classList.add("hover:bg-neutral-100")
                         cellule.id="cellule-"+celluleIndex
+                        cellule.addEventListener("click", (event) => {CelluleSelect(event.target)})
                         zone.appendChild(cellule)
                     }
                 }
