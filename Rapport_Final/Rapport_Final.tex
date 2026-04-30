@@ -824,18 +824,34 @@ Si nous assemblons toutes ses complexités, nous obtenons une complexité total 
 \section{Analyse des Résultats}
 
 \subsection{Graphiques de performance}
+Voici un graphique de performance de backtrack d'une grille Facile : \textbf{Figure~\ref{fig:backtrack-facile}}
+
+Voici un graphique de performance de solveur humaine d'une grille Facile : \textbf{Figure~\ref{fig:solH-facile}}
+
+Voici un graphique de performance de backtrack d'une grille Difficile : \textbf{Figure~\ref{fig:backtrack-difficile}}
+
+Voici un graphique de performance de solveur humaine d'une grille Difficile : \textbf{Figure~\ref{fig:solH-difficile}}
 
 \subsection{Analyse des résultats}
+Dans la section au dessus nous avons montré différents graphiques de performances de notre SolverBacktrack et SolverHuman en fonctions des difficultés d’une grille. Premièrement pour le backttrtacking on a le temps en milliseconde et le nombres d’appels récursifs, on constate que les courbes montrent des temps très faibles sur la majorité des tests (quelques millisecondes) mais des pics énormes sur certains tests (jusqu’à ~1.8 secondes), ce qui montrent que le backtracking est extrêmement instable en terme de performances, il peut résoudre une grille en 0.01 seconde ou en 2 secondes selon la configuration initiale. 
+De même pour le nombre d’appels récursifs, les courbes montres des tests avec 500 appels et des pics à ~20000. Ce qui est compréhensible car une seule case mal placée peut multiplier le nombre d’appels par 40.
+
+Pour le SolverHuman comme le bactracking a des temps très faible et contrairement à ce dernier lui est très stable et n’a pas de pics extrêmes. Il applique des techniques déterministes donc il est rapide et constant.
 
 \subsection{Comparaison des méthodes}
 
 \subsubsection{Backtracking vs Méthodes humaines}
+Les deux approches présentent des philosophies et des comportements très différents.
 
-\subsection{Procédures de test}
+Le Backtracking est un solveur universel : il peut résoudre n’importe quelle grille valide, indépendamment de sa complexité logique. Cependant, cette universalité a un coût : l’algorithme peut s’effondrer en performance dès que la grille nécessite une exploration profonde de l’arbre des possibilités. Les résultats montrent des variations extrêmes, avec des temps d’exécution pouvant être multipliés par 100 ou 200 selon les cas. Le Backtracking est donc fiable mais imprévisible.
 
-\subsubsection{Génération de grilles}
+À l’inverse, le SolverHuman est extrêmement rapide et stable. Il ne souffre d’aucune explosion combinatoire et son temps d’exécution reste quasi constant. En revanche, il est limité par les techniques implémentées : si une grille nécessite une technique non disponible, le solveur restera bloqué. Il n’a pas la garantie de résoudre toutes les grilles, mais il excelle dans l’analyse logique et la classification de difficulté.
 
-\subsubsection{Validation des solutions}
+En résumé, les deux solveurs sont complémentaires :
+
+- le Backtracking est idéal pour vérifier l’unicité d’une solution ou générer des grilles complètes,
+
+- le SolverHuman est parfait pour analyser la difficulté, reproduire une résolution humaine et garantir des performances stables.
 
 \vspace{0.5cm}
 
@@ -887,32 +903,32 @@ Les fonctionnalités qui ont été implémenter sont les suivantes :
 
 - Résolution d'une Grille Sudoku via Techniques Humaines,
 
-- Estimation de difficulté d'une Grille via Techniques Humaine,
+- Estimation de difficulté d'une Grille via Techniques Humaines,
 
-- Le traçage de la résolution d'une grille,
+- Le traçage de la résolution d'une Grille,
 
-- Un historique permettant d'enregister et de restituer un séquence de Grille,
+- Un historique permettant d'enregister et de restituer une séquence de Grille,
 
-- Un Parser Permettant le transtypage notamment pour la Grille,
+- Un Parser permettant le transtypage notamment pour la Grille,
 
-- Un système de sauvegarde et de restitution de Grille précédemment générer,
+- Un système de sauvegarde et de restitution de Grille précédemment généré,
 
-- Un système permettant de récupérer l'estimation de la difficulté faite par un site Externe : SudokuCoach(Numero),
+- Un système permettant de récupérer l'estimation de la difficulté faite par un site externe : SudokuCoach \textbf{\cite{sudokucoach}},
 
-- Un affichage console permettant l'affichage et l'interaction avec les fonctionnalités implémenter ainsi que jouer,
+- Un affichage console permettant l'affichage et l'interaction avec les fonctionnalités implémentés ainsi que jouer,
 
-- Demande de génération de d'affichage de Grille dans une Page WEB,
+- Demande de génération d'affichage de Grille dans une page web,
    
 - Un système de modification visuelle de Grille sans en modifier la difficulté.
 
 \subsection{Comparaison avec cahier des charges}
 Le cahier des charges qui fut décidé incluais :
     
-- Génération de Grille valide via Backtrack en ayant une difficulté dépendante du nombre de cases vides,
+- Génération de Grille valide via backtrack en ayant une difficulté dépendante du nombre de cases vides,
 
 - Un Parser de fichier,
 
-- Un solver Automatique (Backtrack),
+- Un solver automatique (backtrack),
 
 - Une interface minimal de test,
 
@@ -1083,6 +1099,34 @@ Cette section regroupe plusieurs captures d'écran obtenues lors des tests du pr
     \includegraphics[width=0.78\textwidth]{grilleGodmodeBanque.png}
     \caption{Chargement d'une grille GodMode depuis la banque de grilles pré-générées}
     \label{fig:grille-godmode}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{graphiques/backtrackFacile(ms).png}
+    \caption{Graphique de performance de backtrack sur une grille Facile}
+    \label{fig:backtrack-facile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{graphiques/SolverHumanFacile(ms).png}
+    \caption{Graphique de performance de solveur humaine sur une grille Facile}
+    \label{fig:solH-facile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{graphiques/BacktrackDifficile(ms).png}
+    \caption{Graphique de performance de backtrack sur une grille Difficile}
+    \label{fig:backtrack-difficile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.70\textwidth]{graphiques/SolverHumanDifficle(ms).png}
+    \caption{Graphique de performance de solveur humaine sur une grille Difficile}
+    \label{fig:solH-difficile}
 \end{figure}
 
 
