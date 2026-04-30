@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.12.15)  30 APR 2026 17:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.12.15)  30 APR 2026 18:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -684,12 +684,12 @@ Package hyperref Info: Link coloring OFF on input line 28.
 \openout4 = `Rapport_Final.out'.
 
 \c@lstlisting=\count359
-<5d690eb0740000ba01a7340e.jpeg, id=260, 401.5pt x 401.5pt>
+<5d690eb0740000ba01a7340e.jpeg, id=252, 401.5pt x 401.5pt>
 File: 5d690eb0740000ba01a7340e.jpeg Graphic file (type jpg)
 <use 5d690eb0740000ba01a7340e.jpeg>
 Package pdftex.def Info: 5d690eb0740000ba01a7340e.jpeg  used on input line 36.
 (pdftex.def)             Requested size: 85.35896pt x 85.35826pt.
-<IMG_9024.jpg, id=261, 209.78375pt x 254.9525pt>
+<IMG_9024.jpg, id=253, 209.78375pt x 254.9525pt>
 File: IMG_9024.jpg Graphic file (type jpg)
 <use IMG_9024.jpg>
 Package pdftex.def Info: IMG_9024.jpg  used on input line 38.
@@ -774,105 +774,107 @@ Underfull \hbox (badness 4765) in paragraph at lines 655--656
 [12]
 
 [13]
-<Diagramme_classe/DiagrammeSlice/Grille_GEN.png, id=392, 2958.55313pt x 3200.95876pt>
-File: Diagramme_classe/DiagrammeSlice/Grille_GEN.png Graphic file (type png)
-<use Diagramme_classe/DiagrammeSlice/Grille_GEN.png>
-Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Grille_GEN.png  used on input line 899.
-(pdftex.def)             Requested size: 249.13371pt x 269.51366pt.
-
 
 [14]
-<Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png, id=398, 1218.05063pt x 2478.25874pt>
+<Diagramme_classe/DiagrammeSlice/Grille_GEN.png, id=388, 2958.55313pt x 3200.95876pt>
+File: Diagramme_classe/DiagrammeSlice/Grille_GEN.png Graphic file (type png)
+<use Diagramme_classe/DiagrammeSlice/Grille_GEN.png>
+Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Grille_GEN.png  used on input line 920.
+(pdftex.def)             Requested size: 294.42636pt x 318.50282pt.
+
+
+[15]
+<Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png, id=394, 1218.05063pt x 2478.25874pt>
 File: Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png Graphic file (type png)
 <use Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png>
-Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png  used on input line 906.
+Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png  used on input line 927.
 (pdftex.def)             Requested size: 249.13371pt x 506.87407pt.
 
 
-[15 <./Diagramme_classe/DiagrammeSlice/Grille_GEN.png>]
-<Diagramme_classe/DiagrammeSlice/Solver.png, id=404, 2314.89844pt x 2628.06844pt>
+[16 <./Diagramme_classe/DiagrammeSlice/Grille_GEN.png>]
+<Diagramme_classe/DiagrammeSlice/Solver.png, id=400, 2314.89844pt x 2628.06844pt>
 File: Diagramme_classe/DiagrammeSlice/Solver.png Graphic file (type png)
 <use Diagramme_classe/DiagrammeSlice/Solver.png>
-Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Solver.png  used on input line 913.
-(pdftex.def)             Requested size: 249.13371pt x 282.83266pt.
+Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Solver.png  used on input line 934.
+(pdftex.def)             Requested size: 271.7835pt x 308.53743pt.
 
 
-[16 <./Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png>]
-<Diagramme_classe/DiagrammeSlice/Parser.png, id=410, 3113.6325pt x 1606.50188pt>
+[17 <./Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png>]
+<Diagramme_classe/DiagrammeSlice/Parser.png, id=406, 3113.6325pt x 1606.50188pt>
 File: Diagramme_classe/DiagrammeSlice/Parser.png Graphic file (type png)
 <use Diagramme_classe/DiagrammeSlice/Parser.png>
-Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Parser.png  used on input line 920.
-(pdftex.def)             Requested size: 249.13371pt x 128.52277pt.
-<Diagramme_classe/DiagrammeSlice/Interface.png, id=411, 2768.09157pt x 1833.85126pt>
+Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Parser.png  used on input line 941.
+(pdftex.def)             Requested size: 271.7835pt x 140.21558pt.
+<Diagramme_classe/DiagrammeSlice/Interface.png, id=407, 2768.09157pt x 1833.85126pt>
 File: Diagramme_classe/DiagrammeSlice/Interface.png Graphic file (type png)
 <use Diagramme_classe/DiagrammeSlice/Interface.png>
-Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Interface.png  used on input line 927.
-(pdftex.def)             Requested size: 249.13371pt x 165.03949pt.
+Package pdftex.def Info: Diagramme_classe/DiagrammeSlice/Interface.png  used on input line 948.
+(pdftex.def)             Requested size: 271.7835pt x 180.038pt.
 
 
-[17 <./Diagramme_classe/DiagrammeSlice/Solver.png> <./Diagramme_classe/DiagrammeSlice/Parser.png>]
-<Diagramme_classe/Diagramme_simpl.png, id=419, 750.8853pt x 485.6544pt>
+[18 <./Diagramme_classe/DiagrammeSlice/Solver.png> <./Diagramme_classe/DiagrammeSlice/Parser.png>]
+<Diagramme_classe/Diagramme_simpl.png, id=416, 750.8853pt x 485.6544pt>
 File: Diagramme_classe/Diagramme_simpl.png Graphic file (type png)
 <use Diagramme_classe/Diagramme_simpl.png>
-Package pdftex.def Info: Diagramme_classe/Diagramme_simpl.png  used on input line 934.
-(pdftex.def)             Requested size: 249.13371pt x 161.13347pt.
-<grilleFacile.png, id=421, 438.63875pt x 625.33624pt>
+Package pdftex.def Info: Diagramme_classe/Diagramme_simpl.png  used on input line 955.
+(pdftex.def)             Requested size: 271.7835pt x 175.78398pt.
+<grilleFacile.png, id=418, 438.63875pt x 625.33624pt>
 File: grilleFacile.png Graphic file (type png)
 <use grilleFacile.png>
-Package pdftex.def Info: grilleFacile.png  used on input line 941.
+Package pdftex.def Info: grilleFacile.png  used on input line 962.
 (pdftex.def)             Requested size: 271.7835pt x 387.46591pt.
 
 
-[18 <./Diagramme_classe/DiagrammeSlice/Interface.png> <./Diagramme_classe/Diagramme_simpl.png>]
-<grilleDifficile.png, id=430, 488.82625pt x 594.22pt>
+[19 <./Diagramme_classe/DiagrammeSlice/Interface.png> <./Diagramme_classe/Diagramme_simpl.png>]
+<grilleDifficile.png, id=425, 488.82625pt x 594.22pt>
 File: grilleDifficile.png Graphic file (type png)
 <use grilleDifficile.png>
-Package pdftex.def Info: grilleDifficile.png  used on input line 948.
+Package pdftex.def Info: grilleDifficile.png  used on input line 969.
 (pdftex.def)             Requested size: 317.07614pt x 385.44052pt.
 
 
-[19 <./grilleFacile.png>]
-<grilleExtremeResolu.png, id=436, 1038.88126pt x 388.45125pt>
+[20 <./grilleFacile.png>]
+<grilleExtremeResolu.png, id=432, 1038.88126pt x 388.45125pt>
 File: grilleExtremeResolu.png Graphic file (type png)
 <use grilleExtremeResolu.png>
-Package pdftex.def Info: grilleExtremeResolu.png  used on input line 955.
+Package pdftex.def Info: grilleExtremeResolu.png  used on input line 976.
 (pdftex.def)             Requested size: 362.37569pt x 135.49171pt.
-<etapesMoyen.png, id=437, 460.72125pt x 645.41125pt>
+<etapesMoyen.png, id=433, 460.72125pt x 645.41125pt>
 File: etapesMoyen.png Graphic file (type png)
 <use etapesMoyen.png>
-Package pdftex.def Info: etapesMoyen.png  used on input line 962.
+Package pdftex.def Info: etapesMoyen.png  used on input line 983.
 (pdftex.def)             Requested size: 271.7835pt x 380.73026pt.
 
 
-[20 <./grilleDifficile.png> <./grilleExtremeResolu.png>]
-<grilleGodmodeBanque.png, id=444, 1067.99pt x 567.11874pt>
+[21 <./grilleDifficile.png> <./grilleExtremeResolu.png>]
+<grilleGodmodeBanque.png, id=440, 1067.99pt x 567.11874pt>
 File: grilleGodmodeBanque.png Graphic file (type png)
 <use grilleGodmodeBanque.png>
-Package pdftex.def Info: grilleGodmodeBanque.png  used on input line 969.
+Package pdftex.def Info: grilleGodmodeBanque.png  used on input line 990.
 (pdftex.def)             Requested size: 353.31439pt x 187.61705pt.
 
 
-[21 <./etapesMoyen.png> <./grilleGodmodeBanque.png>] (./Rapport_Final.aux)
+[22 <./etapesMoyen.png> <./grilleGodmodeBanque.png>] (./Rapport_Final.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `Rapport_Final.out' has not changed.
-(rerunfilecheck)             Checksum: 15108F614D438CD6B20B211D3FBD8D32;12990.
+(rerunfilecheck)             Checksum: 29F4C607213084C18DBC6DA9CF8665B3;12616.
  ) 
 Here is how much of TeX's memory you used:
- 30337 strings out of 473190
- 603637 string characters out of 5715799
+ 30334 strings out of 473190
+ 603584 string characters out of 5715799
  1006005 words of memory out of 5000000
- 53020 multiletter control sequences out of 15000+600000
+ 53018 multiletter control sequences out of 15000+600000
  570868 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  98i,10n,105p,746b,638s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfcc1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on Rapport_Final.pdf (22 pages, 1946617 bytes).
+Output written on Rapport_Final.pdf (23 pages, 1948964 bytes).
 PDF statistics:
- 543 PDF objects out of 1000 (max. 8388607)
- 461 compressed objects within 5 object streams
- 125 named destinations out of 1000 (max. 500000)
- 582 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 539 PDF objects out of 1000 (max. 8388607)
+ 456 compressed objects within 5 object streams
+ 124 named destinations out of 1000 (max. 500000)
+ 566 words of extra memory for PDF output out of 10000 (max. 10000000)
 

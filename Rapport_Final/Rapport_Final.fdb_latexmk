@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1777562098.70821 "/Users/martinkonchev/Marti/L3/S2/Projet2/ter-sudoku-groupX/Rapport_Final/Rapport_Final.tex" "Rapport_Final.pdf" "Rapport_Final" 1777562101.44342 0
-  "/Users/martinkonchev/Marti/L3/S2/Projet2/ter-sudoku-groupX/Rapport_Final/Rapport_Final.tex" 1777562097.27081 54101 d2ba7a037b4cc531304c47b8d2012378 ""
+["pdflatex"] 1777565561.50556 "/Users/martinkonchev/Marti/L3/S2/Projet2/ter-sudoku-groupX/Rapport_Final/Rapport_Final.tex" "Rapport_Final.pdf" "Rapport_Final" 1777565564.24333 0
+  "/Users/martinkonchev/Marti/L3/S2/Projet2/ter-sudoku-groupX/Rapport_Final/Rapport_Final.tex" 1777565563.43807 56695 fc5b1066bf1ee330def809588a9b7d0e ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -205,9 +205,9 @@
   "Diagramme_classe/DiagrammeSlice/Solver.png" 1777482842.53786 230082 5c7869ab9d5d91f838fcdea511c0025b ""
   "Diagramme_classe/Diagramme_simpl.png" 1777482842.53954 438654 a60b77ec406f7fcee95a2c442ea975ba ""
   "IMG_9024.jpg" 1777482842.54742 25776 2aaa716ca363c7f74f5861fe8399e747 ""
-  "Rapport_Final.aux" 1777562101.35867 15538 3c0e4f6fc4bae27bef1c143e29b92acb "pdflatex"
-  "Rapport_Final.out" 1777562101.35988 12990 15108f614d438cd6b20b211d3fbd8d32 "pdflatex"
-  "Rapport_Final.tex" 1777562097.27081 54101 d2ba7a037b4cc531304c47b8d2012378 ""
+  "Rapport_Final.aux" 1777565564.15965 15274 03b75e4ed556433d3536b1d301a64e3a "pdflatex"
+  "Rapport_Final.out" 1777565564.16157 12616 29f4c607213084c18dbc6da9cf8665b3 "pdflatex"
+  "Rapport_Final.tex" 1777565563.43807 56695 fc5b1066bf1ee330def809588a9b7d0e ""
   "etapesMoyen.png" 1777482842.55551 323857 4c5bd168d10fa5c1818bebffc8dbbcb2 ""
   "grilleDifficile.png" 1777482842.55799 131191 79e3140350498550dc1bc686621dfd9f ""
   "grilleExtremeResolu.png" 1777482842.56015 145891 ce9c371a1a73afa54129ca46b20f3983 ""

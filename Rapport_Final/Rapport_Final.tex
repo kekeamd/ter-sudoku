@@ -810,14 +810,35 @@ Si nous assemblons toutes ses complexités, nous obtenons une complexité total 
 
 % ===== 6. Gestion du Projet =====
 \section{Gestion du Projet}
+Au début du projet, soit le sprint1, nous nous sommes surtout concentrés sur l'aspect fonctionnel du projet, le but était d'avoir un génération de grille aléatoire, une résolution de grille et une interface affichant une grille avec laquelle on peut interagir. 
+
+Cependant, même si le projet était fonctionnel, il restait encore assez simple et pouvait être amélioré, qui nous laissa insatisfait après cette fin de sprint. Nous avons donc décidé de réorganiser le projet, de mettre des règles, conventions et répartitions de tâches ainsi que d'établir un diagramme des classes.
 
 \subsection{Organisation du projet}
+Premièrement, nous sommes passés à une structure avec des classes, ainsi que quelques énumérations, puis nous avons établi de multiples conventions tel que celles énumérées ci-dessous:
 
-\subsection{Diagramme de Gantt}
+- avoir un fichier par classe et ayant le même nom que la classe avec éventuellement un fichier Test, un fichier Utils et un fichier Error,
+
+- les classes ont une majuscule au début de chaque mot, de même pour les méthodes avec une minuscule au début, et que des minuscule pour les attributs,
+
+- marquer les types et commenter les différentes méthodes et fonctions afin de de facilité l'assemblage des différents modules
+
+
+%\subsection{Diagramme de Gantt}
 
 \subsection{Répartition des tâches}
+Afin de répartir les tâches d'une manière convenant à l'entièreté du groupe, nous avons décidés de faire un plan claire est précis des tâches à réaliser, puis de laisser chacun choisir les tâches leur convenant et d'attribuer les tâches restantes en fonction des disponibilités et de la charge de travail, et enfin il fut décidé que quelqu'un passe vérifier le bon respect des conventions. Suivant ceci, nous obtenons la répartition suivante:
+	
+- \textbf{Konchev Martin} s'occupant de l'interface console et du fichier main, puis par la suite de la génération et résolution de grille avec des techniques humaines et la création de la banque de grilles pré-générées;
 
-\subsection{Changements en cours de projet}
+- \textbf{Barré-Guétrot Ilan} fut réparti sur l'historique de grilles, les classes concernant la grille sudoku ainsi que la génération backtrack et par la suite la résolution de grille humaine et l'interface web;
+
+- \textbf{Dolo Abdourahamane-Abdoul} sur la résolution de grille, la résolution de grille backtrack et ensuite de la résolution de grille humaine ainsi que la récupération de difficulté via le WebScrapping;
+
+- \textbf{Briot--Amadieu Kellyan} se chargea du fichier main, de la transformation de grille en fichier et de l'interaction avec celle-ci, de la grille et des différentes transformations, rotations et inversions de grille par la suite.
+
+
+%\subsection{Changements en cours de projet}
 
 \vspace{0.5cm}
 
@@ -896,7 +917,7 @@ Elles illustrent l'affichage des grilles dans l'interface console, les différen
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Grille_GEN.png}
+    \includegraphics[width=0.65\textwidth]{Diagramme_classe/DiagrammeSlice/Grille_GEN.png}
     \caption{Le diagramme UML représentant les classes des grilles}
     \label{fig:grilleGen}
 \end{figure}
@@ -910,28 +931,28 @@ Elles illustrent l'affichage des grilles dans l'interface console, les différen
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Solver.png}
+    \includegraphics[width=0.60\textwidth]{Diagramme_classe/DiagrammeSlice/Solver.png}
     \caption{Le diagramme UML représentant les classes de Solver}
     \label{fig:solver}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Parser.png}
+    \includegraphics[width=0.60\textwidth]{Diagramme_classe/DiagrammeSlice/Parser.png}
     \caption{Le diagramme UML représentant la classe Parser}
     \label{fig:parser}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Interface.png}
+    \includegraphics[width=0.60\textwidth]{Diagramme_classe/DiagrammeSlice/Interface.png}
     \caption{Le diagramme UML représentant les classes d'Interface}
     \label{fig:interface}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.55\textwidth]{Diagramme_classe/Diagramme_simpl.png}
+    \includegraphics[width=0.60\textwidth]{Diagramme_classe/Diagramme_simpl.png}
     \caption{Le diagramme UML entier et simplifié}
     \label{fig:UML}
 \end{figure}
@@ -959,7 +980,7 @@ Elles illustrent l'affichage des grilles dans l'interface console, les différen
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{etapesMoyen.png}
+    \includegraphics[width=0.60\textwidth]{etapesMoyen.png}
     \caption{Exemple des étapes d'une grille moyen resolue avec des techniques humaines dans l'interface console}
     \label{fig:etapes-moyen}
 \end{figure}
