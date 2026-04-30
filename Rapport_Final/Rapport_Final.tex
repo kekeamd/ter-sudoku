@@ -40,7 +40,7 @@
   \vspace{1.7cm}
 
   \begin{center}
-    {\LARGE\bfseries RAPPORT FINALE \\[0.4em]
+    {\LARGE\bfseries RAPPORT FINAL \\[0.4em]
     Générateur de grilles de Sudoku à difficulté contrôlée\\[1cm]}
 
     {\large \textbf{Groupe X}\\
@@ -224,7 +224,7 @@ L’utilisation de bibliothèques standards permet de garantir la simplicité, l
 
 \paragraph{Gestion de version}
 
-Le projet est géré à l’aide de \textbf{Git}, avec un dépôt hébergé sur GitLab. Cela permet :
+Le projet est géré à l’aide de \textbf{Git} \textbf{\cite{git}}, avec un dépôt hébergé sur GitLab. Cela permet :
 \begin{itemize}
     \item de suivre l’évolution du code,
     \item de travailler en équipe de manière collaborative,
@@ -274,8 +274,8 @@ Enfin, Python est largement utilisé dans le domaine académique, ce qui en fait
 
 \subsection{Présentation des développements réalisés et modules principaux du logiciel}
 
-\subsubsection{Grille}
-Nous avons décidé de découper et représenter la grille en 3 parties, ces parties étant les cellules contenant les valeurs, les blocs qui correspondent aux carrés regroupant les cellules et que nous verrons par la suite sous le nom de 'zone', et enfin la grille en elle-même qui est le carré regroupant les zones. Grâce à cette représentation, nous avons ensuite aisément pu implémenter le concept de grille avec une classe pour chacune des parties énumérées ci-dessus.
+\subsubsection{Grille  (\textbf{Figure~\ref{fig:grilleGen}})} 
+Nous avons décidé de découper et représenter la grille en 3 parties, ces parties étant les cellules contenant les valeurs, les blocs qui correspondent aux carrés regroupant les cellules et que nous verrons par la suite sous le nom de 'zone', et enfin la grille en elle-même qui est le carré regroupant les zones (\textbf{Figure~\ref{fig:zone-cellule}}). Grâce à cette représentation, nous avons ensuite aisément pu implémenter le concept de grille avec une classe pour chacune des parties énumérées ci-dessus.
 
 Tout d’abord, la classe cellule contient évidemment un attribut pour sa valeur, mais aussi un attribut pour les candidats de la cellule sous forme d’une liste d’entiers, sachant qu’un candidat est une valeur qui peut être attribuée à la cellule sans rompre les règles fondamentales du sudoku, mais qui n’est pas forcément la bonne. Par "la bonne" il est entendu que cette valeur est la seule valeur possible pour cette cellule permettant au sudoku d’être résolu, qui nous le rappelons a pour principe de n’avoir qu’une seule solution possible. 
 
@@ -295,19 +295,19 @@ Dernièrement, la grille contient une génération de valeurs sous forme de mét
 
 Pour finir et comme énoncé précédemment, la génération des valeurs n’est pas définie dans la classe Grille, qui devient donc un classe abstraite, et la génération est relayée à ses classes filles, chacune correspondant à une différente manière de générer les valeurs de la grille de sudoku.
 
-\subsubsection{Solver}
+\subsubsection{Solver  (\textbf{Figure~\ref{fig:solver}})} 
 
-\paragraph{Contexte et objectif}
+\paragraph{Contexte et objectif :}
 
 Le projet s'organise autour d'une hiérarchie de classes dont la racine abstraite est
-\texttt{Solver}. Deux familles de solveurs en héritent : \texttt{SolverBacktrack}, qui
-implémente une résolution exhaustive par retour sur trace (\textit{backtracking}), et
-\texttt{SolverHuman}, qui simule les raisonnements humains classiques à travers une
+Solver. Deux familles de solveurs en héritent : SolverBacktrack, qui
+implémente une résolution exhaustive par retour sur trace (backtracking), et
+SolverHuman, qui simule les raisonnements humains classiques à travers une
 succession de techniques de complexité croissante. Chaque famille dispose d'une
-variante instrumentée (\texttt{SolverBacktrackStats} et \texttt{SolverHumanStats}) permettant
+variante instrumentée (SolverBacktrackStats et SolverHumanStats) permettant
 de collecter des métriques de résolution.
 
-\paragraph{Architecture générale}
+\paragraph{Architecture générale :}
 
 L'organisation du code repose sur le principe de l'héritage. La figure~\ref{fig:hierarchy}
 en donne une vue synthétique.
@@ -328,10 +328,10 @@ en donne une vue synthétique.
 \label{fig:hierarchy}
 \end{center}
 
-\paragraph{Objet \texttt{Grille} : structure d'entrée commune}
+\paragraph{Objet Grille (structure d'entrée commune) :}
 
 Toutes les classes de la hiérarchie reçoivent en entrée un unique paramètre : un objet de
-type \texttt{Grille}. Cet objet encapsule l'intégralité de l'état courant de la grille de
+type Grille. Cet objet encapsule l'intégralité de l'état courant de la grille de
 Sudoku et expose une interface uniforme utilisée par tous les solveurs.
 
 \medskip
@@ -344,14 +344,12 @@ Pour un Sudoku $9 \times 9$ standard : $n = 3$, $N = 9$, 81 cellules.
 
 % — Classe mère Solver —
 
-\paragraph{Classe mère : \texttt{Solver}}
-
- est une classe abstraite (\texttt{ABC}) qui définit le contrat commun à
+\paragraph{Classe mère (Solver) :}
+est une classe abstraite (ABC) qui définit le contrat commun à
 toutes les stratégies de résolution. Elle ne possède aucun attribut d'instance et ne stocke
 aucun état.
 
-\subparagraph{Méthode abstraite \texttt{solveGrille}}
-
+\subparagraph{Méthode abstraite :}
 Toute sous-classe doit implémenter \texttt{solveGrille(grille: Grille) -> bool}.
 
 \begin{center}
@@ -359,13 +357,13 @@ Toute sous-classe doit implémenter \texttt{solveGrille(grille: Grille) -> bool}
   \toprule
   \textbf{Paramètre} & \textbf{Description} \\
   \midrule
-  \texttt{grille} & Objet \texttt{Grille} en entrée/sortie — modifié en place par le solveur \\
+  \texttt{grille} & Objet Grille en entrée/sortie — modifié en place par le solveur \\
   \textbf{Retour} & \texttt{True} si la grille est résolue, \texttt{False} sinon \\
   \bottomrule
 \end{tabular}
 \end{center}
 
-\subparagraph{Méthode de validation \texttt{isValid}}:
+\subparagraph{Méthode de validation (\texttt{isValid})}:
 
 Cette méthode statique  primordiale est partagé dans toute la hiérarchie. Elle vérifie
 qu'une valeur candidate ne viole aucune des trois contraintes du Sudoku (colonne, ligne,
@@ -373,25 +371,20 @@ bloc).
 
 % — Famille SolverBacktrack —
 
-\paragraph{ La classe \texttt{SolverBacktrack}}
-
-
+\paragraph{La classe SolverBacktrack :}
 
 ne définit aucun attribut propre : toute l'information réside dans
-l'objet \texttt{Grille} passé en paramètre. Le parcours s'effectue en coordonnées $(i, j)$
+l'objet Grille passé en paramètre. Le parcours s'effectue en coordonnées $(i, j)$
 avec $i, j \in [0, N-1]$, ligne par ligne de gauche à droite.
-
-
 
 \medskip
 \noindent\textbf{Génération des valeurs candidates :} les valeurs $1$ à $N$ sont générées
-sous forme de liste Python, puis \textbf{mélangées aléatoirement} via \texttt{random.shuffle}
+sous forme de liste Python, puis mélangées aléatoirement via \texttt{random.shuffle}
 dans \texttt{solveGrille}. Ce choix garantit la diversité des solutions produites lors de la
 génération de grilles.
 
-\subparagraph{Classe SolverBacktrackStats}:
- hérite de \texttt{SolverBacktrack} et ajoute un dictionnaire
-de classe partagé entre toutes les instances, avec les clés suivantes :
+\subparagraph{Classe SolverBacktrackStats :}
+hérite de SolverBacktrack et ajoute un dictionnaire de classe partagé entre toutes les instances, avec les clés suivantes :
 
 \begin{center}
 \begin{tabular}{lll}
@@ -417,11 +410,11 @@ Les compteurs sont incrémentés à des points précis de l'algorithme :
 
 % — Famille SolverHuman —
 
-\paragraph{Classe \texttt{SolverHuman}}
+\paragraph{Classe SolverHuman}
 
-\subparagraph{\texttt{SolverHuman} : résolution par techniques humaines}
+\subparagraph{SolverHuman (résolution par techniques humaines) :}
 
-Contrairement au backtracking, \texttt{SolverHuman} exploite les \textbf{candidats} de chaque
+Contrairement au backtracking, SolverHuman exploite les candidats de chaque
 cellule. Avant tout traitement, la méthode \texttt{grille.adjustCandidates()} est appelée
 pour initialiser ces listes : pour chaque cellule vide, elle calcule l'ensemble des valeurs
 $\{1, \ldots, N\}$ non encore présentes dans sa ligne, sa colonne, et son bloc.
@@ -430,9 +423,9 @@ $\{1, \ldots, N\}$ non encore présentes dans sa ligne, sa colonne, et son bloc.
 \textbf{Principales structures accédées à l'exécution :}
 
 \begin{itemize}[noitemsep]
-  \item \textbf{Régions} (\texttt{getRegions()}) — liste cyclique (zone / ligne / colonne) ;
-  \item \textbf{Candidats} — liste d'entiers par cellule, modifiée en place pendant la résolution ;
-  \item \textbf{Valeurs} — entier $\in \{0, 1, \ldots, N\}$ par cellule ($0$ = vide).
+  \item Régions (\texttt{getRegions()}) — liste cyclique (zone / ligne / colonne) ;
+  \item Candidats — liste d'entiers par cellule, modifiée en place pendant la résolution ;
+  \item Valeurs — entier $\in \{0, 1, \ldots, N\}$ par cellule ($0$ = vide).
 \end{itemize}
 
 \texttt{solveGrille} orchestre les techniques dans un ordre de complexité croissante.
@@ -456,11 +449,10 @@ Si aucune ne progresse, une \texttt{SolverError} est levée.
 \end{tabular}
 \end{center}
 
-\subparagraph{\texttt{SolverHumanStats} : variante instrumentée}
-
-contrairement à \texttt{SolverBacktrackStats}, les statistiques sont ici des variables
-\textbf{locales} initialisées à chaque appel de \texttt{solveWithStats}, ce qui évite les
-problèmes de persistance entre résolutions. Chaque entrée de l'historique (\texttt{"history"})
+\subparagraph{SolverHumanStats (variante instrumentée) :}
+contrairement à SolverBacktrackStats, les statistiques sont ici des variables
+locales initialisées à chaque appel de \texttt{solveWithStats}, ce qui évite les
+problèmes de persistance entre résolutions. Chaque entrée de l'historique ("history")
 est un dictionnaire contenant le numéro d'étape, la technique utilisée, ainsi que la ligne,
 la colonne et la valeur affectée.
 
@@ -487,8 +479,6 @@ Le score de base est donné par la technique maximale utilisée, puis légèreme
 les compteurs d'usage de chaque technique (contribution plafonnée pour éviter qu'un volume
 important d'une technique facile ne dépasse la classe d'une technique difficile).
 
-
-
 \subsubsection{Scraper}
 Dans un premier temps, la classe SudokuScraping a été implémentée afin de comparer la difficulté estimée par notre algorithme avec celle fournie par le site sudoku.coach, qui dispose d’une métrique reconnue.
 La partie web scraping repose sur des structures simples. La grille en entrée est représentée sous forme d’une chaîne de 81 caractères, où chaque chiffre correspond à une cellule (0 représentant une case vide), par exemple : "204503910060008005...".
@@ -512,8 +502,9 @@ Si le motif n’est pas trouvé (page non chargée, site indisponible ou modific
 \subsection{Diagramme de cas d’utilisation (UML)}
 
 \subsection{Diagramme de classes (UML)}
+Voici une version simplifiée du diagramme de classes UML : \textbf{Figure~\ref{fig:UML}}
 
-\subsection{Fonctionnalités de l’interface (console)}
+\subsection{Fonctionnalités de l’interface (console) (\textbf{Figure~\ref{fig:interface}})}
 Le projet propose une interface console interactive permettant à l’utilisateur d’interagir avec le système de génération et de résolution de Sudoku. Cette interface joue un rôle central dans le projet, car elle permet de tester les fonctionnalités développées tout en offrant une expérience utilisateur simple et fonctionnelle.
 
 Au lancement du programme, un menu principal est affiché. L’utilisateur peut alors choisir entre générer une grille de Sudoku et jouer, ou quitter l’application. Ce point d’entrée est volontairement simple afin de rendre l’utilisation du programme intuitive.
@@ -545,24 +536,24 @@ Ces deux méthodes permettent de comparer les approches et d’analyser la diffi
 
 \subsubsection{Exemples d'affichage dans l'interface console avec la résolution humaine}
 
-Comme illustré en \textbf{FIGURE~\ref{fig:grille-facile}}, l'interface console affiche la grille chargée ainsi que les informations liées à sa difficulté (facile).
+Comme illustré en \textbf{Figure~\ref{fig:grille-facile}}, l'interface console affiche la grille chargée ainsi que les informations liées à sa difficulté (facile).
 
-Un exemple d'une génération de grille difficile est présenté en \textbf{FIGURE~\ref{fig:grille-difficile}}.
+Un exemple d'une génération de grille difficile est présenté en \textbf{Figure~\ref{fig:grille-difficile}}.
 
 Après la génération ou le chargement d'une grille, l'utilisateur peut choisir d'afficher la résolution par méthodes humaines afin de terminer la partie sans saisir manuellement les valeurs. 
 Le programme montre alors les différentes étapes appliquées par le solveur humain. 
-La \textbf{FIGURE~\ref{fig:grille-extreme-resolu}} présente un exemple de résolution d'une grille extrême.
+La \textbf{Figure~\ref{fig:grille-extreme-resolu}} présente un exemple de résolution d'une grille extrême.
 
 
 Dans le cas de la résolution par méthode humaine, le programme peut également afficher les étapes détaillées de résolution avant la fin de la partie. 
-Chaque étape indique la technique utilisée, la valeur placée, ainsi que sa position dans la grille \textbf{FIGURE~\ref{fig:etapes-moyen}}. 
+Chaque étape indique la technique utilisée, la valeur placée, ainsi que sa position dans la grille \textbf{Figure~\ref{fig:etapes-moyen}}. 
 Cela permet de suivre le raisonnement du solveur humain et de mieux comprendre pourquoi une grille est classée dans une certaine difficulté avant le retour au menu principal.
 
 
 \textbf{Le chemin d’exécution est celui-ci :}
 Le chemin d'exécution a été modifié afin d'éviter la génération directe des grilles pendant l'utilisation normale du programme. 
 Désormais, lorsqu'une partie est lancée, le programme ne génère plus une nouvelle grille en temps réel. 
-Il charge une grille déjà préparée depuis la banque de grilles \textbf{FIGURE~\ref{fig:grille-godmode}}.
+Il charge une grille déjà préparée depuis la banque de grilles \textbf{Figure~\ref{fig:grille-godmode}}.
 
 Le nouveau chemin d'exécution est le suivant :
 
@@ -748,8 +739,6 @@ La majorité du code se trouve dans les fichiers Python, car ils contiennent tou
 % ===== 4. Algorithmes et Analyse =====
 \section{Algorithmes et Analyse}
 
-\subsection{Algorithmes principaux}
-
 Tout d'abord, il est important de noter que les algorithmes sont tout au long de ce projet divisées en deux catégories:
 
 - les algorithmes de backtracking,
@@ -757,6 +746,8 @@ Tout d'abord, il est important de noter que les algorithmes sont tout au long de
 - et les algorithmes employant des méthodes plus humaines.
 
 Nous allons donc premièrement voir à quoi servent ces algorithmes et leur fonctionnement basique puis ensuite comparer leur complexité en temps.
+
+\subsection{Algorithmes principaux}
 
 \subsubsection{Algorithmes de backtracking}
 Nous avons dans un premier temps un algorithme de génération de grilles par le biais du backtracking, qui consiste à générer une grille vide, la remplir, puis enlever un nombre de valeurs dépendant de la difficulté. 
@@ -779,11 +770,23 @@ De plus, il n'y a maintenant non pas un nombre de retrait fixe mais un nombre de
 Enfin, le Solver est maintenant certes plus compliqué mais la tactique n'en reste pas moins extrêmement simple, elle consiste juste à appliquer les techniques de la plus simple à la plus complexe jusqu'à ce qu'une soit applicable, et cela en boucle jusqu'à résoudre la grille. En effet, contrairement au Solver backtrack nous appliquons des techniques intelligentes garantissant soit l'ajout d'une valeur ou l'élimination de candidats, ce qui amènera à coup sûr à la résolution d'une grille valide.
 
 \subsection{Complexité temporelle des algorithmes}
+Afin d'avoir une complexité en temps sensée, nous allons d'abord établir $n$ comme le nombre de retrait et $m$ pour la taille d'un coté d'une zone de la grille (car c'est le seul indice que l'on peut incrémenter de un tout en gardant une grille carrée de sudoku), avec $n$ le nombre de retrait maximum pour les algorithmes humains, et nous allons calculer la complexité des Solver avant celle de leur générateur respectif car les générateurs font appel au Solver.
 
 \subsubsection{Complexité backtrack}
+Nous avons donc en premier le Solver de backtracking avec la méthode \texttt{Solver.isValid} et un appel récursif avec une valeur ajoutée à la grille, tout deux contenus dans 3 boucles imbriquées itérant $m^2$ fois, cela nous donne \[(m^2)^{3n}\], soit \[O(m^{6n})\] ce qui heureusement n'arrive jamais vu que l'algorithme est un algorithme de backtrack et non un algorithme exhaustif.
+
+Le générateur quand à lui créé une grille vide sans faire recours à la difficulté donc $O(1)$, appel le solver pour le remplissage en $O(m^{6n})$, puis estime le nombre de retrait en fonction de la difficulté avec des calculs arithmétiques donc $O(1)$ aussi, et enfin effectue le retrait des valeurs. 
+
+Le retrait des valeurs ne fait simplement que boucler jusqu'à maximum $n \cdot m^2$ fois avec un retrait de valeur à l'intérieur qui boucle $m^4$ sur la vérification unicité qui revient à boucler $m^6$ fois sur un appel récursif avec une valeur ajoutée à grille. Cela nous donne $O(n \cdot m^6)$ pour la vérification d'unicité, $O(n \cdot m^4 \cdot m^6)$ qui est égal à $O(n \cdot m^{10})$ pour le retrait d'une valeur, $O(n \cdot m^2 \cdot n \cdot m^{10})$ soit $O(n^2 \cdot m^{12})$ pour le retrait des valeurs et pour finir $O(m^{6n}) + O(n^2 \cdot m^{12})$ qui donne $O(m^{6n})$ pour la génération de grille.
 
 \subsubsection{Complexité humaine}
+Pour ce qui est du Solver humain, nous allons d'abord déterminer qu'est-ce que le pire des cas. Dans le pire des cas, nous allons devoir utiliser la technique d'élimination de candidats avec la plus grande complexité jusqu'à éliminer tout les candidats (soit environ $m^4 \cdot m^2 = m^6$ candidats) puis la technique d'ajout de valeur avec la plus grande complexité jusqu'à remplir toutes les cellules libres (soit $n$ fois).
 
+Il se trouve que la technique d'ajout de plus haute complexité est \texttt{singletonCache} testant chaque valeur possible sur toutes les régions, soit $m^2$ valeurs fois $m^2 \cdot m^2 \cdot 3$, ce qui nous donne une complexité en $O(m^6)$.
+
+Pour la technique d'élimination de candidats, on a \texttt{candidatEnferme} qui au pire parcours toutes les régions ($m^4 \cdot 3$), pour lequel nous testons toutes les valeurs possibles ($m^2$), dans toutes les régions ($m^4 \cdot 3$), soit une complexité en $O(m^{10} \cdot 9)$.
+
+Si nous assemblons toutes ses complexités, nous obtenons une complexité total de $O((m^{10} \cdot 9) \cdot m^6 \cdot m^6 \cdot n)$, soit $O(m^{22} \cdot n)$. Toutefois il est important de rappeler que non seulement les techniques d'élimination éliminent souvent plus d'un seul candidat et qu'il n'y a absolument pas besoin d'éliminer tout les candidats pour résoudre la grille, cette complexité est donc purement théorique et ne sera jamais atteinte.
 \vspace{0.5cm}
 
 % ===== 5. Analyse des Résultats =====
@@ -891,6 +894,47 @@ Support de cours fourni au format PDF : \texttt{Cours2-Exhaustif.pdf}.
 Cette section regroupe plusieurs captures d'écran obtenues lors des tests du programme et les fonctionnalités de notre projet. 
 Elles illustrent l'affichage des grilles dans l'interface console, les différents niveaux de difficulté, ainsi que la résolution par méthodes humaines.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Grille_GEN.png}
+    \caption{Le diagramme UML représentant les classes des grilles}
+    \label{fig:grilleGen}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Grille_Zone_Cellule.png}
+    \caption{Le diagramme UML représentant la classe Zone et Cellule}
+    \label{fig:zone-cellule}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Solver.png}
+    \caption{Le diagramme UML représentant les classes de Solver}
+    \label{fig:solver}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Parser.png}
+    \caption{Le diagramme UML représentant la classe Parser}
+    \label{fig:parser}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Diagramme_classe/DiagrammeSlice/Interface.png}
+    \caption{Le diagramme UML représentant les classes d'Interface}
+    \label{fig:interface}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\textwidth]{Diagramme_classe/Diagramme_simpl.png}
+    \caption{Le diagramme UML entier et simplifié}
+    \label{fig:UML}
+\end{figure}
 
 \begin{figure}[H]
     \centering
