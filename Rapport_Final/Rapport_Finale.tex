@@ -194,8 +194,13 @@ Le projet utilise essentiellement des bibliothèques natives de Python, notammen
     \item \texttt{random} : pour la génération aléatoire des grilles,
     \item \texttt{os} : pour la gestion des fichiers et du système,
     \item \texttt{shutil} : pour certaines opérations sur les fichiers,
-    \item \texttt{pickle} : permet de sauvegarder directement des objets Python dans un fichier,
-    \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur.
+    \item \texttt{pickle} : permet de sauvegarder directement des objets Python dans un fichier \cite{python},
+    \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur,
+    \item \texttt{selenium} : afin de récupérer une estimation de la difficulté d'une grille depuis le site Sudoku Coach~\cite{sudokucoach},
+    \item \texttt{webdriver\_manager} : avec comme utilité d'adapter la récupération de difficulté aux différents navigateur web,
+    \item \texttt{flask} : pour pouvoir interagir avec une interface plus pratique et intuitive \cite{flask},
+    \item \texttt{flask\_socketio} : permettant au serveur de communiquer avec le script javascript de la page web,
+    \item \texttt{pytest} : afin de tester le bon fonctionnement des classes.
 \end{itemize}
 
 L’utilisation de bibliothèques standards permet de garantir la simplicité, la portabilité et la reproductibilité du projet.
@@ -309,7 +314,7 @@ Le projet propose une interface console interactive permettant à l’utilisateu
 
 Au lancement du programme, un menu principal est affiché. L’utilisateur peut alors choisir entre générer une grille de Sudoku et jouer, ou quitter l’application. Ce point d’entrée est volontairement simple afin de rendre l’utilisation du programme intuitive.
 
-Une fois le jeu lancé, l’utilisateur est invité à choisir un niveau de difficulté parmi plusieurs options : facile, moyen, difficile, extrême et un mode avancé (« God Mode »). Ce choix influence directement la génération de la grille, notamment le nombre de cases vides et la complexité de résolution.
+Une fois le jeu lancé, l’utilisateur est invité à choisir un niveau de difficulté parmi plusieurs options : facile, moyen, difficile, extrême et un mode avancé ("God Mode"). Ce choix influence directement la génération de la grille, notamment le nombre de cases vides et la complexité de résolution.
 
 Après la génération, la grille est affichée dans la console. L’interface fournit également des informations supplémentaires sur la difficulté, telles que :
 \begin{itemize}
@@ -394,8 +399,38 @@ Ainsi, même si elle reste simple, cette interface console offre un ensemble de 
 Comme vous pouvez le constater tout au long de ce rapport, notre choix de structure s'est très rapidement tourné vers les classes du paradigme de Programmation Orientée Objet, principalement pour leur clarté, visualisation et efficacité quand il s'agit de communiquer entre différents modules. De plus, les énumérations se sont trouvées être un choix astucieux pour représenter une statistique avec un nombre fini de valeur possible, tel que la difficulté avec comme valeur soit facile, moyen, difficile, extrême ou encore godmode.
 
 \subsection{Format des entrées (grilles Sudoku)}
+- grille 9x9
+
+- valeurs entre 1 et 9
+
+- 0 pour représenter une case vide
+
+- stockage en matrice ou dans des objets Cellule
+
+- éventuellement lecture depuis un fichier
+
+- grille complète (solution) / grille de jeu 
+
+Les grilles peuvent aussi être sauvegardées dans la banque de grilles pré-générées. 
+Dans ce cas, chaque entrée contient la grille de jeu, la solution complète, la difficulté et les statistiques associées comme déjà mentionné plus bas dans le rapport (7.1.1).
 
 \subsection{Procédures de lecture et validation}
+- vérifier que les valeurs sont entre 0 et 9
+
+- vérifier qu’une valeur entrée par l’utilisateur est valide
+
+- vérifier ligne / colonne / bloc 3x3
+
+- vérifier que la case n’est pas déjà remplie
+
+- comparer avec la grille solution
+
+- ajuster les candidats possibles
+
+Après chaque insertion valide, les candidats des autres cellules sont mis à jour. Cela permet de conserver une grille cohérente et de faciliter l'affichage des candidats possibles.
+
+- validation par solveur de backtrack ou solveur humain
+
 
 \subsection{Statistiques}
 
