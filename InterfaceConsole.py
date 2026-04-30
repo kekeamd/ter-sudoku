@@ -34,7 +34,7 @@ class InterfaceConsole(Interface): # extends Interface
                 print("\nChoix invalide, veuillez réessayer.")
 
     def askChoice(self) -> str: # soit generer une grille et jouer, soit quitter
-        print("1. Génerer une grille et joeur")
+        print("1. Génerer une grille et jouer")
         print("2. Quitter")
 
         choix = input("Votre choix: ")
