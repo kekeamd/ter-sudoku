@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage{float}      % pour [H]
 \usepackage{subcaption} % pour les sous-figures côte à côte
-\usepackage{hyperref}   % pour le limk des photos
+\usepackage{hyperref}   % pour le link des photos
 
 
 \begin{document}
@@ -34,7 +34,7 @@
     BARRE-GUEROT Ilan\\
     BRIOT-AMADIUE Kellyan\\[0.8em]
     \textbf{Encadrant:} Marc Hartley\\
-    \emph{L3 informatique}\\
+    \emph{L3 Informatique}\\
     Faculté des Sciences\\
     Université de Montpellier\\[0.8em]
     Avril 2026}
@@ -245,6 +245,7 @@ De plus, Python offre une grande flexibilité dans la manipulation des structure
 
 Enfin, Python est largement utilisé dans le domaine académique, ce qui en fait un choix cohérent avec le cadre du projet.
 
+\vspace{0.5cm}
 
 % ===== 3. Développements Logiciel : Conception, Modélisation, Implémentation =====
 \section{Développements Logiciel : Conception, Modélisation, Implémentation}
@@ -273,6 +274,31 @@ Une méthode renvoyant les régions fût ensuite rajoutée, avec une région cor
 Dernièrement, la grille contient une génération de valeurs sous forme de méthode abstraite étant donné qu’elle dépendra des différentes approches utilisés.
 
 Pour finir et comme énoncé précédemment, la génération des valeurs n’est pas définie dans la classe Grille, qui devient donc un classe abstraite, et la génération est relayée à ses classes filles, chacune correspondant à une différente manière de générer les valeurs de la grille de sudoku.
+
+\subsubsection{Solver}
+
+
+
+
+\subsubsection{Scraper}
+Dans un premier temps, la classe SudokuScraping a été implémentée afin de comparer la difficulté estimée par notre algorithme avec celle fournie par le site sudoku.coach, qui dispose d’une métrique reconnue.
+La partie web scraping repose sur des structures simples. La grille en entrée est représentée sous forme d’une chaîne de 81 caractères, où chaque chiffre correspond à une cellule (0 représentant une case vide), par exemple : "204503910060008005...".
+
+Le résultat retourné par \texttt{get\_difficulty\_form\_coach()} est un dictionnaire Python de la forme suivante :
+{"score": 2, "label": "Modérément facile"}
+où score est un entier compris entre 0 et 10 et label correspond au texte affiché par sudoku.coach.
+
+La fonction principale \texttt{get\_difficulty\_form\_coach()} attend une chaîne composée exactement de 81 caractères numériques. Cette convention correspond au format standard de représentation d’une grille de sudoku 9×9 sous forme linéaire, lue de gauche à droite puis de haut en bas. La fonction Parser.grilleToStringWithoutCandidates() se charge de convertir une instance de GrilleHuman vers ce format en parcourant les cellules via getCelluleValueCoord(row, col).
+
+La récupération des données se fait en deux étapes. Dans un premier temps, Selenium lance Firefox en mode headless et charge l’URL: \texttt{https://sudoku.coach/fr/solver/}. 
+Ensuite, après avoir attendu la fin du calcul du solveur JavaScript de sudoku.coach (environ 6 secondes), le texte brut de la page est extrait à l’aide de \texttt{driver.find\_element(By.TAG\_NAME, "body").text}.
+
+La validation du résultat est effectuée à l’aide d’une expression régulière dans la méthode \texttt{\_find\_difficulty()} :
+\verb|re.search(r'Difficulté\s*:\s*\n([^\n]+)\n(\d+)', page_text)|
+
+Ce motif recherche précisément le bloc affiché par sudoku.coach, de la forme « Difficulté : Modérément facile (2) ».
+
+Si le motif n’est pas trouvé (page non chargée, site indisponible ou modification du format), la fonction retourne (None, None) sans lever d’exception, permettant ainsi au programme de continuer son exécution.
 
 \subsection{Diagramme de cas d’utilisation (UML)}
 
@@ -310,7 +336,7 @@ Ces deux méthodes permettent de comparer les approches et d’analyser la diffi
 
 \subsubsection{Exemples d'affichage dans l'interface console avec la résolution humaine}
 
-Comme illustré en \textbf{FIGURE~\ref{fig:grille-facile}}, l'interface console affiche la grille chargée ainsi que les informations liées à sa difficulté (FACILE).
+Comme illustré en \textbf{FIGURE~\ref{fig:grille-facile}}, l'interface console affiche la grille chargée ainsi que les informations liées à sa difficulté (facile).
 
 Un exemple d'une génération de grille difficile est présenté en \textbf{FIGURE~\ref{fig:grille-difficile}}.
 
@@ -364,6 +390,8 @@ Cette étape permet de générer plusieurs grilles pour chaque difficulté, puis
 Ainsi, même si elle reste simple, cette interface console offre un ensemble de fonctionnalités complet permettant de générer, manipuler, résoudre et analyser des grilles de Sudoku. Elle constitue une base solide pour une éventuelle évolution vers une interface graphique plus avancée.
 
 \subsection{Structures de données principales}
+
+Comme vous pouvez le constater tout au long de ce rapport, notre choix de structure s'est très rapidement tourné vers les classes du paradigme de Programmation Orientée Objet, principalement pour leur clarté, visualisation et efficacité quand il s'agit de communiquer entre différents modules. De plus, les énumérations se sont trouvées être un choix astucieux pour représenter une statistique avec un nombre fini de valeur possible, tel que la difficulté avec comme valeur soit facile, moyen, difficile, extrême ou encore godmode.
 
 \subsection{Format des entrées (grilles Sudoku)}
 
@@ -481,46 +509,45 @@ La majorité du code se trouve dans les fichiers Python, car ils contiennent tou
 % ===== 4. Algorithmes et Analyse =====
 \section{Algorithmes et Analyse}
 
-\begin{itemize}
-    \item Algorithmes principaux :
-    \begin{itemize}
-        \item backtracking
-        \item génération de grille
-    \end{itemize}
-    \item Illustration du fonctionnement
-    \item Complexité temporelle :
-    \begin{itemize}
-        \item backtracking
-        \item génération
-    \end{itemize}
-\end{itemize}
+\subsection{Algorithmes principaux}
+
+\subsubsection{Solve/backtrack/generation humaine}
+
+\subsection{Illustration du fonctionnement}
+
+\vspace{0.5cm}
 
 % ===== 5. Analyse des Résultats =====
 \section{Analyse des Résultats}
 
-\begin{itemize}
-    \item Graphiques de performance
-    \item Analyse des résultats
-    \item Comparaison des méthodes :
-    \begin{itemize}
-        \item backtracking vs méthodes humaines
-    \end{itemize}
-    \item Procédures de test :
-    \begin{itemize}
-        \item génération de grilles
-        \item validation des solutions
-    \end{itemize}
-\end{itemize}
+\subsection{Graphiques de performance}
+
+\subsection{Analyse des résultats}
+
+\subsection{Comparaison des méthodes}
+
+\subsubsection{Backtracking vs Méthodes humaines}
+
+\subsection{Procédures de test}
+
+\subsubsection{Génération de grilles}
+
+\subsubsection{Validation des solutions}
+
+\vspace{0.5cm}
 
 % ===== 6. Gestion du Projet =====
 \section{Gestion du Projet}
 
-\begin{itemize}
-    \item Organisation du projet
-    \item Diagramme de Gantt
-    \item Répartition des tâches
-    \item Changements en cours de projet
-\end{itemize}
+\subsection{Organisation du projet}
+
+\subsection{Diagramme de Gantt}
+
+\subsection{Répartition des tâches}
+
+\subsection{Changements en cours de projet}
+
+\vspace{0.5cm}
 
 % ===== 7. Bilan et Conclusions =====
 \section{Bilan et Conclusions}
