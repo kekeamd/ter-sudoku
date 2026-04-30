@@ -2,11 +2,21 @@ import Interface
 import InterfaceConsole
 import InterfaceWeb
 import os
-from mainWeb_tmp import main as WebMain
+import webbrowser
+import threading
 from requirement import verifyRequire
 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def startServer():
+    os.system("flask --app mainWeb run")
+
+def Web():
+    serverThread = threading.Thread(target=startServer, daemon=True)
+    serverThread.start()
+    webbrowser.open_new_tab("http://127.0.0.1:5000")
+
 
 if __name__ == "__main__":
     clear()
@@ -46,7 +56,7 @@ if __name__ == "__main__":
             answer : str = input("Voulez-vous lancer le serveur ? (O/N) ").upper() # pour o et O, n et N
             if answer == 'O':
                 print("Lancement du serveur Web...")
-                WebMain()
+                Web()
             else:
                 print("Serveur non lancé.")
             

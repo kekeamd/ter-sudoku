@@ -8,6 +8,10 @@ from SudokuScraping import getDifficultyFromGrille
 from Parser import Parser
 from Technique import Technique
 
+if __name__=="__main__":
+    print("Ne dois pas être lancé !")
+    exit()
+
 app = Flask(__name__)
 socketio = SocketIO(app)
 
