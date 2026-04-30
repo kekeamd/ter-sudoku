@@ -211,7 +211,7 @@ Le projet utilise essentiellement des bibliothèques natives de Python \textbf{\
     \item \texttt{shutil} : pour certaines opérations sur les fichiers,
     \item \texttt{pickle} : permet de sauvegarder directement des objets Python dans un fichier,
     \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur,
-    \item \texttt{selenium} : afin de récupérer une estimation de la difficulté d'une grille depuis le site Sudoku Coach \textbf{\cite{sudokucoach}},
+    \item \texttt{selenium}  \textbf{\cite{coursAGL}}: afin de récupérer une estimation de la difficulté d'une grille depuis le site Sudoku Coach \textbf{\cite{sudokucoach}},
     \item \texttt{webdriver\_manager} : avec comme utilité d'adapter la récupération de difficulté aux différents navigateur web,
     \item \texttt{flask} : pour pouvoir interagir avec une interface plus pratique et intuitive \textbf{\cite{flask}},
     \item \texttt{flask\_socketio} : permettant au serveur de communiquer avec le script javascript de la page web,
@@ -479,6 +479,23 @@ Le score de base est donné par la technique maximale utilisée, puis légèreme
 les compteurs d'usage de chaque technique (contribution plafonnée pour éviter qu'un volume
 important d'une technique facile ne dépasse la classe d'une technique difficile).
 
+
+\subsubsection{Parser   (\textbf{Figure~\ref{fig:parser}})}
+
+Le Parser est une classe faite en 2 parties comme nous pouvons le voir dans le Diagramme. La majorité de la Classe est statique, mais une partie nécessite l’instanciation.
+
+\textbf{1. Le Parser :}
+
+La classe Parser (Fichier Parser.py) a comme objectif de faire du transtypage. Dans notre projet, nous avions comme ambition de pouvoir faire de l’enregistrement de partie, afin de pouvoir sauvegarder une progression par exemple. Mais également l’idée de stocker le déroulement d’une partie ou bien tout le processus de résolution. Également, dans le Scrapper par exemple nous avons besoin d’avoir notre Grille sous forme textuelle, c’est donc ici que le Parser à vue une raison de naître. Il peut donc faire tout un tas de conversion, nous pouvons le voir dans notre Diagramme UML (\textbf{Figure~\ref{fig:parser}}). 
+Des exemples sont grilleToTab, tabToGrille, grilleToStringWithoutCandidates, il y a donc, évidemment, des moyens de faire les transtypages dans le deux sens, grilleToTab transforme notre Grille en tableau à deux dimensions, et tabToGrille fait l’inverse. Sachant que les candidats, au début du projet n’étaient pas encore bien mis en place. 
+La classe Parser, prend dans la majorité de ses méthodes pas en compte les candidats, les méthodes citées précédemment en font partie (grilleToTab…). Comme dit précédemment, c’est une classe en grande partie statique, en réalité tout ce qui ne touche pas à l’écriture et la lecture de fichier est statique, ce qui est cohérent, car il n’y a besoin de rien pour faire du simple transtypage. 
+Cependant, lorsque nous voulons faire de l’écriture/lecture dans un fichier, on a deux méthodes : grilleToFile et fileToGrille ; qui respectivement permette la lecture et l’écriture d’une grille dans un fichier. Ici, l’instanciation sera nécessaire, car nous utilisons une classe FileInteraction qui va être décrite ci-dessous.
+
+\textbf{2. FileInteraction}
+
+La classe FileInteraction a été créée afin de faciliter l’écriture et la lecture dans un même répertoire ou dans un même fichier tout en minimisant le temps d’ouverture des fichiers. On y trouvera des méthodes pour choisir l’emplacement de lecture et d’écriture (setDirectory, setFile…) et des méthodes d’écriture et de lecture (read, write…). Ici, les méthodes de lecture et d’écriture ne revoient pas de manière brute le texte lu, on renvoie un tableau de chaque ligne afin de faciliter le traitement notamment dans Parser.
+
+
 \subsubsection{Scraper}
 Dans un premier temps, la classe SudokuScraping a été implémentée afin de comparer la difficulté estimée par notre algorithme avec celle fournie par le site sudoku.coach, qui dispose d’une métrique reconnue.
 La partie web scraping repose sur des structures simples. La grille en entrée est représentée sous forme d’une chaîne de 81 caractères, où chaque chiffre correspond à une cellule (0 représentant une case vide), par exemple : "204503910060008005...".
@@ -499,10 +516,13 @@ Ce motif recherche précisément le bloc affiché par sudoku.coach, de la forme 
 
 Si le motif n’est pas trouvé (page non chargée, site indisponible ou modification du format), la fonction retourne (None, None) sans lever d’exception, permettant ainsi au programme de continuer son exécution.
 
+
 \subsection{Diagramme de cas d’utilisation (UML)}
+Voici le diagramme de cas d'utilisation UML : \textbf{Figure~\ref{fig:CasUML}}
 
 \subsection{Diagramme de classes (UML)}
 Voici une version simplifiée du diagramme de classes UML : \textbf{Figure~\ref{fig:UML}}
+
 
 \subsection{Fonctionnalités de l’interface (console) (\textbf{Figure~\ref{fig:interface}})}
 Le projet propose une interface console interactive permettant à l’utilisateur d’interagir avec le système de génération et de résolution de Sudoku. Cette interface joue un rôle central dans le projet, car elle permet de tester les fonctionnalités développées tout en offrant une expérience utilisateur simple et fonctionnelle.
@@ -863,9 +883,31 @@ Le générateur de grilles reste bien sûr conservé dans le projet afin de mont
 \subsection{Limites du projet}
 
 \subsection{Perspectives}
+Cependant, le projet pourrait être cible d'encore multiples améliorations, ajouts et optimisations, tels que l'ajout et l'optimisation de techniques de résolution, l'optimisation de la génération de grilles et même l'amélioration de l'interface.
 
-\subsubsection{Amélioration des algorithmes...}
-\subsubsection{Interface graphique...}
+\subsubsection{Amélioration des algorithmes}
+En effet, nous ne faisons qu'écorcher la surface de ce qu'est l'iceberg des techniques de résolution, un bon exemple de cela est le site Sudoku Coach \textbf{\cite{sudokucoach}} qui regorge de ces techniques, de la plus simple comme le singleton nu à la plus complexe tel que méduse 3D. 
+
+De plus, les techniques actuellement implémentées ne sont pas forcément optimales et certaines mesures à prendre pour les optimiser serait sûrement possible, tel que la méthode de Grille renvoyant les régions que nous avons ajouté.
+
+\subsubsection{Simplification de la génération de grille}
+Comme énoncé précédemment, la génération de grille est grandement optimisable, nous avons discutés d'une tactique astucieuse à ce sujet: la transformation de grille. Cela consiste à avoir une banque de grilles triées par difficulté, puis, lorsque nous souhaitons générer une grille, de saisir une grille de cette banque de difficulté équivalente et de la passer à travers une fonction de transformation qui peut aléatoirement faire:
+	
+- une rotation d'un certain angle (ou symétrie centrale),
+
+- une symétrie axiale,
+
+- et une permutation des valeurs.
+
+Cela permettrai de réduire considérablement le temps de génération des grilles.
+
+\subsubsection{Interface Web}
+Les plus grands défauts de l'interface console sont ses interactions limitées et non intuitives ainsi que l'affichage restreint, une bonne solution à ces problèmes serait une interface web, qui marie simplicité et visuel. 
+
+Cependant il nous faudrait pour cela un fichier main alternatif sur lequel tourne un serveur afin de pouvoir communiquer entre les modules du sudoku et l'interface web.
+
+\subsubsection{Parser}
+En prenant du recul, cette classe aurait pu être encodée totalement différemment, notamment car il existe déjà des bibliothèques qui facilitent l'écriture et la lecture de données encodées dans des fichiers, mais également qui facilitent le transtypage (ici je pense à la bibliothèque JSON). Ce qui remets également en cause la question de l'existence de la classe FileInteraction, classe qui aurait pu être faite différemment ou alors simplement supprimée.
 
 \vspace{0.5cm}
 
@@ -903,6 +945,14 @@ Chapitre 2 : Recherche exhaustive et backtrack, L3 Informatique, Université de 
 Utilisé pour la résolution de grilles par algorithme de backtracking.\\
 Support de cours fourni au format PDF : \texttt{Cours2-Exhaustif.pdf}.
 \href{run:Cours2-Exhaustif.pdf}{Ouvrir le PDF du cours}
+
+\bibitem{coursAGL}
+\textbf{Cours d'Ateliers de Génie Logiciel}. 
+Cours 4 : End2End Testing et Selenium, L3 Informatique, Université de Montpellier. 
+Utilisé pour le sudoku scraping.\\
+Support de cours fourni au format PDF : \texttt{CoursE2ETesting\_Selenium.pdf}.
+\href{run:CoursE2ETesting_Selenium.pdf}{Ouvrir le PDF du cours}
+
 
 
 \end{thebibliography}
@@ -945,15 +995,22 @@ Elles illustrent l'affichage des grilles dans l'interface console, les différen
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.60\textwidth]{Diagramme_classe/DiagrammeSlice/Interface.png}
+    \includegraphics[width=0.65\textwidth]{Diagramme_classe/DiagrammeSlice/Interface.png}
     \caption{Le diagramme UML représentant les classes d'Interface}
     \label{fig:interface}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.60\textwidth]{Diagramme_classe/Diagramme_simpl.png}
-    \caption{Le diagramme UML entier et simplifié}
+    \includegraphics[width=1.10\textwidth]{DiagrammeDeCasD_utilisation.png}
+    \caption{Le diagramme de cas d'utilisation UML}
+    \label{fig:CasUML}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{Diagramme_classe/Diagramme_simpl.png}
+    \caption{Le diagramme de classes UML entier et simplifié}
     \label{fig:UML}
 \end{figure}
 
