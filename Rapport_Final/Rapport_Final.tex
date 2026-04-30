@@ -130,7 +130,7 @@ Ces méthodes sont robustes et garantissent la résolution complète des grilles
 
 Elles combinent les deux précédentes : un solveur automatique avec une analyse basée sur des techniques humaines pour évaluer la difficulté.
 
-\subsubsection*{Choix retenu}
+\subsubsection*{Choix retenu :}
 
 Dans le cadre du Sprint 1, le choix s’est porté sur une approche principalement algorithmique, basée sur un solveur utilisant le backtracking.
 
@@ -516,6 +516,17 @@ Ce motif recherche précisément le bloc affiché par sudoku.coach, de la forme 
 
 Si le motif n’est pas trouvé (page non chargée, site indisponible ou modification du format), la fonction retourne (None, None) sans lever d’exception, permettant ainsi au programme de continuer son exécution.
 
+\subsubsection{Banque de grilles pré-générées}
+
+Pour éviter les problèmes de génération lente pendant la soutenance, nous avons décidé d’utiliser un système de banque de grilles pré-générées. L’idée est de ne pas générer les Sudokus en direct devant le jury, car certaines difficultés comme DIFFICILE, EXTREME ou GODMODE peuvent demander plusieurs redémarrages (restarts) et beaucoup de temps avant de trouver une grille valide.
+Le principe consiste à générer plusieurs grilles à l’avance pour chaque niveau de difficulté, puis à les stocker dans un fichier de banque. Chaque grille sauvegardée contient la grille de jeu, la grille solution complète, la difficulté correspondante, ainsi que les statistiques de résolution obtenues avec SolverHumanStats: comme le nombre d’étapes, les techniques utilisées, la technique maximale atteinte et si la grille est bloquée ou non.
+
+Par exemple, nous pouvons préparer plusieurs grilles pour chaque difficulté : FACILE, MOYEN, DIFFICILE, EXTREME et GODMODE. Ainsi, lorsque l’utilisateur choisit une difficulté dans l’interface console, le programme ne lance plus la génération complète. Il charge directement une grille déjà validée depuis la banque.
+
+Cette méthode présente plusieurs avantages. Elle rend l’exécution beaucoup plus rapide, évite les longues attentes liées aux restarts, supprime le risque qu’une mauvaise grille soit générée pendant la démonstration, et garantit que chaque grille affichée correspond bien à la difficulté demandée. Cela rend la soutenance plus fluide, plus stable et plus professionnelle.
+
+Le générateur de grilles reste bien sûr conservé dans le projet afin de montrer le fonctionnement complet du système. Cependant, pour la démonstration finale, l’utilisation d’une banque de grilles validées permet d’assurer une meilleure fiabilité.
+
 
 \subsection{Diagramme de cas d’utilisation (UML)}
 Voici le diagramme de cas d'utilisation UML : \textbf{Figure~\ref{fig:CasUML}}
@@ -627,7 +638,7 @@ Comme vous pouvez le constater tout au long de ce rapport, notre choix de struct
 - grille complète (solution) / grille de jeu 
 
 Les grilles peuvent aussi être sauvegardées dans la banque de grilles pré-générées. 
-Dans ce cas, chaque entrée contient la grille de jeu, la solution complète, la difficulté et les statistiques associées comme déjà mentionné plus bas dans le rapport (7.1.1).
+Dans ce cas, chaque entrée contient la grille de jeu, la solution complète, la difficulté et les statistiques associées comme déjà mentionné plus haut dans le rapport.
 
 \subsection{Procédures de lecture et validation}
 - vérifier que les valeurs sont entre 0 et 9
@@ -832,7 +843,7 @@ Si nous assemblons toutes ses complexités, nous obtenons une complexité total 
 \section{Gestion du Projet}
 Au début du projet, soit le sprint1, nous nous sommes surtout concentrés sur l'aspect fonctionnel du projet, le but était d'avoir un génération de grille aléatoire, une résolution de grille et une interface affichant une grille avec laquelle on peut interagir. 
 
-Cependant, même si le projet était fonctionnel, il restait encore assez simple et pouvait être amélioré, qui nous laissa insatisfait après cette fin de sprint. Nous avons donc décidé de réorganiser le projet, de mettre des règles, conventions et répartitions de tâches ainsi que d'établir un diagramme des classes.
+Cependant cela résulta en un projet certes fonctionnel bien que rudimentaire mais qui laissait à désirer, qui nous laissa insatisfait après cette fin de sprint. Nous avons donc décidé de réorganiser le projet, de mettre des règles, conventions et répartitions de tâches ainsi que d'établir un diagramme des classes, sans oublier des réunions hebdomadaires avec notre encadrant afin faire le point et de rester dans la bonne lignée.
 
 \subsection{Organisation du projet}
 Premièrement, nous sommes passés à une structure avec des classes, ainsi que quelques énumérations, puis nous avons établi de multiples conventions tel que celles énumérées ci-dessous:
@@ -866,23 +877,53 @@ Afin de répartir les tâches d'une manière convenant à l'entièreté du group
 \section{Bilan et Conclusions}
 
 \subsection{Fonctionnalités réalisées}
+Les fonctionnalités qui ont été implémenter sont les suivantes :
+    
+- Génération de grille via Backtrack,
 
-\subsubsection{Banque de grilles pré-générées}
+- Résolution d'une Grille Sudoku via Backtrack,
 
-Pour éviter les problèmes de génération lente pendant la soutenance, nous avons décidé d’utiliser un système de banque de grilles pré-générées. L’idée est de ne pas générer les Sudokus en direct devant le jury, car certaines difficultés comme DIFFICILE, EXTREME ou GODMODE peuvent demander plusieurs redémarrages (restarts) et beaucoup de temps avant de trouver une grille valide.
-Le principe consiste à générer plusieurs grilles à l’avance pour chaque niveau de difficulté, puis à les stocker dans un fichier de banque. Chaque grille sauvegardée contient la grille de jeu, la grille solution complète, la difficulté correspondante, ainsi que les statistiques de résolution obtenues avec SolverHumanStats: comme le nombre d’étapes, les techniques utilisées, la technique maximale atteinte et si la grille est bloquée ou non.
+- Génération de grille via Techniques Humaines,
 
-Par exemple, nous pouvons préparer plusieurs grilles pour chaque difficulté : FACILE, MOYEN, DIFFICILE, EXTREME et GODMODE. Ainsi, lorsque l’utilisateur choisit une difficulté dans l’interface console, le programme ne lance plus la génération complète. Il charge directement une grille déjà validée depuis la banque.
+- Résolution d'une Grille Sudoku via Techniques Humaines,
 
-Cette méthode présente plusieurs avantages. Elle rend l’exécution beaucoup plus rapide, évite les longues attentes liées aux restarts, supprime le risque qu’une mauvaise grille soit générée pendant la démonstration, et garantit que chaque grille affichée correspond bien à la difficulté demandée. Cela rend la soutenance plus fluide, plus stable et plus professionnelle.
+- Estimation de difficulté d'une Grille via Techniques Humaine,
 
-Le générateur de grilles reste bien sûr conservé dans le projet afin de montrer le fonctionnement complet du système. Cependant, pour la démonstration finale, l’utilisation d’une banque de grilles validées permet d’assurer une meilleure fiabilité.
+- Le traçage de la résolution d'une grille,
+
+- Un historique permettant d'enregister et de restituer un séquence de Grille,
+
+- Un Parser Permettant le transtypage notamment pour la Grille,
+
+- Un système de sauvegarde et de restitution de Grille précédemment générer,
+
+- Un système permettant de récupérer l'estimation de la difficulté faite par un site Externe : SudokuCoach(Numero),
+
+- Un affichage console permettant l'affichage et l'interaction avec les fonctionnalités implémenter ainsi que jouer,
+
+- Demande de génération de d'affichage de Grille dans une Page WEB,
+   
+- Un système de modification visuelle de Grille sans en modifier la difficulté.
 
 \subsection{Comparaison avec cahier des charges}
+Le cahier des charges qui fut décidé incluais :
+    
+- Génération de Grille valide via Backtrack en ayant une difficulté dépendante du nombre de cases vides,
 
-\subsection{Limites du projet}
+- Un Parser de fichier,
 
-\subsection{Perspectives}
+- Un solver Automatique (Backtrack),
+
+- Une interface minimal de test,
+
+- Une estimation de difficulté via le nombre de cases vides.
+
+Nous avons pris une direction plus orientée Résolution, estimation et génération via des techniques Humaine afin d'obtenir une difficulté plus Cohérente et également indiqué une manière de résoudre à échelle humaine.
+
+Nous avons réalisé une interface Console plus claire et avec plus de fonctionnalités que nous l'avions décidé dans le cahier des charges. Également le Parser contient plus de fonctionnalités que prévu tout en remplissant évidemment sa fonction demandée. Le "Scrapping" afin d'obtenir une estimation de difficulté via des sources externe n'était pas dans le cahier des charges initial, de la même manière la modification de Grille, la sauvegarde de Grille, l'historique, n'y étaient pas non plus. 
+Nous avons donc respecté le cahier des charges tout en améliorant des fonctionnalités et en ajoutant de nouvelles.
+
+\subsection{Perspectives et points ouvertes}
 Cependant, le projet pourrait être cible d'encore multiples améliorations, ajouts et optimisations, tels que l'ajout et l'optimisation de techniques de résolution, l'optimisation de la génération de grilles et même l'amélioration de l'interface.
 
 \subsubsection{Amélioration des algorithmes}
@@ -944,16 +985,12 @@ Utilisée pour la gestion de version et le travail collaboratif.\\
 Chapitre 2 : Recherche exhaustive et backtrack, L3 Informatique, Université de Montpellier. 
 Utilisé pour la résolution de grilles par algorithme de backtracking.\\
 Support de cours fourni au format PDF : \texttt{Cours2-Exhaustif.pdf}.
-\href{run:Cours2-Exhaustif.pdf}{Ouvrir le PDF du cours}
 
 \bibitem{coursAGL}
 \textbf{Cours d'Ateliers de Génie Logiciel}. 
 Cours 4 : End2End Testing et Selenium, L3 Informatique, Université de Montpellier. 
 Utilisé pour le sudoku scraping.\\
 Support de cours fourni au format PDF : \texttt{CoursE2ETesting\_Selenium.pdf}.
-\href{run:CoursE2ETesting_Selenium.pdf}{Ouvrir le PDF du cours}
-
-
 
 \end{thebibliography}
 
@@ -962,8 +999,7 @@ Support de cours fourni au format PDF : \texttt{CoursE2ETesting\_Selenium.pdf}.
 % ===== 9. Annexes =====
 \section{Annexes}
 
-Cette section regroupe plusieurs captures d'écran obtenues lors des tests du programme et les fonctionnalités de notre projet. 
-Elles illustrent l'affichage des grilles dans l'interface console, les différents niveaux de difficulté, ainsi que la résolution par méthodes humaines.
+Cette section regroupe plusieurs captures d'écran obtenues lors des tests du programme et les fonctionnalités de notre projet.
 
 \begin{figure}[H]
     \centering
