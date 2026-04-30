@@ -163,7 +163,7 @@ Le projet doit respecter plusieurs contraintes :
     \item utilisation de bibliothèques standards,
     \item exécution sur les environnements Linux de l’université,
     \item temps de calcul raisonnable pour la génération et la résolution,
-    \item organisation du code via un dépôt Git structuré.
+    \item organisation du code via un dépôt Git structuré \textbf{\cite{git}}.
 \end{itemize}
 
 
@@ -189,16 +189,16 @@ Comme indiqué dans le rapport de Sprint 1, Python a été choisi pour développ
 
 \subsubsection{Bibliothèques utilisées}
 
-Le projet utilise essentiellement des bibliothèques natives de Python, notamment :
+Le projet utilise essentiellement des bibliothèques natives de Python \textbf{\cite{python}}, notamment :
 \begin{itemize}
     \item \texttt{random} : pour la génération aléatoire des grilles,
     \item \texttt{os} : pour la gestion des fichiers et du système,
     \item \texttt{shutil} : pour certaines opérations sur les fichiers,
-    \item \texttt{pickle} : permet de sauvegarder directement des objets Python dans un fichier \cite{python},
+    \item \texttt{pickle} : permet de sauvegarder directement des objets Python dans un fichier,
     \item \texttt{matplotlib} : pour la visualisation des statistiques du solveur,
-    \item \texttt{selenium} : afin de récupérer une estimation de la difficulté d'une grille depuis le site Sudoku Coach~\cite{sudokucoach},
+    \item \texttt{selenium} : afin de récupérer une estimation de la difficulté d'une grille depuis le site Sudoku Coach \textbf{\cite{sudokucoach}},
     \item \texttt{webdriver\_manager} : avec comme utilité d'adapter la récupération de difficulté aux différents navigateur web,
-    \item \texttt{flask} : pour pouvoir interagir avec une interface plus pratique et intuitive \cite{flask},
+    \item \texttt{flask} : pour pouvoir interagir avec une interface plus pratique et intuitive \textbf{\cite{flask}},
     \item \texttt{flask\_socketio} : permettant au serveur de communiquer avec le script javascript de la page web,
     \item \texttt{pytest} : afin de tester le bon fonctionnement des classes.
 \end{itemize}
@@ -281,7 +281,6 @@ Dernièrement, la grille contient une génération de valeurs sous forme de mét
 Pour finir et comme énoncé précédemment, la génération des valeurs n’est pas définie dans la classe Grille, qui devient donc un classe abstraite, et la génération est relayée à ses classes filles, chacune correspondant à une différente manière de générer les valeurs de la grille de sudoku.
 
 \subsubsection{Solver}
-
 
 
 
@@ -546,9 +545,39 @@ La majorité du code se trouve dans les fichiers Python, car ils contiennent tou
 
 \subsection{Algorithmes principaux}
 
-\subsubsection{Solve/backtrack/generation humaine}
+Tout d'abord, il est important de noter que les algorithmes sont tout au long de ce projet divisées en deux catégories:
 
-\subsection{Illustration du fonctionnement}
+- les algorithmes de backtracking,
+
+- et les algorithmes employant des méthodes plus humaines.
+
+Nous allons donc premièrement voir à quoi servent ces algorithmes et leur fonctionnement basique puis ensuite comparer leur complexité en temps.
+
+\subsubsection{Algorithmes de backtracking}
+Nous avons dans un premier temps un algorithme de génération de grilles par le biais du backtracking, qui consiste à générer une grille vide, la remplir, puis enlever un nombre de valeurs dépendant de la difficulté. 
+
+Le remplissage se fait tout simplement en appliquant l'algorithme de résolution de grille(nommé Solver) à la grille vide, tout en sachant que le Solver utilise des valeurs aléatoires, ce qui nous garanti une probabilité négligeable d'obtenir la même grille de départ. 
+
+Les valeurs à retirer quand à elles sont réparties en deux sous-algorithmes, un premier qui tente de retirer une valeur aléatoire jusqu'à ce que cela soit possible tout en conservant le principe de solution unique, et un deuxième utilisant le premier sous-algorithmes pour retirer des valeurs tant que c'est possible (et seulement jusqu'au nombre de retrait attendu bien évidemment) ou revenant sur ces pas si ce n'est pas possible, cette impossibilité signifiant que le choix de valeur précédent ne permet pas de créer une grille à solution unique sur le long terme.
+
+Nous noterons que cette tactique de génération est fondamentalement la même pour la génération humaine et que la différence réside dans le Solver et dans l'évaluation des valeurs à retirer.
+
+Ensuite l'algorithme de résolution de grille cité précédemment et dénommé Solver, nous nous sommes inspirés des différents cours d'algorithmique sur le sujet tel que le cours de recherche exhaustive et backtrack d'Algorithmique 4~\textbf{\cite{coursAlgo}}, le concept est très simple: tester toutes solutions possibles jusqu'à trouver la bonne, tout en revenant sur ses pas si les grilles partant de la grille actuelle ne sont pas valides.
+
+\subsubsection{Algorithmes humains}
+Comme dit précédemment, la génération de grille humaine adopte la même tactique, avec seulement les sous-algorithmes qui diffère, la plus complexe différence étant le retrait de valeurs. 
+
+En effet, les valeurs ne sont plus retirées aléatoirement mais en fonction des techniques employables pour résoudre ce retrait, avec dépendamment de la difficulté une technique de résolution servant de plafond et pour laquelle les retraits demandant des techniques de complexité supérieure ne sont pas autorisés. Par complexité nous entendons à quel point la technique de résolution est avancé et difficile à exécuter pour l'utilisateur. 
+
+De plus, il n'y a maintenant non pas un nombre de retrait fixe mais un nombre de retrait minimum et maximum dépendant aussi de la difficulté.
+
+Enfin, le Solver est maintenant certes plus compliqué mais la tactique n'en reste pas moins extrêmement simple, elle consiste juste à appliquer les techniques de la plus simple à la plus complexe jusqu'à ce qu'une soit applicable, et cela en boucle jusqu'à résoudre la grille. En effet, contrairement au Solver backtrack nous appliquons des techniques intelligentes garantissant soit l'ajout d'une valeur ou l'élimination de candidats, ce qui amènera à coup sûr à la résolution d'une grille valide.
+
+\subsection{Complexité temporelle des algorithmes}
+
+\subsubsection{Complexité backtrack}
+
+\subsubsection{Complexité humaine}
 
 \vspace{0.5cm}
 
@@ -638,6 +667,14 @@ Utilisée pour la partie interface web du projet.\\
 \textbf{Documentation Git}. 
 Utilisée pour la gestion de version et le travail collaboratif.\\
 \texttt{https://gitlab.etu.umontpellier.fr/}
+
+\bibitem{coursAlgo}
+\textbf{Cours d'Algorithmique 4}. 
+Chapitre 2 : Recherche exhaustive et backtrack, L3 Informatique, Université de Montpellier. 
+Utilisé pour la résolution de grilles par algorithme de backtracking.\\
+Support de cours fourni au format PDF : \texttt{Cours2-Exhaustif.pdf}.
+\href{run:Cours2-Exhaustif.pdf}{Ouvrir le PDF du cours}
+
 
 \end{thebibliography}
 
