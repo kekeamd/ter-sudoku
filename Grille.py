@@ -202,6 +202,16 @@ class Grille(ABC):
     def getCelluleCandidatesIndex(self, index : int) -> list[int]:
         cellule = self._getCelluleIndex(index)
         return cellule.getCandidates()
+    
+    # Ajoute les candidats d'une liste (candidates) aux candidats d'une cellule (Version index)
+    def addCelluleCandidatesIndex(self,index : int, candidates : list[int]) -> None:
+        cel = self._getCelluleIndex(index)
+        cel.setCandidates(listUnion(cel.getCandidates(),candidates))
+
+    # Ajoute les candidats d'une liste (candidates) aux candidats d'une cellule (Version Coords)
+    def addCelluleCandidatesCoord(self,row : int, column : int, candidates : list[int]) -> None:
+        cel = self._getCelluleCoord(row,column)
+        cel.setCandidates(listUnion(cel.getCandidates(),candidates))
 
     #purpose: retire la valeur dans la liste des candidats
     def removeCandidateCoord(self, row: int, col: int, val: int) -> None:

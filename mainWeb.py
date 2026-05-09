@@ -8,6 +8,7 @@ from SudokuScraping import getDifficultyFromGrille
 from Parser import Parser
 from Technique import Technique
 
+
 def parseStats(stats: dict) -> dict:
     grilleStats={}
     for k, v in stats.items():
@@ -40,6 +41,7 @@ if __name__=="__main__":
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+grilleData = {'grille' : None, 'solution' : None}
 
 @app.route('/')
 def play():
@@ -75,6 +77,8 @@ def handle_play(data):
         emit('info', {'data': "Cette grille ne peut pas être résolue uniquement avec les techniques humaines actuellement implémentées dans ce projet (dernier nombre, singleton nu, singleton caché, paire nue, paire cachée, candidat enfermé, gratte-ciel)."})
     grille= Parser.grilleToStringWithoutCandidates(grilleDeJeu)
     solution= Parser.grilleToStringWithoutCandidates(grilleComplete)
+    grilleData['grille'] = grilleDeJeu
+    grilleData['solution'] = grilleComplete
     grilleStats= parseStats(stats)
     HumanRated= rated.name
 
@@ -83,9 +87,41 @@ def handle_play(data):
 
 @socketio.on('add')
 def handle_add(data): #placeholder pour tester si ça fonctionne
-    if data['type']=="value":
-        emit('info', {'data': "ajout de la valeur "+str(data['value'])+" dans la cellule "+str(data['pos'])})
-    elif data['type']=="candidate":
-        emit('info', {'data': "ajout du candidat "+str(data['value'])+" dans la cellule "+str(data['pos'])})
+    value = data['value']   # Valeur de l'élément à placer
+    pos = data['pos']       # Position de l'élément à Placer
+    strict = False          # Paramètre selon lequel on accepte des données non correctes
+    # isDid                 # J'ai pu effectuer le changement
+    # alreadySet            # Tu me demande de faire quelque chose qui est déjà fait !
+    # correct               # Le coup est juste
+    toSend = {'isDid' : True, 'alreadySet' : False, 'correct' : False}
+    if data['type']=="value":                                       # On set ici une valeur dans une case
+        if grilleData['grille'].getCelluleValueIndex(pos) == value:
+            toSend['alreadySet'] = True
+        else:
+            try:
+                if grilleData['solution'].getCelluleValueIndex(pos) == value:
+                    toSend['correct'] = True
+                if strict:
+                    if toSend['correct']:
+                        grilleData['grille'].setCelluleValueIndex(pos,value)
+                    else:
+                        toSend['isDid'] = False
+                else:
+                    grilleData['grille'].setCelluleValueIndex(pos,value)
+            except e as e:
+                print(f"Value not set : \n{e}")
+                toSend['isDid'] = False
+        emit('info', {'data': "Demande d'ajout de la valeur "+str(value)+" dans la cellule "+str(pos)})
+    elif data['type']=="candidate":                              # On set ici un candidat (Attention, pas de set côté serveur !)
+        if value in grilleData['grille'].getCelluleCandidatesIndex(pos):
+            toSend['alreadySet'] = True
+        emit('info', {'data': "Demande d'ajout du candidat "+str(value)+" dans la cellule "+str(pos)})
     else:
         emit('info', {'data': "Erreur: Tentative d'ajouter autre-chose qu'une valeur on un candidat à une cellule!"})
+    print("\n==========")
+    print("DEBUG : ")
+    print(f"Value : {grilleData['grille'].getCelluleValueIndex(pos)}\n && -> {value} | {pos}")
+    print(f"Candidates : {grilleData['grille'].getCelluleCandidatesIndex(pos)}\n && -> {value} | {pos}")
+    print(f"Datas send : {toSend}")
+    print("==========\n")
+    emit('add',toSend)   # Envoie des datas au client
