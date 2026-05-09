@@ -77,6 +77,9 @@
         const socket = io.connect('http://'+document.domain+':'+location.port);
         console.log(location.pathname)
 
+
+
+        //-------------------------Definition Variables----------------------------------
         var Pseudo=""
         var Focused= false
         var FocusTarget= null
@@ -120,6 +123,9 @@
         var candidates8= document.getElementById("candidates-8")
         var candidates9= document.getElementById("candidates-9")
 
+
+
+        //-------------------------Autres----------------------------------
         function removeBlur(target){
             if (target.classList.contains("blured")){target.classList.remove("blured")}
             if (target.classList.contains("focusedElement")){target.classList.remove("focusedElement")}
@@ -158,6 +164,9 @@
             removeBlur(document.body)
         }
 
+
+
+        //-------------------------Interaction Interfaces----------------------------------
         function CloseInfos(){
             anonymousInfos.setAttribute("hidden", "")
         }
@@ -225,6 +234,9 @@
             }
         }
 
+
+
+        //-------------------------Fonctions de jeu----------------------------------
         function Play(difficulte){
             if (!Focused){
                 socket.emit('play', difficulte)
@@ -232,6 +244,17 @@
             }
         }
 
+        function AddValue(pos, value){
+            socket.emit('add', {'pos': pos, 'type': "value", 'value': value})
+        }
+
+        function AddCandidate(pos, candidate){
+            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
+        }
+
+
+
+        //-------------------------Interaction Cellules----------------------------------
         function ColorRegions(cellule, type="color"){
             let index= parseInt(cellule.id.slice(8))
             grille= document.getElementById("sudoku-grid")
@@ -242,7 +265,7 @@
                 let zoneChild= zone.children[i]
                 let rowChild= document.getElementById("cellule-"+(rowFirstIndex+i))
                 let colChild= document.getElementById("cellule-"+(colFirstIndex+i*zone.children.length))
-                if (type=="color"){
+                if (type=="color"){ //colore les cases
                     if (zoneChild!=cellule){
                         zoneChild.classList.add("bg-blue-100/50")
                         zoneChild.classList.add("hover:bg-blue-200/50")
@@ -259,7 +282,7 @@
                         colChild.classList.add("hover:bg-blue-200/50")
                         colChild.classList.remove("hover:bg-neutral-100")
                     }
-                } else{
+                } else{ //décolore les cases
                     zoneChild.classList.remove("bg-blue-100/50")
                     if (!zoneChild.classList.contains("hover:bg-neutral-100")){
                         zoneChild.classList.add("hover:bg-neutral-100")
@@ -298,9 +321,16 @@
 
         function CelluleSelect(cellule){
             if (!Focused){
-                if (cellule==SelectedCellule){
-                    //il faut rajouter la valeur
-                } else{
+                if (cellule==SelectedCellule){ //cas double-click ou click sur une cellule déjà sélectionnée (équivalent)
+                    if (SelectedUtility!=null && cellule.innerText==""){
+                        if (SelectedUtility.id[0]=='v'){
+                            AddValue(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(7)))
+                        }
+                        if (SelectedUtility.id[0]=='c'){
+                            AddCandidate(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(11)))
+                        }
+                    }
+                } else{ //cas click simple
                     CelluleUnselect()
                     SelectedCellule= cellule
                     SelectedCellule.classList.add("cellule-selected")
@@ -323,7 +353,7 @@
                 if (SelectedUtility==null){
                     id= "values-"
                     num= 1
-                }else if (SelectedUtility.id[0]=="v"){
+                }else if (SelectedUtility.id[0]=='v'){
                     id= "candidates-"
                     num= parseInt(SelectedUtility.id.slice(7))
                 } else {
@@ -338,7 +368,7 @@
             if (!Focused && SelectedUtility!=null){
                 let id
                 let num
-                if (SelectedUtility.id[0]=="v"){
+                if (SelectedUtility.id[0]=='v'){
                     id= "values-"
                     num= parseInt(SelectedUtility.id.slice(7))
                 } else {
@@ -376,8 +406,6 @@
                 SelectedUtility.classList.add("bg-blue-300/50")
                 SelectedUtility.classList.add("hover:bg-blue-400/50")
                 SelectedUtility.classList.remove("hover:bg-neutral-100")
-                //il faut rajouter la partie si une cellule est déjà selectionnée (ajouter la valeur)
-                //ColorValues()
             }
         }
         //-----FORMAT UTILITIES SELECTED:-----
@@ -398,6 +426,9 @@
             }
         }
 
+
+
+        //-------------------------Ecouteurs d'évènement----------------------------------
         anonymousInfosButton.addEventListener("click", CloseInfos)
         menuButton.addEventListener("click", OpenMenu)
         playButton.addEventListener("click", ChooseDifficulte)
@@ -430,12 +461,16 @@
         candidates7.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
         candidates8.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
         candidates9.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        document.addEventListener("click", UnselectCellule)
-        document.addEventListener("contextmenu", UnSelectUtilities)
-        document.addEventListener("wheel", ScrollUtilities)
-        document.addEventListener("mouseup", SwitchUtilities)
+        document.addEventListener("click", UnselectCellule) //click gauche
+        document.addEventListener("contextmenu", UnSelectUtilities) //contextmenu c'est le menu quand tu fait click droit sur une page donc ça sert à détecter le click droit 
+        document.addEventListener("wheel", ScrollUtilities) //scroll de la souris (l'évènement 'scroll' correspond au scroll de la page)
+        document.addEventListener("mouseup", SwitchUtilities) // sert à détecter le click du milieu dans ce cas là
+        //Todo/idee: faire une fonction qui prend la fonction à éxecuter en entrée et vérifie si il y a un objet focus avant de l'éxecuter
+        //Cela évite de devoir faire 'if (!Focused)' à chaque début de fonction qui est appelée par un evenlistener
 
 
+
+        //-------------------------Communication Serveur----------------------------------
         socket.on('play', data => {
             //format data: {'grille': Grille,
             //'solution': Grille,
@@ -485,11 +520,6 @@
                 }
             }
         })
-
-        socket.on('info', data => {
-            console.log(data.data)
-        })
-
         //-------FORMAT GRILLE:--------------
         //<div class="grid grid-rows-3" id="sudoku-grid"></div>
         //-------FORMAT ZONES:---------------
@@ -498,5 +528,10 @@
         //-------FORMAT CELLULES:-------------
         //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100"></button>
         // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
+
+
+        socket.on('info', data => {
+            console.log(data.data)
+        })
     </script>
 </html>

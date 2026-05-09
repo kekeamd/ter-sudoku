@@ -51,7 +51,7 @@ div{
     width: 100cqmin;
     height: 100cqmin;
     aspect-ratio: 1/1;
-    border: 2px solid gray;
+    border: 1px solid black;
 }
 
 .zone{

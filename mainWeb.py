@@ -20,6 +20,7 @@ def play():
     return render_template('index.html')
 
 
+#Todo/idée: mettre tout ce qui concerne la grille dans InterfaceWeb d'une manière ou d'une autre?
 @socketio.on('play')
 def handle_play(data):
     difficulte= Difficulte.FACILE
@@ -74,3 +75,12 @@ def handle_play(data):
 
     emit('play', {'grille': grille, 'solution': solution, 'taille': grilleDeJeu.getSize(), 'stats': grilleStats, 'difficulteEstimee': [HumanRated, sudokuCoachRated]})
     return
+
+@socketio.on('add')
+def handle_add(data): #placeholder pour tester si ça fonctionne
+    if data['type']=="value":
+        emit('info', {'data': "ajout de la valeur "+str(data['value'])+" dans la cellule "+str(data['pos'])})
+    elif data['type']=="candidate":
+        emit('info', {'data': "ajout du candidat "+str(data['value'])+" dans la cellule "+str(data['pos'])})
+    else:
+        emit('info', {'data': "Erreur: Tentative d'ajouter autre-chose qu'une valeur on un candidat à une cellule!"})
