@@ -164,7 +164,13 @@
             removeBlur(document.body)
         }
 
-
+        function FocusLock(fonction, targetToVerify, ...args){
+            if (!Focused || (targetToVerify!=null && FocusTarget==targetToVerify)){ //revient à faire :
+            // 'if (!Focused)' si il n'y a pas de target à verifier
+            // 'if (!Focused || FocusTarget==targetToVerify)' sinon
+                fonction(...args)
+            }
+        }
 
         //-------------------------Interaction Interfaces----------------------------------
         function CloseInfos(){
@@ -172,76 +178,64 @@
         }
 
         function OpenMenu(){
-            if (!Focused){
-                if (menu.hasAttribute("hidden")){
-                    menu.removeAttribute("hidden")
-                    menuButton.innerText= ">"
-                } else{
-                    menu.setAttribute("hidden", "")
-                    menuButton.innerText= "<"
-                }
+            if (menu.hasAttribute("hidden")){
+                menu.removeAttribute("hidden")
+                menuButton.innerText= ">"
+            } else{
+                menu.setAttribute("hidden", "")
+                menuButton.innerText= "<"
             }
         }
 
         function ChooseDifficulte(){
-            if (!Focused){
-                if (menuDifficulte.hasAttribute("hidden")){
-                    menuDifficulte.removeAttribute("hidden")
-                    playButton.innerText="Annuler"
-                    if (Pseudo==""){
-                        if (anonymousInfos.hasAttribute("hidden")){anonymousInfos.removeAttribute("hidden")}
-                    }
-                } else{
-                    menuDifficulte.setAttribute("hidden", "")
-                    playButton.innerText="Nouvelle Partie"
+            if (menuDifficulte.hasAttribute("hidden")){
+                menuDifficulte.removeAttribute("hidden")
+                playButton.innerText="Annuler"
+                if (Pseudo==""){
+                    if (anonymousInfos.hasAttribute("hidden")){anonymousInfos.removeAttribute("hidden")}
                 }
+            } else{
+                menuDifficulte.setAttribute("hidden", "")
+                playButton.innerText="Nouvelle Partie"
             }
         }
 
         function OpenLogin(){
-            if (!Focused || FocusTarget==loginMenu){
-                if (loginMenu.hasAttribute("hidden")){
-                    FocusOn(loginMenu, [loginButton])
-                    loginMenu.removeAttribute("hidden")
-                    loginButton.innerText="Annuler"
-                } else{
-                    FocusOff()
-                    loginMenu.setAttribute("hidden", "")
-                    loginButton.innerText="Connexion"
-                }
+            if (loginMenu.hasAttribute("hidden")){
+                FocusOn(loginMenu, [loginButton])
+                loginMenu.removeAttribute("hidden")
+                loginButton.innerText="Annuler"
+            } else{
+                FocusOff()
+                loginMenu.setAttribute("hidden", "")
+                loginButton.innerText="Connexion"
             }
         }
 
         function Login(){
-            if (!Focused || FocusTarget==loginMenu){
-                if (loginPseudo.value!=""){
-                    FocusOff()
-                    Pseudo=loginPseudo.value
-                    loginPseudo.value=""
-                    loginMenu.setAttribute("hidden", "")
-                    loginButton.setAttribute("hidden", "")
-                    logoutButton.removeAttribute("hidden")
-                    loginButton.innerText="Connexion"
-                }
+            if (loginPseudo.value!=""){
+                FocusOff()
+                Pseudo=loginPseudo.value
+                loginPseudo.value=""
+                loginMenu.setAttribute("hidden", "")
+                loginButton.setAttribute("hidden", "")
+                logoutButton.removeAttribute("hidden")
+                loginButton.innerText="Connexion"
             }
         }
 
         function Logout(){
-            if (!Focused){
-                Pseudo=""
-                logoutButton.setAttribute("hidden", "")
-                loginButton.removeAttribute("hidden")
-            }
+            Pseudo=""
+            logoutButton.setAttribute("hidden", "")
+            loginButton.removeAttribute("hidden")
         }
 
 
 
         //-------------------------Fonctions de jeu----------------------------------
         function Play(difficulte){
-            if (!Focused){
-                socket.emit('play', difficulte)
-                ChooseDifficulte()
-            }
+            socket.emit('play', difficulte)
+            ChooseDifficulte()
         }
 
         function AddValue(pos, value){
@@ -304,41 +298,37 @@
         }
 
         function CelluleUnselect(){
-            if (!Focused){
-                if (SelectedCellule!=null){
-                    SelectedCellule.classList.remove("cellule-selected")
-                    SelectedCellule.classList.remove("bg-blue-300/50")
-                    if (!SelectedCellule.classList.contains("hover:bg-neutral-100")){
-                        SelectedCellule.classList.add("hover:bg-neutral-100")
-                    }
-                    SelectedCellule.classList.remove("hover:bg-blue-400/50")
-
-                    ColorRegions(SelectedCellule, "uncolor")
-                    SelectedCellule=null
+            if (SelectedCellule!=null){
+                SelectedCellule.classList.remove("cellule-selected")
+                SelectedCellule.classList.remove("bg-blue-300/50")
+                if (!SelectedCellule.classList.contains("hover:bg-neutral-100")){
+                    SelectedCellule.classList.add("hover:bg-neutral-100")
                 }
+                SelectedCellule.classList.remove("hover:bg-blue-400/50")
+
+                ColorRegions(SelectedCellule, "uncolor")
+                SelectedCellule=null
             }
         }
 
         function CelluleSelect(cellule){
-            if (!Focused){
-                if (cellule==SelectedCellule){ //cas double-click ou click sur une cellule déjà sélectionnée (équivalent)
-                    if (SelectedUtility!=null && cellule.innerText==""){
-                        if (SelectedUtility.id[0]=='v'){
-                            AddValue(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(7)))
-                        }
-                        if (SelectedUtility.id[0]=='c'){
-                            AddCandidate(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(11)))
-                        }
+            if (cellule==SelectedCellule){ //cas double-click ou click sur une cellule déjà sélectionnée (équivalent)
+                if (SelectedUtility!=null && cellule.innerText==""){
+                    if (SelectedUtility.id[0]=='v'){
+                        AddValue(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(7)))
                     }
-                } else{ //cas click simple
-                    CelluleUnselect()
-                    SelectedCellule= cellule
-                    SelectedCellule.classList.add("cellule-selected")
-                    SelectedCellule.classList.add("bg-blue-300/50")
-                    SelectedCellule.classList.add("hover:bg-blue-400/50")
-                    SelectedCellule.classList.remove("hover:bg-neutral-100")
-                    ColorRegions(cellule)
+                    if (SelectedUtility.id[0]=='c'){
+                        AddCandidate(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(11)))
+                    }
                 }
+            } else{ //cas click simple
+                CelluleUnselect()
+                SelectedCellule= cellule
+                SelectedCellule.classList.add("cellule-selected")
+                SelectedCellule.classList.add("bg-blue-300/50")
+                SelectedCellule.classList.add("hover:bg-blue-400/50")
+                SelectedCellule.classList.remove("hover:bg-neutral-100")
+                ColorRegions(cellule)
             }
         }
         
@@ -347,7 +337,7 @@
         //on ajoute au selectionné "cellule-selected bg-blue-300/50 hover:bg-blue-400/50" à class
 
         function SwitchUtilities(event){
-            if (!Focused && event.button==1){
+            if (event.button==1){
                 let id
                 let num
                 if (SelectedUtility==null){
@@ -365,7 +355,7 @@
         }
 
         function ScrollUtilities(event){
-            if (!Focused && SelectedUtility!=null){
+            if (SelectedUtility!=null){
                 let id
                 let num
                 if (SelectedUtility.id[0]=='v'){
@@ -385,86 +375,80 @@
         }
 
         function UtilitiesUnselect(){
-            if (!Focused){
-                if (SelectedUtility!=null){
-                    SelectedUtility.classList.remove("utilities-selected")
-                    SelectedUtility.classList.remove("bg-blue-300/50")
-                    if (!SelectedUtility.classList.contains("hover:bg-neutral-100")){
-                        SelectedUtility.classList.add("hover:bg-neutral-100")
-                    }
-                    SelectedUtility.classList.remove("hover:bg-blue-400/50")
-                    SelectedUtility= null
+            if (SelectedUtility!=null){
+                SelectedUtility.classList.remove("utilities-selected")
+                SelectedUtility.classList.remove("bg-blue-300/50")
+                if (!SelectedUtility.classList.contains("hover:bg-neutral-100")){
+                    SelectedUtility.classList.add("hover:bg-neutral-100")
                 }
+                SelectedUtility.classList.remove("hover:bg-blue-400/50")
+                SelectedUtility= null
             }
         }
 
         function UtilitiesSelect(button){
-            if (!Focused){
-                UtilitiesUnselect()
-                SelectedUtility=button
-                SelectedUtility.classList.add("utilities-selected")
-                SelectedUtility.classList.add("bg-blue-300/50")
-                SelectedUtility.classList.add("hover:bg-blue-400/50")
-                SelectedUtility.classList.remove("hover:bg-neutral-100")
-            }
+            UtilitiesUnselect()
+            SelectedUtility=button
+            SelectedUtility.classList.add("utilities-selected")
+            SelectedUtility.classList.add("bg-blue-300/50")
+            SelectedUtility.classList.add("hover:bg-blue-400/50")
+            SelectedUtility.classList.remove("hover:bg-neutral-100")
         }
         //-----FORMAT UTILITIES SELECTED:-----
         //on ajoute "utilities-selected bg-blue-300/50 hover:bg-blue-400/50" à class
 
         function UnselectCellule(event){
-            if (!Focused){
-                if (!event.target.classList.contains("cellule")){
-                    CelluleUnselect()
-                }
+            if (!event.target.classList.contains("cellule")){
+                CelluleUnselect()
             }
         }
 
         function UnSelectUtilities(event){
             event.preventDefault()
-            if (!Focused){
-                UtilitiesUnselect()
-            }
+            UtilitiesUnselect()
         }
 
 
 
         //-------------------------Ecouteurs d'évènement----------------------------------
-        anonymousInfosButton.addEventListener("click", CloseInfos)
-        menuButton.addEventListener("click", OpenMenu)
-        playButton.addEventListener("click", ChooseDifficulte)
-        loginButton.addEventListener("click", OpenLogin)
-        loginSubmit.addEventListener("click", Login)
-        logoutButton.addEventListener("click", Logout)
+        //Format pour le focus: FocusLock(nomDeLaFonction, null, argumentsDeLaFonction) si la fonction ne doit pas fonctionner quand focus
+        //                      FocusLock(nomDeLaFonction, objetFocusé, argumentsDeLaFonction) si la fonction doit fonctionner lorsque objetFocusé est la cible du focus
+        anonymousInfosButton.addEventListener("click", () => {FocusLock(CloseInfos, null, CloseInfos)})
+        menuButton.addEventListener("click", () => {FocusLock(OpenMenu, null, OpenMenu)})
+        playButton.addEventListener("click", () => {FocusLock(ChooseDifficulte, null, ChooseDifficulte)})
+        loginButton.addEventListener("click", () => {FocusLock(OpenLogin, loginMenu, OpenLogin)})
+        loginSubmit.addEventListener("click", () => {FocusLock(Login, loginMenu, Login)})
+        logoutButton.addEventListener("click", () => {FocusLock(Logout, null, Logout)})
 
-        difficulteFacile.addEventListener("click", () => {Play("facile")})
-        difficulteMoyen.addEventListener("click", () => {Play("moyen")})
-        difficulteDifficile.addEventListener("click", () => {Play("difficile")})
-        difficulteExtreme.addEventListener("click", () => {Play("extreme")})
-        difficulteGodmode.addEventListener("click", () => {Play("godmode")})
+        difficulteFacile.addEventListener("click", () => {FocusLock(Play, null, "facile")})
+        difficulteMoyen.addEventListener("click", () => {FocusLock(Play, null, "moyen")})
+        difficulteDifficile.addEventListener("click", () => {FocusLock(Play, null, "difficile")})
+        difficulteExtreme.addEventListener("click", () => {FocusLock(Play, null, "extreme")})
+        difficulteGodmode.addEventListener("click", () => {FocusLock(Play, null, "godmode")})
 
-        values1.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values2.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values3.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values4.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values5.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values6.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values7.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values8.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values9.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        values1.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values2.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values3.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values4.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values5.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values6.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values7.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values8.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values9.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
 
-        candidates1.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates2.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates3.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates4.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates5.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates6.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates7.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates8.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates9.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        document.addEventListener("click", UnselectCellule) //click gauche
-        document.addEventListener("contextmenu", UnSelectUtilities) //contextmenu c'est le menu quand tu fait click droit sur une page donc ça sert à détecter le click droit 
-        document.addEventListener("wheel", ScrollUtilities) //scroll de la souris (l'évènement 'scroll' correspond au scroll de la page)
-        document.addEventListener("mouseup", SwitchUtilities) // sert à détecter le click du milieu dans ce cas là
+        candidates1.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates2.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates3.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates4.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates5.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates6.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates7.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates8.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates9.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        document.addEventListener("click", (event) => {FocusLock(UnselectCellule, null, event)}) //click gauche
+        document.addEventListener("contextmenu", (event) => {FocusLock(UnSelectUtilities, null, event)}) //contextmenu c'est le menu quand tu fait click droit sur une page donc ça sert à détecter le click droit 
+        document.addEventListener("wheel", (event) => {FocusLock(ScrollUtilities, null, event)}) //scroll de la souris (l'évènement 'scroll' correspond au scroll de la page)
+        document.addEventListener("mouseup", (event) => {FocusLock(SwitchUtilities, null, event)}) // sert à détecter le click du milieu dans ce cas là
         //Todo/idee: faire une fonction qui prend la fonction à éxecuter en entrée et vérifie si il y a un objet focus avant de l'éxecuter
         //Cela évite de devoir faire 'if (!Focused)' à chaque début de fonction qui est appelée par un evenlistener
 
