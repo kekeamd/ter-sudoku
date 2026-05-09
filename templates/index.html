@@ -85,6 +85,7 @@
         var FocusTarget= null
         var SelectedCellule= null
         var SelectedUtility= null
+        var Strict= false // false pour débugger mais doit être à true
 
         var anonymousInfos= document.getElementById("anonymous-infos")
         var anonymousInfosButton= document.getElementById("anonymous-infos-close")
@@ -240,11 +241,11 @@
         }
 
         function AddValue(pos, value){
-            socket.emit('add', {'pos': pos, 'type': "value", 'value': value})
+            socket.emit('add', {'pos': pos, 'type': "value", 'value': value, 'strict': Strict})
         }
 
         function AddCandidate(pos, candidate){
-            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
+            //socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
         }
 
 
