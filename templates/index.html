@@ -514,6 +514,16 @@
         //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100"></button>
         // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
 
+        socket.on('add', data => {
+            //format data: {'isDone' : bool, 'alreadySet' : bool, 'correct' : bool, entry : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
+            let cellule= document.getElementById("cellule-"+data.entry.pos)
+            if (!data.alreadySet && data.isDone){
+                if (data.entry.type=="value"){
+                    //Mise en place de la valeur de la cellule : data.entry.value && data.entry.pos
+                }else if (data.entry.type=="candidate"){
+                    //Ajout du candidat : data.entry.value && data.entry.pos
+                }
+            })
 
         socket.on('info', data => {
             console.log(data.data)
