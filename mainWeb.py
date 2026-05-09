@@ -93,7 +93,7 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
     # done                 # J'ai pu effectuer le changement
     # alreadySet            # Tu me demande de faire quelque chose qui est déjà fait !
     # correct               # Le coup est juste
-    toSend = {'done' : True, 'alreadySet' : False, 'correct' : False}
+    toSend = {'done' : True, 'alreadySet' : False, 'correct' : False, 'entryData' : data}
     if data['type']=="value":                                       # On set ici une valeur dans une case
         if grilleData['grille'].getCelluleValueIndex(pos) == value:
             toSend['alreadySet'] = True
@@ -113,8 +113,8 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
                 toSend['done'] = False
         emit('info', {'data': "Demande d'ajout de la valeur "+str(value)+" dans la cellule "+str(pos)})
     elif data['type']=="candidate":                              # On set ici un candidat (Attention, pas de set côté serveur !)
-        if value in grilleData['grille'].getCelluleCandidatesIndex(pos):
-            toSend['alreadySet'] = True
+        # if value in grilleData['grille'].getCelluleCandidatesIndex(pos):
+        #     toSend['alreadySet'] = True
         emit('info', {'data': "Demande d'ajout du candidat "+str(value)+" dans la cellule "+str(pos)})
     else:
         emit('info', {'data': "Erreur: Tentative d'ajouter autre-chose qu'une valeur on un candidat à une cellule!"})
