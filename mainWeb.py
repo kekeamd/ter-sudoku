@@ -8,6 +8,32 @@ from SudokuScraping import getDifficultyFromGrille
 from Parser import Parser
 from Technique import Technique
 
+def parseStats(stats: dict) -> dict:
+    grilleStats={}
+    for k, v in stats.items():
+        if k=='counts':
+            grilleCounts= {}
+            for kbis, vbis in v.items():
+                grilleCounts[kbis.name]= vbis
+            grilleStats[k]= grilleCounts
+        elif k=='maxTechnique':
+            grilleStats[k]= v.name
+        elif k=='history':
+            grilleHistory= []
+            for move in v:
+                moveDetails= {}
+                for kbis, vbis in move.items():
+                    if kbis=='technique':
+                        moveDetails[kbis]=vbis.name
+                    else:
+                        moveDetails[kbis]= vbis
+                grilleHistory.append(moveDetails)
+            grilleStats[k]= grilleHistory
+        else:
+            grilleStats[k]= v
+    return grilleStats
+
+
 if __name__=="__main__":
     print("Ne dois pas être lancé !")
     exit()
@@ -49,28 +75,7 @@ def handle_play(data):
         emit('info', {'data': "Cette grille ne peut pas être résolue uniquement avec les techniques humaines actuellement implémentées dans ce projet (dernier nombre, singleton nu, singleton caché, paire nue, paire cachée, candidat enfermé, gratte-ciel)."})
     grille= Parser.grilleToStringWithoutCandidates(grilleDeJeu)
     solution= Parser.grilleToStringWithoutCandidates(grilleComplete)
-    grilleStats={}
-    for k, v in stats.items():
-        if k=='counts':
-            grilleCounts= {}
-            for kbis, vbis in v.items():
-                grilleCounts[kbis.name]= vbis
-            grilleStats[k]= grilleCounts
-        elif k=='maxTechnique':
-            grilleStats[k]= v.name
-        elif k=='history':
-            grilleHistory= []
-            for move in v:
-                moveDetails= {}
-                for kbis, vbis in move.items():
-                    if kbis=='technique':
-                        moveDetails[kbis]=vbis.name
-                    else:
-                        moveDetails[kbis]= vbis
-                grilleHistory.append(moveDetails)
-            grilleStats[k]= grilleHistory
-        else:
-            grilleStats[k]= v
+    grilleStats= parseStats(stats)
     HumanRated= rated.name
 
     emit('play', {'grille': grille, 'solution': solution, 'taille': grilleDeJeu.getSize(), 'stats': grilleStats, 'difficulteEstimee': [HumanRated, sudokuCoachRated]})
