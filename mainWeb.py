@@ -89,11 +89,11 @@ def handle_play(data):
 def handle_add(data): #placeholder pour tester si ça fonctionne
     value = data['value']   # Valeur de l'élément à placer
     pos = data['pos']       # Position de l'élément à Placer
-    strict = False          # Paramètre selon lequel on accepte des données non correctes
-    # isDid                 # J'ai pu effectuer le changement
+    strict = data['strict'] # Paramètre selon lequel on accepte des données non correctes
+    # done                 # J'ai pu effectuer le changement
     # alreadySet            # Tu me demande de faire quelque chose qui est déjà fait !
     # correct               # Le coup est juste
-    toSend = {'isDid' : True, 'alreadySet' : False, 'correct' : False, 'entryData' : data}
+    toSend = {'done' : True, 'alreadySet' : False, 'correct' : False, 'entryData' : data}
     if data['type']=="value":                                       # On set ici une valeur dans une case
         if grilleData['grille'].getCelluleValueIndex(pos) == value:
             toSend['alreadySet'] = True
@@ -105,12 +105,12 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
                     if toSend['correct']:
                         grilleData['grille'].setCelluleValueIndex(pos,value)
                     else:
-                        toSend['isDid'] = False
+                        toSend['done'] = False
                 else:
                     grilleData['grille'].setCelluleValueIndex(pos,value)
             except e as e:
                 print(f"Value not set : \n{e}")
-                toSend['isDid'] = False
+                toSend['done'] = False
         emit('info', {'data': "Demande d'ajout de la valeur "+str(value)+" dans la cellule "+str(pos)})
     elif data['type']=="candidate":                              # On set ici un candidat (Attention, pas de set côté serveur !)
         # if value in grilleData['grille'].getCelluleCandidatesIndex(pos):

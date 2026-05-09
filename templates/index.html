@@ -85,6 +85,7 @@
         var FocusTarget= null
         var SelectedCellule= null
         var SelectedUtility= null
+        var Strict= false // false pour débugger mais doit être à true
 
         var anonymousInfos= document.getElementById("anonymous-infos")
         var anonymousInfosButton= document.getElementById("anonymous-infos-close")
@@ -240,11 +241,11 @@
         }
 
         function AddValue(pos, value){
-            socket.emit('add', {'pos': pos, 'type': "value", 'value': value})
+            socket.emit('add', {'pos': pos, 'type': "value", 'value': value, 'strict': Strict})
         }
 
         function AddCandidate(pos, candidate){
-            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
+            //socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
         }
 
 
@@ -515,9 +516,9 @@
         // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
 
         socket.on('add', data => {
-            //format data: {'isDone' : bool, 'alreadySet' : bool, 'correct' : bool, entry : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
+            //format data: {'done' : bool, 'alreadySet' : bool, 'correct' : bool, entry : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
             let cellule= document.getElementById("cellule-"+data.entry.pos)
-            if (!data.alreadySet && data.isDone){
+            if (!data.alreadySet && data.done){
                 if (data.entry.type=="value"){
                     //Mise en place de la valeur de la cellule : data.entry.value && data.entry.pos
                 }else if (data.entry.type=="candidate"){
