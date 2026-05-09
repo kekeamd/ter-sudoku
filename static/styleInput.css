@@ -65,6 +65,15 @@ div{
     width: 100/3cqmin;
     height: 100/3cqmin;
     aspect-ratio: 1/1;
+    container-type: size;
+    overflow: hidden;
+}
+
+.candidate{
+    width: 100/3cqmin;
+    height: 100/3cqmin;
+    font-size: 20cqmin;
+    aspect-ratio: 1/1;
 }
 
 #top{

@@ -410,7 +410,35 @@
             UtilitiesUnselect()
         }
 
+        function addCandidate(cellule, value, taille){
+            if (cellule.children.length==0 && cellule.innerText==""){
+                cellule.classList.add("grid")
+                cellule.classList.add("grid-rows-3")
+                for (let i=0; i<taille**2;i++){
+                    let candidate = document.createElement("p")
+                    let candidateRow= Math.floor(i/taille)
+                    candidate.classList.add("candidate")
+                    candidate.classList.add("row-start-"+(candidateRow+1))
+                    candidate.innerText= (i+1)
+                    candidate.id= cellule.id + "-c-" + (i+1)
+                    if (i+1==value){
+                        candidate.classList.add("opacity-100")
+                    } else{
+                        candidate.classList.add("opacity-0")
+                    }
+                    cellule.appendChild(candidate)
+                }
+            } else if (cellule.children.length!=0 && value!=0){
+                cellule.children[value-1].classList.remove("opacity-0")
+                cellule.children[value-1].classList.add("opacity-100")
+            }
+        }
 
+        function addCandidates(cellule, taille){
+            for (let i=1;i<=taille**2;i++){
+                addCandidate(cellule, 0, taille)
+            }
+        }
 
         //-------------------------Ecouteurs d'évènement----------------------------------
         //Format pour le focus: FocusLock(nomDeLaFonction, null, argumentsDeLaFonction) si la fonction ne doit pas fonctionner quand focus
@@ -451,8 +479,6 @@
         document.addEventListener("contextmenu", (event) => {FocusLock(UnSelectUtilities, null, event)}) //contextmenu c'est le menu quand tu fait click droit sur une page donc ça sert à détecter le click droit 
         document.addEventListener("wheel", (event) => {FocusLock(ScrollUtilities, null, event)}) //scroll de la souris (l'évènement 'scroll' correspond au scroll de la page)
         document.addEventListener("mouseup", (event) => {FocusLock(SwitchUtilities, null, event)}) // sert à détecter le click du milieu dans ce cas là
-        //Todo/idee: faire une fonction qui prend la fonction à éxecuter en entrée et vérifie si il y a un objet focus avant de l'éxecuter
-        //Cela évite de devoir faire 'if (!Focused)' à chaque début de fonction qui est appelée par un evenlistener
 
 
 
@@ -501,7 +527,10 @@
                 let cellule=document.getElementById("cellule-"+i)
                 if (data.grille[i]==0){
                     cellule.innerText= ""
+                    //addCandidates(cellule, data.taille)//           WIP (currently not working)
                 }else{
+                    cellule.classList.remove("grid")
+                    cellule.classList.remove("grid-rows-3")
                     cellule.innerText= data.grille[i]
                 }
             }
@@ -512,9 +541,8 @@
         //<div class="zone grid grid-rows-3 row-start-rowNumber"></div>
         // en remplaçant rowNumber par le numéro de la ligne à laquelle la zone appartient (de 1 à 3)
         //-------FORMAT CELLULES:-------------
-        //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100"></button>
+        //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100 grid grid-rows-3"></button>
         // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
-
 
         socket.on('info', data => {
             console.log(data.data)

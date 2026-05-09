@@ -731,6 +731,14 @@ video {
   color: rgb(71 85 105 / var(--tw-text-opacity, 1));
 }
 
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-100 {
+  opacity: 1;
+}
+
 .shadow-2xl {
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);
@@ -812,6 +820,15 @@ div{
   border-style: solid;
   width: 100/3cqmin;
   height: 100/3cqmin;
+  aspect-ratio: 1/1;
+  container-type: size;
+  overflow: hidden;
+}
+
+.candidate{
+  width: 100/3cqmin;
+  height: 100/3cqmin;
+  font-size: 20cqmin;
   aspect-ratio: 1/1;
 }
 
