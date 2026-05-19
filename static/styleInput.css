@@ -69,7 +69,15 @@ div{
     overflow: hidden;
 }
 
+.value{
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    pointer-events: none;
+}
+
 .candidate{
+    justify-content: center;
     width: 100/3cqmin;
     height: 100/3cqmin;
     font-size: 20cqmin;

@@ -582,6 +582,10 @@ video {
   grid-row: span 5 / span 5;
 }
 
+.row-span-3 {
+  grid-row: span 3 / span 3;
+}
+
 .row-start-1 {
   grid-row-start: 1;
 }
@@ -711,6 +715,10 @@ video {
   font-weight: 100;
 }
 
+.text-blue-700\/75 {
+  color: rgb(29 78 216 / 0.75);
+}
+
 .text-blue-950 {
   --tw-text-opacity: 1;
   color: rgb(23 37 84 / var(--tw-text-opacity, 1));
@@ -729,6 +737,10 @@ video {
 .text-slate-600 {
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity, 1));
+}
+
+.text-slate-600\/75 {
+  color: rgb(71 85 105 / 0.75);
 }
 
 .opacity-0 {
@@ -825,7 +837,15 @@ div{
   overflow: hidden;
 }
 
+.value{
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  pointer-events: none;
+}
+
 .candidate{
+  justify-content: center;
   width: 100/3cqmin;
   height: 100/3cqmin;
   font-size: 20cqmin;
