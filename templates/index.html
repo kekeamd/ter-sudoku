@@ -353,8 +353,8 @@
         }
 
         function CelluleSelect2(cellule){//cas double-click
+            let pos = parseInt(cellule.id.slice(8))
             if (SelectedUtility!=null && cellule.children[0].innerText==""){
-                let pos = parseInt(cellule.id.slice(8))
                 if (SelectedUtility.id[0]=='v'){
                     AddValue(pos, parseInt(SelectedUtility.id.slice(7)))
                 }
@@ -634,7 +634,7 @@
             //format data: {'solution': Grille}
             for (let i=0; i<data.solution.length; i++){
                 let cellule = document.getElementById("cellule-"+i)
-                cellule.children[0].innerText= solution[i]
+                cellule.children[0].innerText= data.solution[i]
                 FinishGame("Solution affichée, la partie est terminée!")
             }
         })
@@ -661,8 +661,18 @@
             }
         })
 
+        socket.on('getCandidates', data => {
+            // format data: {'cands' : listOfCands}
+            for (let i = 0; i<data.cands.length; i++){
+                let cellule= document.getElementById("cellule-"+i)
+                // removeCandidates
+                addCandidates(cellule,data.cands[i])
+            }
+        })
+
+
         socket.on('info', data => {
             console.log(data.data)
         })
     </script>
-</html>
+</html> 
