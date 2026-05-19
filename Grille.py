@@ -225,9 +225,6 @@ class Grille(ABC):
         if val in cellule.getCandidates():
             self._adjustCandidatesCellule(cellule, [val])
 
-    def removeAllCandidates(self):
-        
-
     #purpose: rectifie les listes de candidats de la cellule en fonction des candidats impossibles 'imp'
     def _adjustCandidatesCellule(self, cellule : Cellule, imp : list[int]) -> None:
         newCandidates = listDifference(cellule.getCandidates(), imp)
