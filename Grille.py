@@ -213,11 +213,20 @@ class Grille(ABC):
         cel = self._getCelluleCoord(row,column)
         cel.setCandidates(listUnion(cel.getCandidates(),candidates))
 
-    #purpose: retire la valeur dans la liste des candidats
+    #purpose: retire la valeur dans la liste des candidats (Version index)
+    def removeCandidateIndex(self,index : int, val: int) -> None:
+        cellule = self._getCelluleIndex(index)
+        if val in cellule.getCandidates():
+            self._adjustCandidatesCellule(cellule, [val])
+
+    #purpose: retire la valeur dans la liste des candidats (Version Coords)
     def removeCandidateCoord(self, row: int, col: int, val: int) -> None:
         cellule = self._getCelluleCoord(row, col)
         if val in cellule.getCandidates():
             self._adjustCandidatesCellule(cellule, [val])
+
+    def removeAllCandidates(self):
+        
 
     #purpose: rectifie les listes de candidats de la cellule en fonction des candidats impossibles 'imp'
     def _adjustCandidatesCellule(self, cellule : Cellule, imp : list[int]) -> None:
