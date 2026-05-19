@@ -245,7 +245,7 @@
         }
 
         function AddCandidate(pos, candidate){
-            //socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
+            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
         }
 
 
@@ -320,7 +320,8 @@
                         AddValue(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(7)))
                     }
                     if (SelectedUtility.id[0]=='c'){
-                        AddCandidate(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(11)))
+                        AddCandidate(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(11))) //version serveur
+                        //addCandidate(cellule, parseInt(SelectedUtility.id.slice(11))) //version client
                     }
                 }
             } else{ //cas click simple
@@ -410,33 +411,59 @@
             UtilitiesUnselect()
         }
 
-        function addCandidate(cellule, value, taille){
+        function addValue(cellule, value){
+            for (let i=0; i<cellule.children.length; i++){
+                cellule.children[i].setAttribute("disabled", "")
+            }
+            cellule.innerText= value
+        }
+
+        function removeValue(cellule){
+            cellule.innerText= ""
+            for (let i=0; i<cellule.children.length; i++){
+                cellule.children[i].removeAttribute("disabled")
+            }
+        }
+
+        function addCandidate(cellule, candidate){
+            let taille= cellule.parent.children.length
             if (cellule.children.length==0 && cellule.innerText==""){
                 cellule.classList.add("grid")
                 cellule.classList.add("grid-rows-3")
                 for (let i=0; i<taille**2;i++){
-                    let candidate = document.createElement("p")
+                    let candidate = document.createElement("div")
                     let candidateRow= Math.floor(i/taille)
                     candidate.classList.add("candidate")
                     candidate.classList.add("row-start-"+(candidateRow+1))
                     candidate.innerText= (i+1)
                     candidate.id= cellule.id + "-c-" + (i+1)
-                    if (i+1==value){
+                    if (i+1==candidate){
                         candidate.classList.add("opacity-100")
                     } else{
                         candidate.classList.add("opacity-0")
                     }
                     cellule.appendChild(candidate)
                 }
-            } else if (cellule.children.length!=0 && value!=0){
-                cellule.children[value-1].classList.remove("opacity-0")
-                cellule.children[value-1].classList.add("opacity-100")
+            }
+            if (candidate!=0){
+                if (cellule.innerText!=""){
+                    console.log("Erreur: tentative d'ajout d'un candidat à une cellule avec une valeur (ceci n'est pas sensé pouvoir arriver)!")
+                } else{
+                    cellule.children[candidate-1].classList.remove("opacity-0")
+                    cellule.children[candidate-1].classList.add("opacity-100")
+                }
             }
         }
 
-        function addCandidates(cellule, taille){
-            for (let i=1;i<=taille**2;i++){
-                addCandidate(cellule, 0, taille)
+        function addCandidates(cellule, candidateList = []){
+            if (candidateList.length==0){
+                for (let i=0;i<taille**2;i++){
+                    addCandidate(cellule, 0)
+                }
+            } else{
+                for (let i=0;i<taille**2;i++){
+                    addCandidate(cellule, candidateList[i])
+                }
             }
         }
 
@@ -518,7 +545,7 @@
                         cellule.classList.add("border-stone-300")
                         cellule.classList.add("hover:bg-neutral-100")
                         cellule.id="cellule-"+celluleIndex
-                        cellule.addEventListener("click", (event) => {CelluleSelect(event.target)})
+                        cellule.addEventListener("click", () => {CelluleSelect(cellule)})
                         zone.appendChild(cellule)
                     }
                 }
@@ -527,7 +554,7 @@
                 let cellule=document.getElementById("cellule-"+i)
                 if (data.grille[i]==0){
                     cellule.innerText= ""
-                    //addCandidates(cellule, data.taille)//           WIP (currently not working)
+                    //addCandidates(cellule)//si on veut initialiser les candidats dès le début (point négatif: temps de génération plus important)
                 }else{
                     cellule.classList.remove("grid")
                     cellule.classList.remove("grid-rows-3")
@@ -549,9 +576,9 @@
             let cellule= document.getElementById("cellule-"+data.entryData.pos)
             if (!data.alreadySet && data.done){
                 if (data.entryData.type=="value"){
-                    //Mise en place de la valeur de la cellule : data.entryData.value && data.entryData.pos
+                    addValue(cellule, data.entryData.value)
                 }else if (data.entryData.type=="candidate"){
-                    //Ajout du candidat : data.entryData.value && data.entryData.pos
+                    addCandidate(cellule, data.entryData.value)
                 }
             }
         })

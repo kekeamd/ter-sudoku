@@ -830,6 +830,7 @@ div{
   height: 100/3cqmin;
   font-size: 20cqmin;
   aspect-ratio: 1/1;
+  pointer-events: none;
 }
 
 #top{
