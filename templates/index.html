@@ -31,7 +31,7 @@
                         <button type="button" id="difficulte-godmode">godmode</button>
                     </div>
                     <br>
-                    <button type="button" id="solution-button">Grille Solution</button>
+                    <button type="button" id="solution-button" disabled>Grille Solution</button>
                     <div class="border-sky-950 border-2 rounded-xl shadow-2xl" id="login-menu" hidden>
                         <input placeholder="Veuillez insérer un pseudo" id="login-pseudo">
                         <input type="password" placeholder="Veuillez entrer un mot de passe" id="login-password" hidden >
@@ -89,7 +89,7 @@
         var FocusTarget= null
         var SelectedCellule= null
         var SelectedUtility= null
-        var Strict= false // false pour débugger mais doit être à true
+        var Strict= false // false pour débugger mais doit être à true //todo switch pour désactiver/activer strict et explication de la fonctionalité
         var ErrorCount= 0
         var MaxError= 5
 
@@ -272,6 +272,7 @@
         }
 
         function FinishGame(message){//placeholder, à remplir plus tard? faire en sorte qu'on ne puisse plus remove après avoir fini
+            //si jamais la grille est enlevée, il faut penser à disable le bouton de grille solution
             console.log(message)
         }
 
@@ -621,6 +622,9 @@
             }
             if (utilitiesFrame.hasAttribute("hidden")){
                 utilitiesFrame.removeAttribute("hidden")
+            }
+            if (solutionButton.hasAttribute("disabled")){
+                solutionButton.removeAttribute("disabled")
             }
         })
         //-------FORMAT GRILLE:--------------
