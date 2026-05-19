@@ -466,7 +466,7 @@
 
         function addCandidate(cellule, candidate){
             let taille= Math.sqrt(cellule.parentElement.children.length)
-            if (cellule.children.length==1 && cellule.children[0].innerText==""){
+            if (cellule.children.length==1){
                 cellule.classList.add("grid")
                 cellule.classList.add("grid-rows-3")
                 for (let i=0; i<taille**2;i++){
@@ -477,11 +477,7 @@
                     candidate.classList.add("text-slate-600/75")
                     candidate.innerText= (i+1)
                     candidate.id= cellule.id + "-candidate-" + (i+1)
-                    if (i+1==candidate){
-                        candidate.classList.add("opacity-100")
-                    } else{
-                        candidate.classList.add("opacity-0")
-                    }
+                    candidate.classList.add("opacity-0")
                     cellule.appendChild(candidate)
                 }
             }
@@ -513,6 +509,12 @@
             } else{
                 cellule.children[candidate].classList.remove("opacity-100")
                 cellule.children[candidate].classList.add("opacity-0")
+            }
+        }
+
+        function removeCandidates(cellule){
+            for (let i=1; i<cellule.children.length; i++){
+                removeCandidate(cellule, i)
             }
         }
 
@@ -639,7 +641,7 @@
             }
         })
 
-        socket.on('add', data => {
+        socket.on('add', data => {//todo: gestion d'erreur
             //format data: {'done' : bool, 'correct' : bool, entryData : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
             let cellule= document.getElementById("cellule-"+data.entryData.pos)
             if (data.done){
