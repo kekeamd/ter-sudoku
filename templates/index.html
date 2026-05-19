@@ -667,7 +667,7 @@
             // format data: {'cands' : listOfCands}
             for (let i = 0; i<data.cands.length; i++){
                 let cellule= document.getElementById("cellule-"+i)
-                // removeCandidates
+                removeCandidates(cellule)
                 addCandidates(cellule,data.cands[i])
             }
         })
