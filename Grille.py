@@ -213,7 +213,13 @@ class Grille(ABC):
         cel = self._getCelluleCoord(row,column)
         cel.setCandidates(listUnion(cel.getCandidates(),candidates))
 
-    #purpose: retire la valeur dans la liste des candidats
+    #purpose: retire la valeur dans la liste des candidats (Version index)
+    def removeCandidateIndex(self,index : int, val: int) -> None:
+        cellule = self._getCelluleIndex(index)
+        if val in cellule.getCandidates():
+            self._adjustCandidatesCellule(cellule, [val])
+
+    #purpose: retire la valeur dans la liste des candidats (Version Coords)
     def removeCandidateCoord(self, row: int, col: int, val: int) -> None:
         cellule = self._getCelluleCoord(row, col)
         if val in cellule.getCandidates():
@@ -307,6 +313,25 @@ class Grille(ABC):
             print(line)
             if row % self._size == self._size-1 and row != size-1:
                 print("-" * numCharPerLine)
+        print("\n")
+
+    # affiche la grille avec tous le candidats
+    def printCandidatesOfGrille(self):
+        print("\n=== Grille des candidats ===\n")
+        for row in range(9):
+            for col in range(9):
+                val = self.getCelluleValueCoord(row,col)
+                if val != 0:
+                    cell = f"{val}"
+                else:
+                    candidats = self.getCelluleCandidatesCoord(row, col)
+                    cell = "{" + ",".join(map(str, candidats)) + "}"
+                print(f"{cell:12}", end="") # :12 cest le formatage de largeur car on peut avoir bcp de candidats, end="" pour ne pas passer à la ligne
+                if (col + 1)  % 3 == 0 and col < 8:
+                    print(" | ", end="")
+            print("\n")
+            if (row + 1) % 3 == 0 and row < 8:
+                print("-" * 120) # 120 au cas où on a bcp de candidats
         print("\n")
 
     #purpose: clone la grille

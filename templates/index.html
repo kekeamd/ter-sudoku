@@ -246,7 +246,7 @@
         }
 
         function AddCandidate(pos, candidate){
-            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate, 'strict': Strict})
+            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
         }
 
         function RemoveValue(pos){
@@ -609,7 +609,7 @@
         socket.on('add', data => {
             //format data: {'done' : bool, 'alreadySet' : bool, 'correct' : bool, entryData : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
             let cellule= document.getElementById("cellule-"+data.entryData.pos)
-            if (!data.alreadySet && data.done){
+            if (data.done){
                 if (data.entryData.type=="value"){
                     addValue(cellule, data.entryData.value)
                 }else if (data.entryData.type=="candidate"){
