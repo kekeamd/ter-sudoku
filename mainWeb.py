@@ -10,7 +10,7 @@ from Technique import Technique
 
 
 def removeAllCandidates(G : Grille):
-    for i in range(G.getSize()**2):
+    for i in range(81):
         for j in G.getCelluleCandidatesIndex(i):
             G.removeCandidateIndex(i,j)
 
@@ -89,7 +89,7 @@ def handle_play(data):
     grilleStats= parseStats(stats)
     HumanRated= rated.name
 
-    removeAllCandidates(grilleDeJeu)
+    removeAllCandidates(grilleData['grille'])
     emit('play', {'grille': grille, 'solution': solution, 'taille': grilleDeJeu.getSize(), 'stats': grilleStats, 'difficulteEstimee': [HumanRated, sudokuCoachRated]})
     return
 
@@ -106,6 +106,7 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
     if data['type']=="value":                                       # On set ici une valeur dans une case
         if grilleData['grille'].getCelluleValueIndex(pos) == value:
             print("ETRANGE : On me demande d'ajouter quelque chose déjà là... (Value)")
+            toSend['done'] = False
         else:
             try:
                 if grilleData['solution'].getCelluleValueIndex(pos) == value:
@@ -126,6 +127,7 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
         toSend['correct'] = True                                 # Correct Vrai dans tout les cas, car INUTILE
         if value in grilleData['grille'].getCelluleCandidatesIndex(pos):
             print("ETRANGE : On me demande d'ajouter quelque chose déjà là... (Candidats)")
+            toSend['done'] = False
         else:
             try:
                 grilleData['grille'].addCelluleCandidatesIndex(pos,[value])
@@ -140,5 +142,7 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
     print(f"Value : {grilleData['grille'].getCelluleValueIndex(pos)}\n && -> {value} | {pos}")
     print(f"Candidates : {grilleData['grille'].getCelluleCandidatesIndex(pos)}\n && -> {value} | {pos}")
     print(f"Datas send : {toSend}")
+    grilleData['grille'].printGrille()
+    grilleData['grille'].printCandidatesOfGrille()
     print("==========\n")
     emit('add',toSend)   # Envoie des datas au client

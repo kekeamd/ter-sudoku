@@ -241,11 +241,11 @@
         }
 
         function AddValue(pos, value){
-            socket.emit('add', {'pos': pos, 'type': "value", 'value': value})
+            socket.emit('add', {'pos': pos, 'type': "value", 'value': value, 'strict': Strict})
         }
 
         function AddCandidate(pos, candidate){
-            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate, 'strict': Strict})
+            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
         }
 
 

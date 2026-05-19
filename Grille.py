@@ -315,6 +315,25 @@ class Grille(ABC):
                 print("-" * numCharPerLine)
         print("\n")
 
+    # affiche la grille avec tous le candidats
+    def printCandidatesOfGrille(self):
+        print("\n=== Grille des candidats ===\n")
+        for row in range(9):
+            for col in range(9):
+                val = self.getCelluleValueCoord(row,col)
+                if val != 0:
+                    cell = f"{val}"
+                else:
+                    candidats = self.getCelluleCandidatesCoord(row, col)
+                    cell = "{" + ",".join(map(str, candidats)) + "}"
+                print(f"{cell:12}", end="") # :12 cest le formatage de largeur car on peut avoir bcp de candidats, end="" pour ne pas passer à la ligne
+                if (col + 1)  % 3 == 0 and col < 8:
+                    print(" | ", end="")
+            print("\n")
+            if (row + 1) % 3 == 0 and row < 8:
+                print("-" * 120) # 120 au cas où on a bcp de candidats
+        print("\n")
+
     #purpose: clone la grille
     @abstractmethod
     def clone(self):# -> Grille
