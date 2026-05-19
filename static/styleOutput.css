@@ -578,12 +578,12 @@ video {
   grid-row: span 1 / span 1;
 }
 
-.row-span-5 {
-  grid-row: span 5 / span 5;
-}
-
 .row-span-3 {
   grid-row: span 3 / span 3;
+}
+
+.row-span-5 {
+  grid-row: span 5 / span 5;
 }
 
 .row-start-1 {
@@ -956,6 +956,10 @@ div{
   position: fixed;
   top: 2vh;
   right: 2vw;
+}
+
+#errors{
+  align-self: flex-end;
 }
 
 .hover\:bg-blue-200\/50:hover {

@@ -30,6 +30,8 @@
                         <button type="button" id="difficulte-extreme">extrême</button>
                         <button type="button" id="difficulte-godmode">godmode</button>
                     </div>
+                    <br>
+                    <button type="button" id="solution-button">Grille Solution</button>
                     <div class="border-sky-950 border-2 rounded-xl shadow-2xl" id="login-menu" hidden>
                         <input placeholder="Veuillez insérer un pseudo" id="login-pseudo">
                         <input type="password" placeholder="Veuillez entrer un mot de passe" id="login-password" hidden >
@@ -38,6 +40,8 @@
                     </div>
                     <button type="button" id="login-button">Connexion</button>
                     <button type="button" id="logout-button" hidden>Déconnexion</button>
+                    <br>
+                    <p id="errors">Erreurs: <span id="error">0</span>/<span id="error-max">0</span></p>
                 </div>
             </div>
             <div class="col-start-2 col-span-3" id="middle-col">
@@ -86,6 +90,8 @@
         var SelectedCellule= null
         var SelectedUtility= null
         var Strict= false // false pour débugger mais doit être à true
+        var ErrorCount= 0
+        var MaxError= 5
 
         var anonymousInfos= document.getElementById("anonymous-infos")
         var anonymousInfosButton= document.getElementById("anonymous-infos-close")
@@ -98,12 +104,16 @@
         var difficulteDifficile= document.getElementById("difficulte-difficile")
         var difficulteExtreme= document.getElementById("difficulte-extreme")
         var difficulteGodmode= document.getElementById("difficulte-godmode")
+        var solutionButton= document.getElementById("solution-button")
         var loginButton= document.getElementById("login-button")
         var logoutButton= document.getElementById("logout-button")
         var loginMenu= document.getElementById("login-menu")
         var loginPseudo= document.getElementById("login-pseudo")
         var loginPassword= document.getElementById("login-password")
         var loginSubmit= document.getElementById("login-submit")
+        var errorsText= document.getElementById("errors")
+        var errorCount= document.getElementById("error")
+        var errorMax= document.getElementById("error-max")
         var sudokuFrame= document.getElementById("sudoku-frame")
         var utilitiesFrame= document.getElementById("utilities-frame")
         var values1= document.getElementById("values-1")
@@ -238,7 +248,11 @@
         //-------------------------Fonctions de jeu----------------------------------
         function Play(difficulte){
             socket.emit('play', difficulte)
-            ChooseDifficulte()
+            ChooseDifficulte()//pour fermer le menu de difficulté
+        }
+
+        function SolveGrille(){
+            socket.emit('solve')
         }
 
         function AddValue(pos, value){
@@ -255,6 +269,10 @@
 
         function RemoveCandidate(pos, candidate){
             socket.emit('remove', {'pos': pos, 'type': "candidate", 'value': candidate})
+        }
+
+        function FinishGame(message){//placeholder, à remplir plus tard? faire en sorte qu'on ne puisse plus remove après avoir fini
+            console.log(message)
         }
 
 
@@ -496,12 +514,13 @@
         //-------------------------Ecouteurs d'évènement----------------------------------
         //Format pour le focus: FocusLock(nomDeLaFonction, null, argumentsDeLaFonction) si la fonction ne doit pas fonctionner quand focus
         //                      FocusLock(nomDeLaFonction, objetFocusé, argumentsDeLaFonction) si la fonction doit fonctionner lorsque objetFocusé est la cible du focus
-        anonymousInfosButton.addEventListener("click", () => {FocusLock(CloseInfos, null, CloseInfos)})
-        menuButton.addEventListener("click", () => {FocusLock(OpenMenu, null, OpenMenu)})
-        playButton.addEventListener("click", () => {FocusLock(ChooseDifficulte, null, ChooseDifficulte)})
-        loginButton.addEventListener("click", () => {FocusLock(OpenLogin, loginMenu, OpenLogin)})
-        loginSubmit.addEventListener("click", () => {FocusLock(Login, loginMenu, Login)})
-        logoutButton.addEventListener("click", () => {FocusLock(Logout, null, Logout)})
+        anonymousInfosButton.addEventListener("click", () => {FocusLock(CloseInfos, null)})
+        menuButton.addEventListener("click", () => {FocusLock(OpenMenu, null)})
+        playButton.addEventListener("click", () => {FocusLock(ChooseDifficulte, null)})
+        solutionButton.addEventListener("click", () => {FocusLock(SolveGrille, null)})
+        loginButton.addEventListener("click", () => {FocusLock(OpenLogin, loginMenu)})
+        loginSubmit.addEventListener("click", () => {FocusLock(Login, loginMenu)})
+        logoutButton.addEventListener("click", () => {FocusLock(Logout, null)})
 
         difficulteFacile.addEventListener("click", () => {FocusLock(Play, null, "facile")})
         difficulteMoyen.addEventListener("click", () => {FocusLock(Play, null, "moyen")})
@@ -605,6 +624,15 @@
         //-------FORMAT CELLULES:-------------
         //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100 grid grid-rows-3"></button>
         // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
+
+        socket.on('solve', data =>{
+            //format data: {'solution': Grille}
+            for (let i=0; i<data.solution.length; i++){
+                let cellule = document.getElementById("cellule-"+i)
+                cellule.children[0].innerText= solution[i]
+                FinishGame("Solution affichée, la partie est terminée!")
+            }
+        })
 
         socket.on('add', data => {
             //format data: {'done' : bool, 'correct' : bool, entryData : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
