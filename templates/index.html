@@ -354,18 +354,22 @@
 
         function CelluleSelect2(cellule){//cas double-click
             if (SelectedUtility!=null && cellule.children[0].innerText==""){
+                let pos = parseInt(cellule.id.slice(8))
                 if (SelectedUtility.id[0]=='v'){
-                    AddValue(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(7)))
+                    AddValue(pos, parseInt(SelectedUtility.id.slice(7)))
                 }
                 if (SelectedUtility.id[0]=='c'){
-                    AddCandidate(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(11))) //version serveur
-                    //addCandidate(cellule, parseInt(SelectedUtility.id.slice(11))) //version client
+                    let candidate = parseInt(SelectedUtility.id.slice(11))
+                    if (cellule.children.length>1 && cellule.children[candidate].innerText!=""){
+                        RemoveCandidate(pos, candidate) // version serveur
+                        //removeCandidate(cellule, candidate) //version client
+                    } else{
+                        AddCandidate(pos, candidate) //version serveur
+                        //addCandidate(cellule, candidate) //version client
+                    }
                 }
-            } else if (SelectedUtility!=null && SelectedUtility.id[0]=='c'){
-                RemoveCandidate(parseInt(cellule.id.slice(8)), parseInt(SelectedUtility.id.slice(11))) // version serveur
-                //removeCandidate(cellule, parseInt(SelectedUtility.id.slice(11))) //version client
             } else if (cellule.children[0].innerText!="" && !Strict){
-                RemoveValue(parseInt(cellule.id.slice(8)))
+                RemoveValue(pos)
             }
         }
         
