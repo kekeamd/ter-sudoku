@@ -511,7 +511,8 @@
             if (candidate==0){
                 console.log("Erreur: tentative d'enlèvement du candidat 0 (impossible).")
             } else{
-                cellule.children[candidate].setAttribute("hidden", "")
+                cellule.children[candidate].classList.remove("opacity-100")
+                cellule.children[candidate].classList.add("opacity-0")
             }
         }
 
