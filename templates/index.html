@@ -44,7 +44,7 @@
                 <div class="font-medium text-base sm:text-base md:text-lg lg:text-xl xl:text-xl" id="sudoku-frame"></div>
             </div>
             <div class="col-start-5 col-span-1" id="right-col">
-                <div class="rounded-md shadow-lg" id="utilities-frame">
+                <div class="rounded-md shadow-lg" id="utilities-frame" hidden>
                     <div class="zone grid grid-rows-3 rounded-lg font-medium text-base sm:text-base md:text-lg lg:text-xl xl:text-xl" id="values">
                         <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="values-1">1</button>
                         <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="values-2">2</button>
@@ -105,6 +105,7 @@
         var loginPassword= document.getElementById("login-password")
         var loginSubmit= document.getElementById("login-submit")
         var sudokuFrame= document.getElementById("sudoku-frame")
+        var utilitiesFrame= document.getElementById("utilities-frame")
         var values1= document.getElementById("values-1")
         var values2= document.getElementById("values-2")
         var values3= document.getElementById("values-3")
@@ -413,7 +414,7 @@
 
         function addValue(cellule, value){
             for (let i=0; i<cellule.children.length; i++){
-                cellule.children[i].setAttribute("disabled", "")
+                cellule.children[i].setAttribute("hidden", "")
             }
             cellule.innerText= value
         }
@@ -421,7 +422,7 @@
         function removeValue(cellule){
             cellule.innerText= ""
             for (let i=0; i<cellule.children.length; i++){
-                cellule.children[i].removeAttribute("disabled")
+                cellule.children[i].removeAttribute("hidden")
             }
         }
 
@@ -560,6 +561,9 @@
                     cellule.classList.remove("grid-rows-3")
                     cellule.innerText= data.grille[i]
                 }
+            }
+            if (utilitiesFrame.hasAttribute("hidden")){
+                utilitiesFrame.removeAttribute("hidden")
             }
         })
         //-------FORMAT GRILLE:--------------
