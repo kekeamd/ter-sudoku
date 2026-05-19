@@ -360,7 +360,7 @@
                 }
                 if (SelectedUtility.id[0]=='c'){
                     let candidate = parseInt(SelectedUtility.id.slice(11))
-                    if (cellule.children.length>1 && cellule.children[candidate].innerText!=""){
+                    if (cellule.children.length>1 && cellule.children[candidate].classList.contains('opacity-100')){
                         RemoveCandidate(pos, candidate) // version serveur
                         //removeCandidate(cellule, candidate) //version client
                     } else{
