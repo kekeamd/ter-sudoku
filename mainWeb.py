@@ -10,7 +10,7 @@ from Technique import Technique
 
 
 def removeAllCandidates(G : Grille):
-    for i in range(81):
+    for i in range(G.getSize()**4):
         for j in G.getCelluleCandidatesIndex(i):
             G.removeCandidateIndex(i,j)
 
@@ -164,3 +164,16 @@ def handle_remove(data):
         emit("remove",data)
     else:
         emit('info',{'data' : "Erreur : Suppression d'un élément de type invalide dans une case !"})
+
+@socketio.on('solve')
+def handle_solve():
+    emit('solve',{'solution': Parser.grilleToStringWithoutCandidates(grilleData['solution'])})
+
+@socketio.on('getCandidates')
+def handle_getCandidates():
+    removeAllCandidates(grilleData['grille'])
+    grilleData['grille'].adjustCandidates()
+    listOfCands = []
+    for i in range(grilleData['grille'].getSize()**4):
+        listOfCands.append(grilleData['grille'].getCelluleCandidatesIndex(i))
+    emit('getCandidates', {'cands' : listOfCands})

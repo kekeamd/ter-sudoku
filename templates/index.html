@@ -640,9 +640,9 @@
             //format data: {'solution': Grille}
             for (let i=0; i<data.solution.length; i++){
                 let cellule = document.getElementById("cellule-"+i)
-                cellule.children[0].innerText= solution[i]
-                FinishGame("Solution affichée, la partie est terminée!")
+                addValue(cellule,data.solution[i])
             }
+            FinishGame("Solution affichée, la partie est terminée!")
         })
 
         socket.on('add', data => {//todo: gestion d'erreur
@@ -667,8 +667,18 @@
             }
         })
 
+        socket.on('getCandidates', data => {
+            // format data: {'cands' : listOfCands}
+            for (let i = 0; i<data.cands.length; i++){
+                let cellule= document.getElementById("cellule-"+i)
+                // removeCandidates
+                addCandidates(cellule,data.cands[i])
+            }
+        })
+
+
         socket.on('info', data => {
             console.log(data.data)
         })
     </script>
-</html>
+</html> 
