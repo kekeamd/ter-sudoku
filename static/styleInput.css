@@ -189,3 +189,7 @@ div{
     top: 2vh;
     right: 2vw;
 }
+
+#errors{
+    align-self: flex-end;
+}
