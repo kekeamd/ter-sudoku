@@ -142,7 +142,25 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
     print(f"Value : {grilleData['grille'].getCelluleValueIndex(pos)}\n && -> {value} | {pos}")
     print(f"Candidates : {grilleData['grille'].getCelluleCandidatesIndex(pos)}\n && -> {value} | {pos}")
     print(f"Datas send : {toSend}")
-    grilleData['grille'].printGrille()
-    grilleData['grille'].printCandidatesOfGrille()
     print("==========\n")
     emit('add',toSend)   # Envoie des datas au client
+    
+@socketio.on('remove')
+def handle_remove(data):
+    # {'pos': pos, 'type': "candidate" or "value", 'value': candidate}
+    value : int = None # Set initial car INUTILE en cas de VALEUR
+    done = False
+    pos = data["pos"]
+    print(data)
+    if data["type"] == "candidate":     # Si on veut supprimer un candidat on doit savoir qui ? 
+        value = data["value"]
+    if data["type"] == "candidate":
+        grilleData['grille'].removeCandidateIndex(pos,value)
+        done = True
+    elif data["type"] == "value":
+        grilleData['grille'].removeCelluleValueIndex(pos)
+        done = True
+    if done:
+        emit("remove",data)
+    else:
+        emit('info',{'data' : "Erreur : Suppression d'un élément de type invalide dans une case !"})

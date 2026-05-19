@@ -264,7 +264,7 @@
         }
 
         function RemoveValue(pos){
-            socket.emit('remove', {'pos': pos, 'type': "value", 'value': null})
+            socket.emit('remove', {'pos': pos, 'type': "value"})
         }
 
         function RemoveCandidate(pos, candidate){
@@ -360,7 +360,7 @@
                 }
                 if (SelectedUtility.id[0]=='c'){
                     let candidate = parseInt(SelectedUtility.id.slice(11))
-                    if (cellule.children.length>1 && cellule.children[candidate].innerText!=""){
+                    if (cellule.children.length>1 && cellule.children[candidate].classList.contains('opacity-100')){
                         RemoveCandidate(pos, candidate) // version serveur
                         //removeCandidate(cellule, candidate) //version client
                     } else{
@@ -642,7 +642,7 @@
         })
 
         socket.on('add', data => {//todo: gestion d'erreur
-            //format data: {'done' : bool, 'alreadySet' : bool, 'correct' : bool, entryData : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
+            //format data: {'done' : bool, 'correct' : bool, entryData : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
             let cellule= document.getElementById("cellule-"+data.entryData.pos)
             if (data.done){
                 if (data.entryData.type=="value"){
@@ -654,12 +654,12 @@
         })
 
         socket.on('remove', data => {
-            //format data: {'entryData': {'pos' : int, 'value' : int, 'type': "value" or "candidate"}}
-            let cellule= document.getElementById("cellule-"+data.entryData.pos)
-            if (data.entryData.type=="value"){
+            //format data: {'pos' : int, 'value' : int, 'type': "value" or "candidate"}
+            let cellule= document.getElementById("cellule-"+data.pos)
+            if (data.type=="value"){
                 removeValue(cellule)
-            }else if (data.entryData.type=="candidate"){
-                removeCandidate(cellule, value)
+            }else if (data.type=="candidate"){
+                removeCandidate(cellule, data.value)
             }
         })
 
