@@ -636,9 +636,9 @@
             //format data: {'solution': Grille}
             for (let i=0; i<data.solution.length; i++){
                 let cellule = document.getElementById("cellule-"+i)
-                cellule.children[0].innerText= data.solution[i]
-                FinishGame("Solution affichée, la partie est terminée!")
+                addValue(cellule,data.solution[i])
             }
+            FinishGame("Solution affichée, la partie est terminée!")
         })
 
         socket.on('add', data => {//todo: gestion d'erreur
