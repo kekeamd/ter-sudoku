@@ -176,7 +176,7 @@ class GrilleHuman(GrilleBacktrack):
                 holes += 1
 
                 if holes < params["min_holes"]:
-                    continue
+                    continue # recommence une nouvelle suppression
 
                 if holes % params["test_every"] != 0:
                     continue

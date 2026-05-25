@@ -91,7 +91,7 @@ class InterfaceConsole(Interface): # extends Interface
 
         self.grilleDeJeu.adjustCandidates()  # Initialiser les candidats après génération
 
-        rated = SolverHuman.rateFromStats(self.stats)
+        rated = SolverHuman.rateFromStats(self.stats) # donne la difficulté estimée
 
         print("\nGrille chargée depuis la banque :")
         print("Difficulté demandée :", difficulty.name)
@@ -103,7 +103,7 @@ class InterfaceConsole(Interface): # extends Interface
 
        
         sudokuCoachRated = getDifficultyFromGrille(self.grilleDeJeu, headless=True)
-        print(f"Difficulté estimée (sudoku.coach): {sudokuCoachRated  ['label']} (score: {sudokuCoachRated['score']})")
+        print(f"Difficulté estimée (sudoku.coach): {sudokuCoachRated  ['label']} (score: {sudokuCoachRated['score']})\n")
 
         #self.grilleDeJeu.generateValues(difficulty, self.grilleComplete.clone())
 
@@ -154,9 +154,12 @@ class InterfaceConsole(Interface): # extends Interface
 
             elif choix == '3':
                 print("\nLa grille résolue automatiquement (backtrack):\n")
-                self.grilleComplete.printGrille()
-                print("LE JEU EST TERMINÉ !\n")
-                return  # sortir après résolution
+                solved = SolverBacktrack.solveGrille(self.grilleDeJeu)
+
+                if solved:
+                    self.grilleDeJeu.printGrille()
+                    print("LE JEU EST TERMINÉ !\n")
+                    return  # sortir après résolution
             elif choix == '4':
                 print("\nRésolution avec méthode humaine...")
                 
@@ -166,9 +169,10 @@ class InterfaceConsole(Interface): # extends Interface
                     print("\nRésolution humaine terminée.")
                     print("Solved:", res["solved"], "| Steps:", res["steps"], "| MaxTech:", res["maxTechnique"])
                     print("Counts:", {k.name: v for k, v in res["counts"].items()})
+                    print("\n")
                     self.grilleDeJeu.printGrille()
                     # Afficher tous les étapes de résolution
-                    print("\nVoulez-vous voir les étapes ?")
+                    print("Voulez-vous voir les étapes ?")
                     print("1. Oui")
                     print("2. Non")
                     choix_etapes = input("Votre choix: ")
