@@ -46,9 +46,11 @@ if __name__=="__main__":
 
 app = Flask(__name__)
 socketio = SocketIO(app)
+baseType : Grille = None #la grille de base
 grilleType : Grille = None
 solutionType : Grille = None
-grilleData = {'grille' : grilleType, 'solution' : solutionType}
+sessionData = {'pseudo' : "", 'strict' : True, 'error' : 0, 'errorMax' : 5, 'finished' : False}
+grilleData = {'base' : baseType, 'grille' : grilleType, 'solution' : solutionType, 'stats' : {}, 'difficulteHuman' : "", 'difficulteCoach' : ""}
 
 @app.route('/')
 def play():
@@ -59,15 +61,15 @@ def play():
 @socketio.on('play')
 def handle_play(data):
     difficulte= Difficulte.FACILE
-    if data=="moyen":
+    if data['difficulte']=="moyen":
         difficulte = Difficulte.MOYEN
-    if data=="difficile":
+    if data['difficulte']=="difficile":
         difficulte = Difficulte.DIFFICILE
-    if data=="extreme":
+    if data['difficulte']=="extreme":
         difficulte = Difficulte.EXTREME
-    if data=="godmode":
+    if data['difficulte']=="godmode":
         difficulte = Difficulte.GODMODE
-    emit('info', {'data': "Génération d'une grille de difficulté "+str(data)})
+    emit('info', {'data': "Génération d'une grille de difficulté "+str(data['difficulte'])})
     entree = BanqueGrilles.charger_grille_aleatoire(difficulte)
     grilleDeJeu : Grille= entree["grille"]
     grilleComplete : Grille = entree["solution"]
@@ -78,28 +80,34 @@ def handle_play(data):
     
     grilleDeJeu.adjustCandidates()  # Initialiser les candidats après génération
     rated = SolverHuman.rateFromStats(stats)
-    sudokuCoachRated= "WebScrapping WIP"
-    #sudokuCoachRated = getDifficultyFromGrille(grilleDeJeu, headless=True)
     if rated == Difficulte.GODMODE:
         emit('info', {'data': "Cette grille ne peut pas être résolue uniquement avec les techniques humaines actuellement implémentées dans ce projet (dernier nombre, singleton nu, singleton caché, paire nue, paire cachée, candidat enfermé, gratte-ciel)."})
     grille= Parser.grilleToStringWithoutCandidates(grilleDeJeu)
     solution= Parser.grilleToStringWithoutCandidates(grilleComplete)
+    grilleData['base'] = grilleDeJeu.clone()
     grilleData['grille'] = grilleDeJeu
     grilleData['solution'] = grilleComplete
-    grilleStats= parseStats(stats)
-    HumanRated= rated.name
+    sessionData['strict'] = data['strict']
+    sessionData['error'] = 0
+    sessionData['finished'] = False
+    if data['strict']:
+        sessionData['errorMax']= 5
+    else:
+        sessionData['errorMax']= -1
+    grilleData['stats']= parseStats(stats)
+    grilleData['difficulteHuman']= rated.name
+    grilleData['difficulteCoach']= "WebScrapping WIP"
+    #grilleData['difficulteCoach'] = getDifficultyFromGrille(grilleDeJeu, headless=True)
 
     removeAllCandidates(grilleData['grille'])
-    emit('play', {'grille': grille, 'solution': solution, 'taille': grilleDeJeu.getSize(), 'stats': grilleStats, 'difficulteEstimee': [HumanRated, sudokuCoachRated]})
+    emit('play', {'grille': grille, 'solution': solution, 'taille': grilleData['base'].getSize(), 'stats': grilleData['stats'], 'difficulteEstimee': [grilleData['difficulteHuman'], grilleData['difficulteCoach']], 'errorMax' : sessionData['errorMax']})
     return
 
 @socketio.on('add')
-def handle_add(data): #placeholder pour tester si ça fonctionne
+def handle_add(data):
+    finished= False
     value = data['value']   # Valeur de l'élément à placer
     pos = data['pos']       # Position de l'élément à Placer
-    strict = None           # Set Inital à None, car INUTILE lors des candidats
-    if data['type'] == "value":
-        strict = data['strict'] # Paramètre selon lequel on accepte des données non correctes
     # done                 # J'ai pu effectuer le changement
     # correct               # Le coup est juste
     toSend = {'done' : True, 'correct' : False, 'entryData' : data}
@@ -111,13 +119,22 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
             try:
                 if grilleData['solution'].getCelluleValueIndex(pos) == value:
                     toSend['correct'] = True
-                if strict:
+                if sessionData['strict']:
                     if toSend['correct']:
                         grilleData['grille'].setCelluleValueIndex(pos,value)
+                        if SolverHuman.isCompleted(grilleData['grille']) and Parser.grilleToStringWithoutCandidates(grilleData['grille'])==Parser.grilleToStringWithoutCandidates(grilleData['solution']):
+                            finished= True
                     else:
                         toSend['done'] = False
+                        if sessionData['error']>=sessionData['errorMax']:
+                            sessionData['finished']= True
+                            emit('finish', {'reason' : "lost"})
+                        else:
+                            sessionData['error'] += 1
                 else:
                     grilleData['grille'].setCelluleValueIndex(pos,value)
+                    if SolverHuman.isCompleted(grilleData['grille']) and Parser.grilleToStringWithoutCandidates(grilleData['grille'])==Parser.grilleToStringWithoutCandidates(grilleData['solution']):
+                            finished= True
             except e as e:
                 print(f"Value not set : \n{e}")
                 toSend['done'] = False
@@ -144,6 +161,9 @@ def handle_add(data): #placeholder pour tester si ça fonctionne
     print(f"Datas send : {toSend}")
     print("==========\n")
     emit('add',toSend)   # Envoie des datas au client
+    if finished:
+        sessionData['finished']= True
+        emit('finish', {'reason' : "won"})
     
 @socketio.on('remove')
 def handle_remove(data):
@@ -168,6 +188,24 @@ def handle_remove(data):
 @socketio.on('solve')
 def handle_solve():
     emit('solve',{'solution': Parser.grilleToStringWithoutCandidates(grilleData['solution'])})
+    sessionData['finished']= True
+    emit('finish', {'reason': "solved"})
+
+@socketio.on('reload')
+def handle_reload():
+    if (grilleData['base']!=None):
+        base = Parser.grilleToStringWithoutCandidates(grilleData['base'])
+        grille = Parser.grilleToStringWithoutCandidates(grilleData['grille'])
+        solution = Parser.grilleToStringWithoutCandidates(grilleData['solution']) # initialisation de la grille
+        emit('play', {'grille': base, 'solution': solution, 'taille': grilleData['base'].getSize(), 'stats': grilleData['stats'], 'difficulteEstimee': [grilleData['difficulteHuman'], grilleData['difficulteCoach']], 'errorMax' : sessionData['errorMax']})
+
+        for i in range(len(grille)): #ajout des valeurs ajoutées par le joueur
+            if base[i]!=grille[i]:
+                emit('add', {'done' : True, 'correct' : True, 'entryData' : {'pos': i, 'type': "value", 'value': int(grille[i])}})
+        
+        emit('pseudo', {'pseudo' : sessionData['pseudo']})
+        #envoie des données de session manquantes
+        emit('reload', {'error' : sessionData['error'], 'strict' : sessionData['strict'], 'finished' : sessionData['finished']})
 
 @socketio.on('getCandidates')
 def handle_getCandidates():
@@ -177,3 +215,13 @@ def handle_getCandidates():
     for i in range(grilleData['grille'].getSize()**4):
         listOfCands.append(grilleData['grille'].getCelluleCandidatesIndex(i))
     emit('getCandidates', {'cands' : listOfCands})
+
+@socketio.on('login')
+def handle_login(data):
+    sessionData['pseudo'] = data['pseudo']
+    emit('pseudo', {'pseudo' : sessionData['pseudo']})
+
+@socketio.on('logout')
+def handle_logout():
+    sessionData['pseudo'] = ""
+    emit('pseudo', {'pseudo' : sessionData['pseudo']})

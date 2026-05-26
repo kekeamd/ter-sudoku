@@ -10,14 +10,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js"></script>
     </head>
     <body class="grid grid-rows-7 gap-y-2 font-mono text-xs sm:text-xs md:text-sm lg:text-base xl:text-base bg-stone-50">
-        <div class="row-start-1 row-span-1" id="top">
-            <button type="button" class="text-neutral-600 text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="menu-button">></button>
-            <h1 class="text-blue-950 font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="title">Sudoku</h1>
+        <div class="row-start-1 row-span-1 grid grid-col-5" id="top">
+            <div class="container-left col-start-1 col-span-1"><button type="button" class="text-neutral-600 text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="menu-button">></button></div>
+            <div class="container-center col-start-2 col-span-3"><h1 class="text-blue-950 font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl xl:text-3xl" id="title">Sudoku</h1></div>
+            <div class="container-right col-start-5 col-span-1"><p id="WIP" hidden>(/!\Work In Progress)</p></div>
             <div class="bg-stone-100 shadow-md" id="anonymous-infos" hidden>
                 <p id="anonymous-infos-text"><span class="text-red-700 font-bold">Attention:</span> Il n'y a pas de sauvegarde en étant anonyme!</p>
                 <button type="button" id="anonymous-infos-close"><span class="font-black text-sm sm:text-sm md:text-base lg:text-lg xl:text-lg">X</span></button>
             </div>
-            <p id="WIP">(/!\Work In Progress)</p>
         </div>
         <div class="row-start-2 row-span-5 grid grid-col-5 gap-x-8" id="middle">
             <div class="col-start-1 col-span-1" id="left-col">
@@ -74,6 +74,9 @@
                 </div>
             </div>
         </div>
+        <div class="row-start-7 row-span-1" id="bottom">
+            <label for="strict">Strict</label>
+            <input type="checkbox" id="strict" checked/>
     </body>
     <script defer>
         console.log("Javascript started")
@@ -92,6 +95,7 @@
         var Strict= false // false pour débugger mais doit être à true //todo switch pour désactiver/activer strict et explication de la fonctionalité
         var ErrorCount= 0
         var MaxError= 5
+        var Finished= false
 
         var anonymousInfos= document.getElementById("anonymous-infos")
         var anonymousInfosButton= document.getElementById("anonymous-infos-close")
@@ -134,7 +138,7 @@
         var candidates7= document.getElementById("candidates-7")
         var candidates8= document.getElementById("candidates-8")
         var candidates9= document.getElementById("candidates-9")
-
+        var strictCheckbox= document.getElementById("strict")
 
 
         //-------------------------Autres----------------------------------
@@ -227,7 +231,7 @@
         function Login(){
             if (loginPseudo.value!=""){
                 FocusOff()
-                Pseudo=loginPseudo.value
+                socket.emit('login', {'pseudo' : loginPseudo.value})
                 loginPseudo.value=""
                 loginMenu.setAttribute("hidden", "")
                 loginButton.setAttribute("hidden", "")
@@ -238,7 +242,7 @@
         }
 
         function Logout(){
-            Pseudo=""
+            socket.emit('logout')
             logoutButton.setAttribute("hidden", "")
             loginButton.removeAttribute("hidden")
         }
@@ -247,7 +251,8 @@
 
         //-------------------------Fonctions de jeu----------------------------------
         function Play(difficulte){
-            socket.emit('play', difficulte)
+            Strict= strictCheckbox.checked
+            socket.emit('play', {'difficulte' : difficulte, 'strict' : Strict})
             ChooseDifficulte()//pour fermer le menu de difficulté
         }
 
@@ -256,7 +261,7 @@
         }
 
         function AddValue(pos, value){
-            socket.emit('add', {'pos': pos, 'type': "value", 'value': value, 'strict': Strict})
+            socket.emit('add', {'pos': pos, 'type': "value", 'value': value})
         }
 
         function AddCandidate(pos, candidate){
@@ -271,9 +276,10 @@
             socket.emit('remove', {'pos': pos, 'type': "candidate", 'value': candidate})
         }
 
-        function FinishGame(message){//placeholder, à remplir plus tard? faire en sorte qu'on ne puisse plus remove après avoir fini
-            //si jamais la grille est enlevée, il faut penser à disable le bouton de grille solution
-            console.log(message)
+        function LoadData(){
+            if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+                socket.emit('reload')
+            }
         }
 
 
@@ -354,23 +360,25 @@
         }
 
         function CelluleSelect2(cellule){//cas double-click
-            let pos = parseInt(cellule.id.slice(8))
-            if (SelectedUtility!=null && cellule.children[0].innerText==""){
-                if (SelectedUtility.id[0]=='v'){
-                    AddValue(pos, parseInt(SelectedUtility.id.slice(7)))
-                }
-                if (SelectedUtility.id[0]=='c'){
-                    let candidate = parseInt(SelectedUtility.id.slice(11))
-                    if (cellule.children.length>1 && cellule.children[candidate].classList.contains('opacity-100')){
-                        RemoveCandidate(pos, candidate) // version serveur
-                        //removeCandidate(cellule, candidate) //version client
-                    } else{
-                        AddCandidate(pos, candidate) //version serveur
-                        //addCandidate(cellule, candidate) //version client
+            if (!Finished){
+                let pos = parseInt(cellule.id.slice(8))
+                if (SelectedUtility!=null && cellule.children[0].innerText==""){
+                    if (SelectedUtility.id[0]=='v'){
+                        AddValue(pos, parseInt(SelectedUtility.id.slice(7)))
                     }
+                    if (SelectedUtility.id[0]=='c'){
+                        let candidate = parseInt(SelectedUtility.id.slice(11))
+                        if (cellule.children.length>1 && cellule.children[candidate].classList.contains('opacity-100')){
+                            RemoveCandidate(pos, candidate) // version serveur
+                            //removeCandidate(cellule, candidate) //version client
+                        } else{
+                            AddCandidate(pos, candidate) //version serveur
+                            //addCandidate(cellule, candidate) //version client
+                        }
+                    }
+                } else if (cellule.children[0].innerText!="" && !Strict){
+                    RemoveValue(pos)
                 }
-            } else if (cellule.children[0].innerText!="" && !Strict){
-                RemoveValue(pos)
             }
         }
         
@@ -555,10 +563,12 @@
         candidates7.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
         candidates8.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
         candidates9.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        strictCheckbox.addEventListener("click", (event) => {if (Focused){event.preventDefault()}})
         document.addEventListener("click", (event) => {FocusLock(UnselectCellule, null, event)}) //click gauche
         document.addEventListener("contextmenu", (event) => {event.preventDefault(); FocusLock(UnSelectUtilities, null, event)}) //contextmenu c'est le menu quand tu fait click droit sur une page donc ça sert à détecter le click droit 
         document.addEventListener("wheel", (event) => {FocusLock(ScrollUtilities, null, event)}) //scroll de la souris (l'évènement 'scroll' correspond au scroll de la page)
         document.addEventListener("mouseup", (event) => {FocusLock(SwitchUtilities, null, event)}) // sert à détecter le click du milieu dans ce cas là
+        window.addEventListener("load", LoadData)
 
 
 
@@ -568,7 +578,14 @@
             //'solution': Grille,
             //'taille': int,
             //'stats': {'solved', 'stuck', 'steps', 'counts', 'maxTechnique', 'history'},
-            //'difficulteEstimee': [Humanrated, sudokuCoachRated]}
+            //'difficulteEstimee': [Humanrated, sudokuCoachRated],
+            //'errorMax': int}
+            MaxError= data.errorMax
+            if (MaxError<0){
+                errorMax.innerText= "inf"
+            } else{
+                errorMax.innerText= MaxError
+            }
             console.log("grille: ", data.grille)
             if (sudokuFrame.children.length==0){
                 let grille= document.createElement("div")
@@ -642,7 +659,6 @@
                 let cellule = document.getElementById("cellule-"+i)
                 addValue(cellule,data.solution[i])
             }
-            FinishGame("Solution affichée, la partie est terminée!")
         })
 
         socket.on('add', data => {//todo: gestion d'erreur
@@ -653,6 +669,11 @@
                     addValue(cellule, data.entryData.value)
                 }else if (data.entryData.type=="candidate"){
                     addCandidate(cellule, data.entryData.value)
+                }
+            } else{
+                if (!data.correct && data.entryData.type=="value"){
+                    ErrorCount+=1
+                    errorCount.innerText= ErrorCount
                 }
             }
         })
@@ -667,6 +688,17 @@
             }
         })
 
+        socket.on('finish', data => {
+            //format data: {'reason' : string}
+            Finished= true
+            if (!solutionButton.hasAttribute("disabled")){
+                solutionButton.setAttribute("disabled", "")
+            }
+            if (data.reason=="solved"){console.log("Solution affichée, la partie est terminée!")}
+            if (data.reason=="lost"){console.log("Le nombre d'erreur autorisé est dépassé, vous avez donc perdu et la partie est terminée")}
+            if (data.reason=="won"){console.log("Bravo, vous avez réussi à résoudre la grille!!")}
+        })
+
         socket.on('getCandidates', data => {
             // format data: {'cands' : listOfCands}
             for (let i = 0; i<data.cands.length; i++){
@@ -676,6 +708,24 @@
             }
         })
 
+        socket.on('pseudo', data =>{
+            // format data: {'pseudo' : string}
+            Pseudo = data.pseudo
+        })
+
+        socket.on('reload', data => {
+            // format data: {'error' : int,
+            // 'strict' : bool, 
+            // 'finished' : bool}
+            ErrorCount= data.error
+            errorCount.innerText= ErrorCount
+            Strict= data.strict
+            strictCheckbox.checked= Strict
+            Finished= data.finished
+            if (solutionButton.hasAttribute("disabled")){
+                solutionButton.removeAttribute("disabled")
+            }
+        })
 
         socket.on('info', data => {
             console.log(data.data)
