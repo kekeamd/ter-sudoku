@@ -51,7 +51,7 @@ div{
     width: 100cqmin;
     height: 100cqmin;
     aspect-ratio: 1/1;
-    border: 2px solid gray;
+    border: 1px solid black;
 }
 
 .zone{
@@ -65,6 +65,24 @@ div{
     width: 100/3cqmin;
     height: 100/3cqmin;
     aspect-ratio: 1/1;
+    container-type: size;
+    overflow: hidden;
+}
+
+.value{
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    pointer-events: none;
+}
+
+.candidate{
+    justify-content: center;
+    width: 100/3cqmin;
+    height: 100/3cqmin;
+    font-size: 20cqmin;
+    aspect-ratio: 1/1;
+    pointer-events: none;
 }
 
 #top{
@@ -170,4 +188,8 @@ div{
     position: fixed;
     top: 2vh;
     right: 2vw;
+}
+
+#errors{
+    align-self: flex-end;
 }

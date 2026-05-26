@@ -30,6 +30,8 @@
                         <button type="button" id="difficulte-extreme">extrême</button>
                         <button type="button" id="difficulte-godmode">godmode</button>
                     </div>
+                    <br>
+                    <button type="button" id="solution-button" disabled>Grille Solution</button>
                     <div class="border-sky-950 border-2 rounded-xl shadow-2xl" id="login-menu" hidden>
                         <input placeholder="Veuillez insérer un pseudo" id="login-pseudo">
                         <input type="password" placeholder="Veuillez entrer un mot de passe" id="login-password" hidden >
@@ -38,13 +40,15 @@
                     </div>
                     <button type="button" id="login-button">Connexion</button>
                     <button type="button" id="logout-button" hidden>Déconnexion</button>
+                    <br>
+                    <p id="errors">Erreurs: <span id="error">0</span>/<span id="error-max">0</span></p>
                 </div>
             </div>
             <div class="col-start-2 col-span-3" id="middle-col">
                 <div class="font-medium text-base sm:text-base md:text-lg lg:text-xl xl:text-xl" id="sudoku-frame"></div>
             </div>
             <div class="col-start-5 col-span-1" id="right-col">
-                <div class="rounded-md shadow-lg" id="utilities-frame">
+                <div class="rounded-md shadow-lg" id="utilities-frame" hidden>
                     <div class="zone grid grid-rows-3 rounded-lg font-medium text-base sm:text-base md:text-lg lg:text-xl xl:text-xl" id="values">
                         <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="values-1">1</button>
                         <button class="cellule row-start-1 border-stone-300 hover:bg-neutral-100" id="values-2">2</button>
@@ -77,11 +81,17 @@
         const socket = io.connect('http://'+document.domain+':'+location.port);
         console.log(location.pathname)
 
+
+
+        //-------------------------Definition Variables----------------------------------
         var Pseudo=""
         var Focused= false
         var FocusTarget= null
         var SelectedCellule= null
         var SelectedUtility= null
+        var Strict= false // false pour débugger mais doit être à true //todo switch pour désactiver/activer strict et explication de la fonctionalité
+        var ErrorCount= 0
+        var MaxError= 5
 
         var anonymousInfos= document.getElementById("anonymous-infos")
         var anonymousInfosButton= document.getElementById("anonymous-infos-close")
@@ -94,13 +104,18 @@
         var difficulteDifficile= document.getElementById("difficulte-difficile")
         var difficulteExtreme= document.getElementById("difficulte-extreme")
         var difficulteGodmode= document.getElementById("difficulte-godmode")
+        var solutionButton= document.getElementById("solution-button")
         var loginButton= document.getElementById("login-button")
         var logoutButton= document.getElementById("logout-button")
         var loginMenu= document.getElementById("login-menu")
         var loginPseudo= document.getElementById("login-pseudo")
         var loginPassword= document.getElementById("login-password")
         var loginSubmit= document.getElementById("login-submit")
+        var errorsText= document.getElementById("errors")
+        var errorCount= document.getElementById("error")
+        var errorMax= document.getElementById("error-max")
         var sudokuFrame= document.getElementById("sudoku-frame")
+        var utilitiesFrame= document.getElementById("utilities-frame")
         var values1= document.getElementById("values-1")
         var values2= document.getElementById("values-2")
         var values3= document.getElementById("values-3")
@@ -120,6 +135,9 @@
         var candidates8= document.getElementById("candidates-8")
         var candidates9= document.getElementById("candidates-9")
 
+
+
+        //-------------------------Autres----------------------------------
         function removeBlur(target){
             if (target.classList.contains("blured")){target.classList.remove("blured")}
             if (target.classList.contains("focusedElement")){target.classList.remove("focusedElement")}
@@ -158,80 +176,109 @@
             removeBlur(document.body)
         }
 
+        function FocusLock(fonction, targetToVerify, ...args){
+            if (!Focused || (targetToVerify!=null && FocusTarget==targetToVerify)){ //revient à faire :
+            // 'if (!Focused)' si il n'y a pas de target à verifier
+            // 'if (!Focused || FocusTarget==targetToVerify)' sinon
+                fonction(...args)
+            }
+        }
+
+        //-------------------------Interaction Interfaces----------------------------------
         function CloseInfos(){
             anonymousInfos.setAttribute("hidden", "")
         }
 
         function OpenMenu(){
-            if (!Focused){
-                if (menu.hasAttribute("hidden")){
-                    menu.removeAttribute("hidden")
-                    menuButton.innerText= ">"
-                } else{
-                    menu.setAttribute("hidden", "")
-                    menuButton.innerText= "<"
-                }
+            if (menu.hasAttribute("hidden")){
+                menu.removeAttribute("hidden")
+                menuButton.innerText= ">"
+            } else{
+                menu.setAttribute("hidden", "")
+                menuButton.innerText= "<"
             }
         }
 
         function ChooseDifficulte(){
-            if (!Focused){
-                if (menuDifficulte.hasAttribute("hidden")){
-                    menuDifficulte.removeAttribute("hidden")
-                    playButton.innerText="Annuler"
-                    if (Pseudo==""){
-                        if (anonymousInfos.hasAttribute("hidden")){anonymousInfos.removeAttribute("hidden")}
-                    }
-                } else{
-                    menuDifficulte.setAttribute("hidden", "")
-                    playButton.innerText="Nouvelle Partie"
+            if (menuDifficulte.hasAttribute("hidden")){
+                menuDifficulte.removeAttribute("hidden")
+                playButton.innerText="Annuler"
+                if (Pseudo==""){
+                    if (anonymousInfos.hasAttribute("hidden")){anonymousInfos.removeAttribute("hidden")}
                 }
+            } else{
+                menuDifficulte.setAttribute("hidden", "")
+                playButton.innerText="Nouvelle Partie"
             }
         }
 
         function OpenLogin(){
-            if (!Focused || FocusTarget==loginMenu){
-                if (loginMenu.hasAttribute("hidden")){
-                    FocusOn(loginMenu, [loginButton])
-                    loginMenu.removeAttribute("hidden")
-                    loginButton.innerText="Annuler"
-                } else{
-                    FocusOff()
-                    loginMenu.setAttribute("hidden", "")
-                    loginButton.innerText="Connexion"
-                }
+            if (loginMenu.hasAttribute("hidden")){
+                FocusOn(loginMenu, [loginButton])
+                loginMenu.removeAttribute("hidden")
+                loginButton.innerText="Annuler"
+            } else{
+                FocusOff()
+                loginMenu.setAttribute("hidden", "")
+                loginButton.innerText="Connexion"
             }
         }
 
         function Login(){
-            if (!Focused || FocusTarget==loginMenu){
-                if (loginPseudo.value!=""){
-                    FocusOff()
-                    Pseudo=loginPseudo.value
-                    loginPseudo.value=""
-                    loginMenu.setAttribute("hidden", "")
-                    loginButton.setAttribute("hidden", "")
-                    logoutButton.removeAttribute("hidden")
-                    loginButton.innerText="Connexion"
-                }
+            if (loginPseudo.value!=""){
+                FocusOff()
+                Pseudo=loginPseudo.value
+                loginPseudo.value=""
+                loginMenu.setAttribute("hidden", "")
+                loginButton.setAttribute("hidden", "")
+                logoutButton.removeAttribute("hidden")
+                loginButton.innerText="Connexion"
+                CloseInfos()
             }
         }
 
         function Logout(){
-            if (!Focused){
-                Pseudo=""
-                logoutButton.setAttribute("hidden", "")
-                loginButton.removeAttribute("hidden")
-            }
+            Pseudo=""
+            logoutButton.setAttribute("hidden", "")
+            loginButton.removeAttribute("hidden")
         }
 
+
+
+        //-------------------------Fonctions de jeu----------------------------------
         function Play(difficulte){
-            if (!Focused){
-                socket.emit('play', difficulte)
-                ChooseDifficulte()
-            }
+            socket.emit('play', difficulte)
+            ChooseDifficulte()//pour fermer le menu de difficulté
         }
 
+        function SolveGrille(){
+            socket.emit('solve')
+        }
+
+        function AddValue(pos, value){
+            socket.emit('add', {'pos': pos, 'type': "value", 'value': value, 'strict': Strict})
+        }
+
+        function AddCandidate(pos, candidate){
+            socket.emit('add', {'pos': pos, 'type': "candidate", 'value': candidate})
+        }
+
+        function RemoveValue(pos){
+            socket.emit('remove', {'pos': pos, 'type': "value"})
+        }
+
+        function RemoveCandidate(pos, candidate){
+            socket.emit('remove', {'pos': pos, 'type': "candidate", 'value': candidate})
+        }
+
+        function FinishGame(message){//placeholder, à remplir plus tard? faire en sorte qu'on ne puisse plus remove après avoir fini
+            //si jamais la grille est enlevée, il faut penser à disable le bouton de grille solution
+            console.log(message)
+        }
+
+
+
+        //-------------------------Interaction Cellules----------------------------------
         function ColorRegions(cellule, type="color"){
             let index= parseInt(cellule.id.slice(8))
             grille= document.getElementById("sudoku-grid")
@@ -242,26 +289,38 @@
                 let zoneChild= zone.children[i]
                 let rowChild= document.getElementById("cellule-"+(rowFirstIndex+i))
                 let colChild= document.getElementById("cellule-"+(colFirstIndex+i*zone.children.length))
-                if (type=="color"){
+                if (type=="color"){ //colore les cases
                     if (zoneChild!=cellule){
                         zoneChild.classList.add("bg-blue-100/50")
                         zoneChild.classList.add("hover:bg-blue-200/50")
+                        zoneChild.classList.remove("hover:bg-neutral-100")
                     }
 
                     if (!rowChild.classList.contains("bg-blue-100/50") && rowChild!=cellule){
                         rowChild.classList.add("bg-blue-100/50")
                         rowChild.classList.add("hover:bg-blue-200/50")
+                        rowChild.classList.remove("hover:bg-neutral-100")
                     }
                     if (!colChild.classList.contains("bg-blue-100/50") && colChild!=cellule){
                         colChild.classList.add("bg-blue-100/50")
                         colChild.classList.add("hover:bg-blue-200/50")
+                        colChild.classList.remove("hover:bg-neutral-100")
                     }
-                } else{
+                } else{ //décolore les cases
                     zoneChild.classList.remove("bg-blue-100/50")
+                    if (!zoneChild.classList.contains("hover:bg-neutral-100")){
+                        zoneChild.classList.add("hover:bg-neutral-100")
+                    }
                     zoneChild.classList.remove("hover:bg-blue-200/50")
                     rowChild.classList.remove("bg-blue-100/50")
+                    if (!rowChild.classList.contains("hover:bg-neutral-100")){
+                        rowChild.classList.add("hover:bg-neutral-100")
+                    }
                     rowChild.classList.remove("hover:bg-blue-200/50")
                     colChild.classList.remove("bg-blue-100/50")
+                    if (!colChild.classList.contains("hover:bg-neutral-100")){
+                        colChild.classList.add("hover:bg-neutral-100")
+                    }
                     colChild.classList.remove("hover:bg-blue-200/50")
                 }
             }
@@ -269,29 +328,49 @@
         }
 
         function CelluleUnselect(){
-            if (!Focused){
-                if (SelectedCellule!=null){
-                    SelectedCellule.classList.remove("cellule-selected")
-                    SelectedCellule.classList.remove("bg-blue-300/50")
-                    SelectedCellule.classList.remove("hover:bg-blue-400/50")
-                    ColorRegions(SelectedCellule, "uncolor")
-                    SelectedCellule=null
+            if (SelectedCellule!=null){
+                SelectedCellule.classList.remove("cellule-selected")
+                SelectedCellule.classList.remove("bg-blue-300/50")
+                if (!SelectedCellule.classList.contains("hover:bg-neutral-100")){
+                    SelectedCellule.classList.add("hover:bg-neutral-100")
                 }
+                SelectedCellule.classList.remove("hover:bg-blue-400/50")
+
+                ColorRegions(SelectedCellule, "uncolor")
+                SelectedCellule=null
             }
         }
 
-        function CelluleSelect(cellule){
-            if (!Focused){
-                if (cellule==SelectedCellule){
-                    //il faut rajouter la valeur
-                } else{
-                    CelluleUnselect()
-                    SelectedCellule= cellule
-                    SelectedCellule.classList.add("cellule-selected")
-                    SelectedCellule.classList.add("bg-blue-300/50")
-                    SelectedCellule.classList.add("hover:bg-blue-400/50")
-                    ColorRegions(cellule)
+        function CelluleSelect(cellule){//cas click simple
+            if (cellule!=SelectedCellule){
+                CelluleUnselect()
+                SelectedCellule= cellule
+                SelectedCellule.classList.add("cellule-selected")
+                SelectedCellule.classList.add("bg-blue-300/50")
+                SelectedCellule.classList.add("hover:bg-blue-400/50")
+                SelectedCellule.classList.remove("hover:bg-neutral-100")
+                ColorRegions(cellule)
+            }
+        }
+
+        function CelluleSelect2(cellule){//cas double-click
+            let pos = parseInt(cellule.id.slice(8))
+            if (SelectedUtility!=null && cellule.children[0].innerText==""){
+                if (SelectedUtility.id[0]=='v'){
+                    AddValue(pos, parseInt(SelectedUtility.id.slice(7)))
                 }
+                if (SelectedUtility.id[0]=='c'){
+                    let candidate = parseInt(SelectedUtility.id.slice(11))
+                    if (cellule.children.length>1 && cellule.children[candidate].classList.contains('opacity-100')){
+                        RemoveCandidate(pos, candidate) // version serveur
+                        //removeCandidate(cellule, candidate) //version client
+                    } else{
+                        AddCandidate(pos, candidate) //version serveur
+                        //addCandidate(cellule, candidate) //version client
+                    }
+                }
+            } else if (cellule.children[0].innerText!="" && !Strict){
+                RemoveValue(pos)
             }
         }
         
@@ -299,81 +378,191 @@
         //on ajoute aux voisins "bg-blue-100/50 hover:bg-blue-200/50" à class
         //on ajoute au selectionné "cellule-selected bg-blue-300/50 hover:bg-blue-400/50" à class
 
-        function UtilitiesUnselect(){
-            if (!Focused){
-                if (SelectedUtility!=null){
-                    SelectedUtility.classList.remove("utilities-selected")
-                    SelectedUtility.classList.remove("bg-blue-300/50")
-                    SelectedUtility.classList.remove("hover:bg-blue-400/50")
+        function SwitchUtilities(event){
+            if (event.button==1){
+                let id
+                let num
+                if (SelectedUtility==null){
+                    id= "values-"
+                    num= 1
+                }else if (SelectedUtility.id[0]=='v'){
+                    id= "candidates-"
+                    num= parseInt(SelectedUtility.id.slice(7))
+                } else {
+                    id= "values-"
+                    num= parseInt(SelectedUtility.id.slice(11))
+                }
+                UtilitiesSelect(document.getElementById(id+num))
+            }
+        }
+
+        function ScrollUtilities(event){
+            if (SelectedUtility!=null){
+                let id
+                let num
+                if (SelectedUtility.id[0]=='v'){
+                    id= "values-"
+                    num= parseInt(SelectedUtility.id.slice(7))
+                } else {
+                    id= "candidates-"
+                    num= parseInt(SelectedUtility.id.slice(11))
+                }
+                if (event.deltaY>0 && num<9){
+                    UtilitiesSelect(document.getElementById(id+(num+1)))
+                }
+                if (event.deltaY<0 && num>1){
+                    UtilitiesSelect(document.getElementById(id+(num-1)))
                 }
             }
         }
 
-        function UtilitiesSelect(button){
-            if (!Focused){
-                UtilitiesUnselect()
-                SelectedUtility=button
-                SelectedUtility.classList.add("utilities-selected")
-                SelectedUtility.classList.add("bg-blue-300/50")
-                SelectedUtility.classList.add("hover:bg-blue-400/50")
-                //il faut rajouter la partie si une cellule est déjà selectionnée (ajouter la valeur)
-                //ColorValues()
+        function UtilitiesUnselect(){
+            if (SelectedUtility!=null){
+                SelectedUtility.classList.remove("utilities-selected")
+                SelectedUtility.classList.remove("bg-blue-300/50")
+                if (!SelectedUtility.classList.contains("hover:bg-neutral-100")){
+                    SelectedUtility.classList.add("hover:bg-neutral-100")
+                }
+                SelectedUtility.classList.remove("hover:bg-blue-400/50")
+                SelectedUtility= null
             }
+        }
+
+        function UtilitiesSelect(button){
+            UtilitiesUnselect()
+            SelectedUtility=button
+            SelectedUtility.classList.add("utilities-selected")
+            SelectedUtility.classList.add("bg-blue-300/50")
+            SelectedUtility.classList.add("hover:bg-blue-400/50")
+            SelectedUtility.classList.remove("hover:bg-neutral-100")
         }
         //-----FORMAT UTILITIES SELECTED:-----
         //on ajoute "utilities-selected bg-blue-300/50 hover:bg-blue-400/50" à class
 
         function UnselectCellule(event){
-            if (!Focused){
-                if (!event.target.classList.contains("cellule")){
-                    CelluleUnselect()
-                }
+            if (!event.target.classList.contains("cellule")){
+                CelluleUnselect()
             }
         }
 
         function UnSelectUtilities(event){
-            event.preventDefault()
-            if (!Focused){
-                UtilitiesUnselect()
+            UtilitiesUnselect()
+        }
+
+        function addValue(cellule, value){
+            for (let i=1; i<cellule.children.length; i++){
+                cellule.children[i].setAttribute("hidden", "")
+            }
+            cellule.children[0].innerText= value
+            cellule.children[0].removeAttribute("hidden")
+        }
+
+        function removeValue(cellule){
+            cellule.children[0].setAttribute("hidden", "")
+            cellule.children[0].innerText= ""
+            for (let i=1; i<cellule.children.length; i++){
+                cellule.children[i].removeAttribute("hidden")
             }
         }
 
-        anonymousInfosButton.addEventListener("click", CloseInfos)
-        menuButton.addEventListener("click", OpenMenu)
-        playButton.addEventListener("click", ChooseDifficulte)
-        loginButton.addEventListener("click", OpenLogin)
-        loginSubmit.addEventListener("click", Login)
-        logoutButton.addEventListener("click", Logout)
+        function addCandidate(cellule, candidate){
+            let taille= Math.sqrt(cellule.parentElement.children.length)
+            if (cellule.children.length==1){
+                cellule.classList.add("grid")
+                cellule.classList.add("grid-rows-3")
+                for (let i=0; i<taille**2;i++){
+                    let candidate = document.createElement("div")
+                    let candidateRow= Math.floor(i/taille)
+                    candidate.classList.add("candidate")
+                    candidate.classList.add("row-start-"+(candidateRow+1))
+                    candidate.classList.add("text-slate-600/75")
+                    candidate.innerText= (i+1)
+                    candidate.id= cellule.id + "-candidate-" + (i+1)
+                    candidate.classList.add("opacity-0")
+                    cellule.appendChild(candidate)
+                }
+            }
+            if (candidate!=0){
+                if (cellule.children[0].innerText!=""){
+                    console.log("Erreur: tentative d'ajout d'un candidat à une cellule avec une valeur (ceci n'est pas sensé pouvoir arriver)!")
+                } else{
+                    cellule.children[candidate].classList.remove("opacity-0")
+                    cellule.children[candidate].classList.add("opacity-100")
+                }
+            }
+        }
 
-        difficulteFacile.addEventListener("click", () => {Play("facile")})
-        difficulteMoyen.addEventListener("click", () => {Play("moyen")})
-        difficulteDifficile.addEventListener("click", () => {Play("difficile")})
-        difficulteExtreme.addEventListener("click", () => {Play("extreme")})
-        difficulteGodmode.addEventListener("click", () => {Play("godmode")})
+        function addCandidates(cellule, candidateList = []){
+            if (candidateList.length==0){
+                for (let i=0;i<taille**2;i++){
+                    addCandidate(cellule, 0)
+                }
+            } else{
+                for (let i=0;i<taille**2;i++){
+                    addCandidate(cellule, candidateList[i])
+                }
+            }
+        }
 
-        values1.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values2.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values3.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values4.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values5.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values6.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values7.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values8.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        values9.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
+        function removeCandidate(cellule, candidate){
+            if (candidate==0){
+                console.log("Erreur: tentative d'enlèvement du candidat 0 (impossible).")
+            } else{
+                cellule.children[candidate].classList.remove("opacity-100")
+                cellule.children[candidate].classList.add("opacity-0")
+            }
+        }
 
-        candidates1.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates2.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates3.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates4.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates5.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates6.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates7.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates8.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        candidates9.addEventListener("click", (event) => {UtilitiesSelect(event.target)})
-        document.addEventListener("click", UnselectCellule)
-        document.addEventListener("contextmenu", UnSelectUtilities)
+        function removeCandidates(cellule){
+            for (let i=1; i<cellule.children.length; i++){
+                removeCandidate(cellule, i)
+            }
+        }
+
+        //-------------------------Ecouteurs d'évènement----------------------------------
+        //Format pour le focus: FocusLock(nomDeLaFonction, null, argumentsDeLaFonction) si la fonction ne doit pas fonctionner quand focus
+        //                      FocusLock(nomDeLaFonction, objetFocusé, argumentsDeLaFonction) si la fonction doit fonctionner lorsque objetFocusé est la cible du focus
+        anonymousInfosButton.addEventListener("click", () => {FocusLock(CloseInfos, null)})
+        menuButton.addEventListener("click", () => {FocusLock(OpenMenu, null)})
+        playButton.addEventListener("click", () => {FocusLock(ChooseDifficulte, null)})
+        solutionButton.addEventListener("click", () => {FocusLock(SolveGrille, null)})
+        loginButton.addEventListener("click", () => {FocusLock(OpenLogin, loginMenu)})
+        loginSubmit.addEventListener("click", () => {FocusLock(Login, loginMenu)})
+        logoutButton.addEventListener("click", () => {FocusLock(Logout, null)})
+
+        difficulteFacile.addEventListener("click", () => {FocusLock(Play, null, "facile")})
+        difficulteMoyen.addEventListener("click", () => {FocusLock(Play, null, "moyen")})
+        difficulteDifficile.addEventListener("click", () => {FocusLock(Play, null, "difficile")})
+        difficulteExtreme.addEventListener("click", () => {FocusLock(Play, null, "extreme")})
+        difficulteGodmode.addEventListener("click", () => {FocusLock(Play, null, "godmode")})
+
+        values1.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values2.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values3.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values4.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values5.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values6.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values7.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values8.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        values9.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+
+        candidates1.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates2.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates3.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates4.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates5.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates6.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates7.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates8.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        candidates9.addEventListener("click", (event) => {FocusLock(UtilitiesSelect, null, event.target)})
+        document.addEventListener("click", (event) => {FocusLock(UnselectCellule, null, event)}) //click gauche
+        document.addEventListener("contextmenu", (event) => {event.preventDefault(); FocusLock(UnSelectUtilities, null, event)}) //contextmenu c'est le menu quand tu fait click droit sur une page donc ça sert à détecter le click droit 
+        document.addEventListener("wheel", (event) => {FocusLock(ScrollUtilities, null, event)}) //scroll de la souris (l'évènement 'scroll' correspond au scroll de la page)
+        document.addEventListener("mouseup", (event) => {FocusLock(SwitchUtilities, null, event)}) // sert à détecter le click du milieu dans ce cas là
 
 
+
+        //-------------------------Communication Serveur----------------------------------
         socket.on('play', data => {
             //format data: {'grille': Grille,
             //'solution': Grille,
@@ -409,32 +598,87 @@
                         cellule.classList.add("border-stone-300")
                         cellule.classList.add("hover:bg-neutral-100")
                         cellule.id="cellule-"+celluleIndex
-                        cellule.addEventListener("click", (event) => {CelluleSelect(event.target)})
+                        cellule.addEventListener("click", () => {FocusLock(CelluleSelect, null, cellule)})
                         zone.appendChild(cellule)
+                        let value= document.createElement("div")
+                        value.classList.add("value")
+                        value.classList.add("row-start-1")
+                        value.classList.add("row-span-3")
+                        cellule.appendChild(value)
                     }
                 }
             }
             for (let i=0; i<data.taille**4;i++){
                 let cellule=document.getElementById("cellule-"+i)
                 if (data.grille[i]==0){
-                    cellule.innerText= ""
+                    cellule.children[0].innerText= ""
+                    cellule.children[0].classList.add("text-blue-700/75")
+                    cellule.children[0].setAttribute("hidden", "")
+                    cellule.addEventListener("dblclick", () => {FocusLock(CelluleSelect2, null, cellule)}) //seulement les cellules qui ne sont pas initialisées peuvent être double-cliquées
+                    //addCandidates(cellule)//si on veut initialiser les candidats dès le début (point négatif: temps de génération plus important)
                 }else{
-                    cellule.innerText= data.grille[i]
+                    cellule.children[0].innerText= data.grille[i]
                 }
             }
+            if (utilitiesFrame.hasAttribute("hidden")){
+                utilitiesFrame.removeAttribute("hidden")
+            }
+            if (solutionButton.hasAttribute("disabled")){
+                solutionButton.removeAttribute("disabled")
+            }
         })
-
-        socket.on('info', data => {
-            console.log(data.data)
-        })
-
         //-------FORMAT GRILLE:--------------
         //<div class="grid grid-rows-3" id="sudoku-grid"></div>
         //-------FORMAT ZONES:---------------
         //<div class="zone grid grid-rows-3 row-start-rowNumber"></div>
         // en remplaçant rowNumber par le numéro de la ligne à laquelle la zone appartient (de 1 à 3)
         //-------FORMAT CELLULES:-------------
-        //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100"></button>
+        //<button type="button" class="cellule row-start-zoneRowNumber border-stone-300 hover:bg-neutral-100 grid grid-rows-3"></button>
         // en remplaçant zoneRowNumber par le numéro de la ligne à laquelle la cellule appartient relatif à la zone(donc ça va de 1 à 3 et non pas jusqu'à 9)
+
+        socket.on('solve', data =>{
+            //format data: {'solution': Grille}
+            for (let i=0; i<data.solution.length; i++){
+                let cellule = document.getElementById("cellule-"+i)
+                addValue(cellule,data.solution[i])
+            }
+            FinishGame("Solution affichée, la partie est terminée!")
+        })
+
+        socket.on('add', data => {//todo: gestion d'erreur
+            //format data: {'done' : bool, 'correct' : bool, entryData : {'pos' : int, 'value' : int, 'type' : "value" or "candidate"}}
+            let cellule= document.getElementById("cellule-"+data.entryData.pos)
+            if (data.done){
+                if (data.entryData.type=="value"){
+                    addValue(cellule, data.entryData.value)
+                }else if (data.entryData.type=="candidate"){
+                    addCandidate(cellule, data.entryData.value)
+                }
+            }
+        })
+
+        socket.on('remove', data => {
+            //format data: {'pos' : int, 'value' : int, 'type': "value" or "candidate"}
+            let cellule= document.getElementById("cellule-"+data.pos)
+            if (data.type=="value"){
+                removeValue(cellule)
+            }else if (data.type=="candidate"){
+                removeCandidate(cellule, data.value)
+            }
+        })
+
+        socket.on('getCandidates', data => {
+            // format data: {'cands' : listOfCands}
+            for (let i = 0; i<data.cands.length; i++){
+                let cellule= document.getElementById("cellule-"+i)
+                removeCandidates(cellule)
+                addCandidates(cellule,data.cands[i])
+            }
+        })
+
+
+        socket.on('info', data => {
+            console.log(data.data)
+        })
     </script>
-</html>
+</html> 

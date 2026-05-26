@@ -578,6 +578,10 @@ video {
   grid-row: span 1 / span 1;
 }
 
+.row-span-3 {
+  grid-row: span 3 / span 3;
+}
+
 .row-span-5 {
   grid-row: span 5 / span 5;
 }
@@ -711,6 +715,10 @@ video {
   font-weight: 100;
 }
 
+.text-blue-700\/75 {
+  color: rgb(29 78 216 / 0.75);
+}
+
 .text-blue-950 {
   --tw-text-opacity: 1;
   color: rgb(23 37 84 / var(--tw-text-opacity, 1));
@@ -729,6 +737,18 @@ video {
 .text-slate-600 {
   --tw-text-opacity: 1;
   color: rgb(71 85 105 / var(--tw-text-opacity, 1));
+}
+
+.text-slate-600\/75 {
+  color: rgb(71 85 105 / 0.75);
+}
+
+.opacity-0 {
+  opacity: 0;
+}
+
+.opacity-100 {
+  opacity: 1;
 }
 
 .shadow-2xl {
@@ -799,7 +819,7 @@ div{
   width: 100cqmin;
   height: 100cqmin;
   aspect-ratio: 1/1;
-  border: 2px solid gray;
+  border: 1px solid black;
 }
 
 .zone{
@@ -813,6 +833,24 @@ div{
   width: 100/3cqmin;
   height: 100/3cqmin;
   aspect-ratio: 1/1;
+  container-type: size;
+  overflow: hidden;
+}
+
+.value{
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  pointer-events: none;
+}
+
+.candidate{
+  justify-content: center;
+  width: 100/3cqmin;
+  height: 100/3cqmin;
+  font-size: 20cqmin;
+  aspect-ratio: 1/1;
+  pointer-events: none;
 }
 
 #top{
@@ -918,6 +956,10 @@ div{
   position: fixed;
   top: 2vh;
   right: 2vw;
+}
+
+#errors{
+  align-self: flex-end;
 }
 
 .hover\:bg-blue-200\/50:hover {
