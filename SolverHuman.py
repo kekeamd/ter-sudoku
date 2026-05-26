@@ -167,7 +167,7 @@ class SolverHuman(Solver):
                                 cellule.setCandidates(newCandidates)
                                 changed = True
                         if changed:
-                            print(f"PAIRE NUE APPLIQUEE : {cand1}")
+                            #print(f"PAIRE NUE APPLIQUEE : {cand1}")
                             return True
         return False
     
@@ -265,7 +265,7 @@ class SolverHuman(Solver):
                     # Le reste sera fait naturellement par les autres techniques
 
                     if changed:
-                        print(f"paire cachée appliquée : {paire} dans cellules {cell1.getPosition()} et {cell2.getPosition()}")
+                        #print(f"paire cachée appliquée : {paire} dans cellules {cell1.getPosition()} et {cell2.getPosition()}")
                         return True
                     # sinon continuer à chercher une autre paire cachée qui change quelque chose
         return False

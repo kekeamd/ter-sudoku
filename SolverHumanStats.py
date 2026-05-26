@@ -12,8 +12,8 @@ class SolverHumanStats(SolverHuman):
             "stuck": False,
             "steps": 0, # nombre de valeurs posees
             "counts": {
-                Technique.SINGLETON_NU: 0,
                 Technique.DERNIER_NOMBRE: 0,
+                Technique.SINGLETON_NU: 0,
                 Technique.SINGLETON_CACHE: 0,
                 Technique.PAIR_NU: 0,
                 Technique.PAIR_CACHEE: 0,
